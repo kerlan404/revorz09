@@ -1,216 +1,59 @@
 <!DOCTYPE html>
-<html lang="id" class="scroll-smooth">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Revorz Titan - Revorz Smartwatch</title>
-
-    <!-- Depedensi & Konfigurasi -->
+    <title>Revorz - Titan X Detail</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: { 'primary': '#1524F4', 'secondary': '#808DE6', 'accent': '#061092', 'deep': '#050E7E', 'light': '#F0F2FF' },
-                    fontFamily: { 'sans': ['Inter', 'sans-serif'] }
-                }
-            }
-        }
-    </script>
     <style>
-        body { background-color: #03084B; color: var(--light, #F0F2FF); }
-        .thumbnail-active { border-color: #1524F4; }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #000; color: #fff; }
+        .silver-text { background: linear-gradient(180deg, #FFF 0%, #C0C0C0 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .glass-panel { background: rgba(15, 15, 15, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(192, 192, 192, 0.1); }
+        .glow-blue { box-shadow: 0 0 30px rgba(21, 36, 244, 0.2); }
     </style>
 </head>
-<body class="overflow-x-hidden">
+<body class="pt-24 px-6 pb-20">
+    <nav class="fixed top-0 w-full left-0 z-50 bg-black/90 border-b border-gray-900 px-8 py-4 flex justify-between items-center">
+        <h1 class="text-xl font-black silver-text tracking-tighter">REVORZ</h1>
+        <a href="products.html" class="text-xs font-bold hover:text-[#1524f4] transition-all">BACK TO SHOP</a>
+    </nav>
 
-    <!-- ===== HEADER & NAVBAR ===== -->
-    <header id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-deep/80 backdrop-blur-sm shadow-lg">
-        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="./index.html" class="text-3xl font-black text-white tracking-wider">REVORZ</a>
-            <ul class="hidden md:flex items-center space-x-8 text-white">
-                <li><a href="./index.html" class="hover:text-secondary">Beranda</a></li>
-                <li><a href="./products.html" class="font-bold text-secondary">Produk</a></li>
-                <li><a href="./contact.html" class="hover:text-secondary">Kontak</a></li>
-            </ul>
-            <div class="flex items-center space-x-4">
-                <a href="./cart.html" class="text-white hover:text-secondary"><i data-lucide="shopping-cart"></i></a>
-                <a href="./login.html" class="text-white hover:text-secondary"><i data-lucide="user-circle"></i></a>
-                <button id="hamburger-btn" class="md:hidden text-white"><i data-lucide="menu" class="w-7 h-7"></i></button>
+    <main class="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+        <div class="glass-panel p-10 rounded-[3rem] relative overflow-hidden group">
+            <div class="absolute inset-0 bg-[#1524f4] opacity-5 blur-[100px] group-hover:opacity-10 transition-all"></div>
+            <i data-lucide="watch" class="w-full h-80 text-[#1524f4] drop-shadow-[0_0_50px_rgba(21,36,244,0.5)]"></i>
+            <div class="flex justify-center gap-4 mt-10">
+                <div class="w-16 h-16 border-2 border-[#1524f4] rounded-2xl p-2 bg-black"><i data-lucide="watch" class="w-full h-full text-white"></i></div>
+                <div class="w-16 h-16 border border-gray-800 rounded-2xl p-2 bg-black"><i data-lucide="camera" class="w-full h-full text-gray-700"></i></div>
             </div>
-        </nav>
-    </header>
-
-     <!-- ===== MOBILE SIDEBAR (reusable component) ===== -->
-    <aside id="mobile-sidebar" class="fixed top-0 right-0 h-full w-64 bg-deep/95 backdrop-blur-sm z-50 transform translate-x-full transition-transform duration-300 ease-in-out md:hidden">
-        <div class="p-5 flex flex-col">
-            <div class="flex justify-between items-center mb-10"><h2 class="text-xl font-bold text-white">Menu</h2><button id="close-sidebar-btn" class="text-white"><i data-lucide="x" class="w-7 h-7"></i></button></div>
-            <ul class="flex flex-col space-y-5 text-white">
-                <li><a href="./index.html" class="p-2 block hover:bg-primary/50 rounded-md">Beranda</a></li>
-                <li><a href="./products.html" class="p-2 block hover:bg-primary/50 rounded-md font-bold bg-primary/30">Produk</a></li>
-                <li><a href="./contact.html" class="p-2 block hover:bg-primary/50 rounded-md">Kontak</a></li>
-                <li class="border-t border-gray-700 pt-4 mt-4"><a href="./history.html" class="p-2 flex items-center gap-2 hover:bg-primary/50 rounded-md"><i data-lucide="history"></i> Riwayat</a></li>
-                <li><a href="./login.html" class="p-2 flex items-center gap-2 hover:bg-primary/50 rounded-md"><i data-lucide="log-in"></i> Login</a></li>
-            </ul>
-        </div>
-    </aside>
-
-    <main class="pt-24">
-        <!-- ===== BREADCRUMB ===== -->
-        <div class="container mx-auto px-6 py-4 text-sm text-secondary">
-            <a href="./index.html" class="hover:text-white">Home</a>
-            <span class="mx-2">></span>
-            <a href="./products.html" class="hover:text-white">Produk</a>
-            <span class="mx-2">></span>
-            <span>Revorz Titan</span>
         </div>
 
-        <!-- ===== PRODUCT DETAIL SECTION ===== -->
-        <section class="py-12" data-aos="fade-up">
-            <div class="container mx-auto px-6">
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-                    <!-- Image Gallery -->
-                    <div class="space-y-4 sticky top-28">
-                        <div class="bg-accent/30 rounded-lg p-4">
-                            <img id="main-product-image" src="https://placehold.co/600x600/061092/FFFFFF?text=R-Titan+1" alt="Revorz Titan" class="w-full h-auto object-cover rounded-lg">
-                        </div>
-                        <div class="grid grid-cols-4 gap-4" id="thumbnail-gallery">
-                            <img src="https://placehold.co/150x150/061092/FFFFFF?text=R-Titan+1" alt="thumbnail 1" class="thumbnail-item cursor-pointer rounded-md border-2 border-transparent hover:border-primary thumbnail-active p-1">
-                            <img src="https://placehold.co/150x150/061092/FFFFFF?text=R-Titan+2" alt="thumbnail 2" class="thumbnail-item cursor-pointer rounded-md border-2 border-transparent hover:border-primary p-1">
-                            <img src="https://placehold.co/150x150/061092/FFFFFF?text=R-Titan+3" alt="thumbnail 3" class="thumbnail-item cursor-pointer rounded-md border-2 border-transparent hover:border-primary p-1">
-                            <img src="https://placehold.co/150x150/061092/FFFFFF?text=R-Titan+4" alt="thumbnail 4" class="thumbnail-item cursor-pointer rounded-md border-2 border-transparent hover:border-primary p-1">
-                        </div>
-                    </div>
+        <div class="space-y-8">
+            <div>
+                <span class="text-[#1524f4] font-bold tracking-[0.4em] uppercase text-xs">Series Edition</span>
+                <h2 class="text-6xl font-black silver-text tracking-tighter mt-2">TITAN X</h2>
+                <p class="text-3xl font-light text-gray-400 mt-4 tracking-tight">Rp 4.299.000</p>
+            </div>
 
-                    <!-- Product Info -->
-                    <div>
-                        <h1 class="text-4xl lg:text-5xl font-black text-white mb-3">Revorz Titan</h1>
-                        <p class="text-lg text-secondary mb-4">Untuk Petualangan Tanpa Batas</p>
-
-                        <div class="flex items-center mb-6">
-                            <div class="flex text-yellow-400">
-                                <i data-lucide="star" class="fill-current"></i><i data-lucide="star" class="fill-current"></i><i data-lucide="star" class="fill-current"></i><i data-lucide="star" class="fill-current"></i><i data-lucide="star-half" class="fill-current"></i>
-                            </div>
-                            <span class="ml-3 text-secondary">(125 ulasan)</span>
-                        </div>
-
-                        <p class="text-4xl font-black text-primary mb-6">Rp 4.299.000</p>
-                        
-                        <p class="text-light mb-8 leading-relaxed">
-                            Revorz Titan adalah partner andal untuk semua petualangan Anda. Dengan build-quality titanium, GPS dual-band terakurat, dan daya tahan baterai superior, tidak ada puncak yang terlalu tinggi atau jejak yang terlalu jauh.
-                        </p>
-
-                        <!-- Actions -->
-                        <div class="flex flex-col sm:flex-row gap-4 mb-8">
-                             <a href="./cart.html" class="w-full text-center bg-primary text-white font-bold py-3 px-8 rounded-full hover:bg-secondary transition-all duration-300">
-                                Tambah ke Keranjang
-                            </a>
-                             <a href="./checkout.html" class="w-full text-center bg-transparent border-2 border-primary text-primary font-bold py-3 px-8 rounded-full hover:bg-primary hover:text-white transition-all duration-300">
-                                Beli Sekarang
-                            </a>
-                        </div>
-                        
-                        <!-- Specifications -->
-                        <div>
-                             <h3 class="text-xl font-bold text-white mb-4 border-b-2 border-primary/30 pb-2">Spesifikasi</h3>
-                             <ul class="space-y-3 text-secondary">
-                                <li class="flex items-center"><i data-lucide="cpu" class="mr-3 text-primary"></i> Prosesor: Revorz Fusion R2</li>
-                                <li class="flex items-center"><i data-lucide="gem" class="mr-3 text-primary"></i> Material: Titanium Case, Sapphire Glass</li>
-                                <li class="flex items-center"><i data-lucide="ruler" class="mr-3 text-primary"></i> Dimensi: 45mm x 45mm x 12mm</li>
-                                <li class="flex items-center"><i data-lucide="battery-charging" class="mr-3 text-primary"></i> Baterai: Hingga 21 hari</li>
-                                <li class="flex items-center"><i data-lucide="smartphone" class="mr-3 text-primary"></i> Konektivitas: Bluetooth 5.2, Wi-Fi, NFC</li>
-                             </ul>
-                        </div>
-                    </div>
+            <p class="text-gray-500 leading-relaxed">Dibuat dari titanium aerospace-grade dengan layar Sapphire Crystal anti gores. Smartwatch tercanggih untuk para profesional yang menghargai presisi.</p>
+            
+            <div class="space-y-4">
+                <p class="text-xs font-bold uppercase tracking-widest text-gray-400">Pilih Warna</p>
+                <div class="flex gap-4">
+                    <button class="w-8 h-8 rounded-full bg-[#1524f4] ring-4 ring-[#1524f4]/20"></button>
+                    <button class="w-8 h-8 rounded-full bg-[#C0C0C0]"></button>
+                    <button class="w-8 h-8 rounded-full bg-gray-800"></button>
                 </div>
             </div>
-        </section>
 
-         <!-- ===== SIMILAR PRODUCTS ===== -->
-        <section class="py-20 bg-deep">
-            <div class="container mx-auto px-6">
-                <h2 class="text-3xl font-bold text-center mb-12" data-aos="fade-up">Anda Mungkin Juga Suka</h2>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                     <!-- Product Card 1 -->
-                    <div class="group bg-accent/30 rounded-lg overflow-hidden shadow-lg hover:shadow-primary/50 transition-all duration-300 transform hover:-translate-y-2" data-aos="fade-up" data-aos-delay="100">
-                        <img src="https://placehold.co/400x400/061092/FFFFFF?text=R-Enduro" alt="Revorz Enduro" class="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-110">
-                        <div class="p-5">
-                            <h3 class="text-xl font-bold text-white mb-1">Revorz Enduro</h3>
-                            <p class="text-secondary text-sm mb-3">Sport & Outdoor</p>
-                            <p class="text-2xl font-black text-primary">Rp 4.999.000</p>
-                        </div>
-                        <a href="#" class="block w-full bg-primary text-center text-white font-semibold p-3 hover:bg-secondary transition-colors">Lihat Detail</a>
-                    </div>
-                    <!-- Product Card 2 -->
-                    <div class="group bg-accent/30 rounded-lg overflow-hidden shadow-lg hover:shadow-primary/50 transition-all duration-300 transform hover:-translate-y-2" data-aos="fade-up" data-aos-delay="200">
-                        <img src="https://placehold.co/400x400/061092/FFFFFF?text=R-X1+Pro" alt="Revorz X1 Pro" class="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-110">
-                        <div class="p-5">
-                            <h3 class="text-xl font-bold text-white mb-1">Revorz X1 Pro</h3>
-                            <p class="text-secondary text-sm mb-3">Pro Series</p>
-                            <p class="text-2xl font-black text-primary">Rp 5.999.000</p>
-                        </div>
-                         <a href="#" class="block w-full bg-primary text-center text-white font-semibold p-3 hover:bg-secondary transition-colors">Lihat Detail</a>
-                    </div>
-                    <!-- Product Card 3 -->
-                    <div class="group bg-accent/30 rounded-lg overflow-hidden shadow-lg hover:shadow-primary/50 transition-all duration-300 transform hover:-translate-y-2" data-aos="fade-up" data-aos-delay="300">
-                        <img src="https://placehold.co/400x400/061092/FFFFFF?text=R-Elegance" alt="Revorz Elegance" class="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-110">
-                        <div class="p-5">
-                            <h3 class="text-xl font-bold text-white mb-1">Revorz Elegance</h3>
-                            <p class="text-secondary text-sm mb-3">Business & Formal</p>
-                            <p class="text-2xl font-black text-primary">Rp 3.599.000</p>
-                        </div>
-                         <a href="#" class="block w-full bg-primary text-center text-white font-semibold p-3 hover:bg-secondary transition-colors">Lihat Detail</a>
-                    </div>
-                </div>
+            <div class="flex gap-4 pt-6">
+                <button onclick="window.location.href='checkout.html'" class="flex-1 bg-[#1524f4] text-white py-5 rounded-2xl font-black tracking-widest uppercase hover:bg-[#050e7e] transition-all glow-blue">Buy Now</button>
+                <button class="px-8 border border-gray-800 rounded-2xl hover:bg-white/5 transition-all"><i data-lucide="shopping-bag"></i></button>
             </div>
-        </section>
+        </div>
     </main>
-
-    <!-- ===== FOOTER (reusable component) ===== -->
-    <footer class="bg-deep pt-16 pb-8 border-t border-accent/30">
-        <div class="container mx-auto px-6 text-center text-secondary text-sm">
-             <p>&copy; 2026 Revorz. All Rights Reserved.</p>
-        </div>
-    </footer>
-
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Inisialisasi
-            lucide.createIcons();
-            AOS.init({ duration: 800, once: true, offset: 50 });
-
-            // Logika Mobile Sidebar
-            const hamburgerBtn = document.getElementById('hamburger-btn');
-            const mobileSidebar = document.getElementById('mobile-sidebar');
-            if(hamburgerBtn && mobileSidebar) {
-                const closeSidebarBtn = document.getElementById('close-sidebar-btn');
-                hamburgerBtn.addEventListener('click', () => mobileSidebar.classList.remove('translate-x-full'));
-                closeSidebarBtn.addEventListener('click', () => mobileSidebar.classList.add('translate-x-full'));
-                document.addEventListener('click', (event) => {
-                    if (!mobileSidebar.contains(event.target) && !hamburgerBtn.contains(event.target)) {
-                        mobileSidebar.classList.add('translate-x-full');
-                    }
-                });
-            }
-
-            // Logika Galeri Gambar Produk
-            const mainImage = document.getElementById('main-product-image');
-            const thumbnails = document.querySelectorAll('.thumbnail-item');
-            thumbnails.forEach(thumb => {
-                thumb.addEventListener('click', function() {
-                    // Ganti gambar utama
-                    mainImage.src = this.src.replace('150x150', '600x600'); // Ganti ukuran placeholder
-                    
-                    // Update style thumbnail aktif
-                    thumbnails.forEach(item => item.classList.remove('thumbnail-active'));
-                    this.classList.add('thumbnail-active');
-                });
-            });
-        });
-    </script>
+    <script>lucide.createIcons();</script>
 </body>
 </html>

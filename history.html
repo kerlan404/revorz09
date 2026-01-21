@@ -1,189 +1,158 @@
 <!DOCTYPE html>
-<html lang="id" class="scroll-smooth">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Riwayat Pesanan - Revorz Smartwatch</title>
-
-    <!-- Depedensi & Konfigurasi -->
+    <title>Revorz - Riwayat Pesanan</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: { 'primary': '#1524F4', 'secondary': '#808DE6', 'accent': '#061092', 'deep': '#050E7E', 'light': '#F0F2FF' },
-                    fontFamily: { 'sans': ['Inter', 'sans-serif'] }
-                }
-            }
-        }
-    </script>
     <style>
-        body { background-color: #03084B; color: var(--light, #F0F2FF); }
-        .status-chip {
-            @apply px-3 py-1 text-xs font-semibold rounded-full;
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #000000;
+            color: #ffffff;
+            min-height: 100vh;
         }
-        .status-completed { @apply bg-green-500/20 text-green-300; }
-        .status-processing { @apply bg-yellow-500/20 text-yellow-300; }
-        .status-cancelled { @apply bg-red-500/20 text-red-300; }
+
+        .silver-text {
+            background: linear-gradient(180deg, #FFFFFF 0%, #C0C0C0 50%, #808080 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .glass-card {
+            background: rgba(15, 15, 15, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(192, 192, 192, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            border-color: rgba(21, 36, 244, 0.4);
+            box-shadow: 0 0 30px rgba(21, 36, 244, 0.1);
+        }
+
+        .status-pill {
+            padding: 4px 12px;
+            border-radius: 99px;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .status-completed { background: rgba(34, 197, 94, 0.1); color: #22c55e; border: 1px solid rgba(34, 197, 94, 0.2); }
+        .status-process { background: rgba(21, 36, 244, 0.1); color: #1524f4; border: 1px solid rgba(21, 36, 244, 0.2); }
+        .status-shipped { background: rgba(168, 85, 247, 0.1); color: #a855f7; border: 1px solid rgba(168, 85, 247, 0.2); }
     </style>
 </head>
-<body class="overflow-x-hidden">
+<body class="pt-24 px-6 pb-20">
 
-    <!-- ===== HEADER & NAVBAR ===== -->
-    <header id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-deep/80 backdrop-blur-sm shadow-lg">
-        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="./index.html" class="text-3xl font-black text-white tracking-wider">REVORZ</a>
-            <ul class="hidden md:flex items-center space-x-8 text-white">
-                <li><a href="./index.html" class="hover:text-secondary">Beranda</a></li>
-                <li><a href="./products.html" class="hover:text-secondary">Produk</a></li>
-                <li><a href="./contact.html" class="hover:text-secondary">Kontak</a></li>
-            </ul>
-            <div class="flex items-center space-x-4">
-                <a href="./cart.html" class="text-white hover:text-secondary"><i data-lucide="shopping-cart"></i></a>
-                <a href="./login.html" class="text-white hover:text-secondary"><i data-lucide="user-circle"></i></a>
-                <button id="hamburger-btn" class="md:hidden text-white"><i data-lucide="menu" class="w-7 h-7"></i></button>
-            </div>
-        </nav>
-    </header>
-
-    <!-- ===== MOBILE SIDEBAR ===== -->
-    <aside id="mobile-sidebar" class="fixed top-0 right-0 h-full w-64 bg-deep/95 backdrop-blur-sm z-50 transform translate-x-full transition-transform duration-300 ease-in-out md:hidden">
-        <div class="p-5 flex flex-col">
-            <div class="flex justify-between items-center mb-10"><h2 class="text-xl font-bold text-white">Menu</h2><button id="close-sidebar-btn" class="text-white"><i data-lucide="x" class="w-7 h-7"></i></button></div>
-            <ul class="flex flex-col space-y-5 text-white">
-                <li><a href="./index.html" class="p-2 block hover:bg-primary/50 rounded-md">Beranda</a></li>
-                <li><a href="./products.html" class="p-2 block hover:bg-primary/50 rounded-md">Produk</a></li>
-                <li><a href="./contact.html" class="p-2 block hover:bg-primary/50 rounded-md">Kontak</a></li>
-                <li class="border-t border-gray-700 pt-4 mt-4"><a href="./history.html" class="p-2 flex items-center gap-2 hover:bg-primary/50 rounded-md font-bold bg-primary/30"><i data-lucide="history"></i> Riwayat</a></li>
-                <li><a href="./login.html" class="p-2 flex items-center gap-2 hover:bg-primary/50 rounded-md"><i data-lucide="log-in"></i> Login</a></li>
-            </ul>
+    <nav class="fixed top-0 w-full left-0 z-50 bg-black/90 border-b border-gray-900 px-8 py-4 flex justify-between items-center">
+        <h1 class="text-xl font-black silver-text tracking-tighter uppercase">REVORZ</h1>
+        <div class="flex items-center gap-6">
+            <a href="index.html" class="text-xs font-bold hover:text-[#1524f4] transition-all tracking-widest uppercase">Beranda</a>
+            <a href="login.html" class="bg-gray-900 p-2 rounded-full border border-gray-800"><i data-lucide="user" class="w-4 h-4"></i></a>
         </div>
-    </aside>
+    </nav>
 
-    <main class="pt-24">
-        <!-- ===== PAGE HEADER ===== -->
-        <section class="py-12 bg-deep text-center" data-aos="fade-in">
-            <div class="container mx-auto px-6">
-                <h1 class="text-4xl md:text-5xl font-black text-white">Riwayat Pesanan</h1>
-                <p class="text-secondary mt-2">Lacak semua pesanan Anda di sini.</p>
-            </div>
-        </section>
+    <div class="max-w-4xl mx-auto">
+        <div class="mb-12">
+            <h2 class="text-4xl font-extrabold silver-text tracking-tighter uppercase">Order History</h2>
+            <p class="text-gray-500 text-sm mt-2">Pantau setiap detik perjalanan smartwatch Anda.</p>
+        </div>
 
-        <!-- ===== HISTORY CONTENT ===== -->
-        <section class="py-16">
-            <div class="container mx-auto px-6">
-                <div class="max-w-4xl mx-auto" data-aos="fade-up">
-                    <div class="space-y-8">
+        <div class="flex gap-4 mb-8 overflow-x-auto pb-2">
+            <button class="px-6 py-2 bg-[#1524f4] text-white rounded-full text-xs font-bold whitespace-nowrap">Semua Pesanan</button>
+            <button class="px-6 py-2 bg-gray-900 text-gray-400 rounded-full text-xs font-bold hover:text-white transition-all whitespace-nowrap">Sedang Dikirim</button>
+            <button class="px-6 py-2 bg-gray-900 text-gray-400 rounded-full text-xs font-bold hover:text-white transition-all whitespace-nowrap">Selesai</button>
+        </div>
 
-                        <!-- Order 1 -->
-                        <div class="bg-accent/30 rounded-lg p-6">
-                            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-secondary/20 pb-4 mb-4">
-                                <div>
-                                    <p class="text-white font-bold text-lg">Order #RVZ-10573</p>
-                                    <p class="text-secondary text-sm">Tanggal: 15 Juli 2024</p>
-                                </div>
-                                <span class="status-chip status-completed mt-2 sm:mt-0">Selesai</span>
-                            </div>
-                            <div class="space-y-4">
-                                <div class="flex justify-between items-center">
-                                    <div class="flex items-center gap-4">
-                                        <img src="https://placehold.co/80x80/061092/FFFFFF?text=R-T" class="w-16 h-16 rounded-md">
-                                        <div>
-                                            <p class="text-white">Revorz Titan</p>
-                                            <p class="text-secondary text-sm">Jumlah: 1</p>
-                                        </div>
-                                    </div>
-                                    <p class="text-white font-semibold">Rp 4.299.000</p>
-                                </div>
-                            </div>
-                            <div class="border-t border-secondary/20 pt-4 mt-4 text-right">
-                                <p class="text-white font-bold text-lg">Total: Rp 4.349.000</p>
-                            </div>
+        <div class="space-y-6">
+            
+            <div class="glass-card rounded-[2.5rem] overflow-hidden">
+                <div class="p-6 md:p-8">
+                    <div class="flex flex-wrap justify-between items-start gap-4 mb-6">
+                        <div>
+                            <span class="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Order ID</span>
+                            <h4 class="font-bold text-[#1524f4]">#RVZ-99201102</h4>
                         </div>
+                        <div class="text-right">
+                            <span class="status-pill status-process">Sedang Diproses</span>
+                            <p class="text-[10px] text-gray-600 font-bold mt-2 uppercase tracking-tighter">Estimasi Tiba: 24 Jan 2026</p>
+                        </div>
+                    </div>
 
-                        <!-- Order 2 -->
-                        <div class="bg-accent/30 rounded-lg p-6">
-                            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-secondary/20 pb-4 mb-4">
-                                <div>
-                                    <p class="text-white font-bold text-lg">Order #RVZ-10451</p>
-                                    <p class="text-secondary text-sm">Tanggal: 2 Juni 2024</p>
-                                </div>
-                                <span class="status-chip status-processing mt-2 sm:mt-0">Diproses</span>
-                            </div>
-                            <div class="space-y-4">
-                                <div class="flex justify-between items-center">
-                                    <div class="flex items-center gap-4">
-                                        <img src="https://placehold.co/80x80/061092/FFFFFF?text=R-L" class="w-16 h-16 rounded-md">
-                                        <div>
-                                            <p class="text-white">Revorz Lite</p>
-                                            <p class="text-secondary text-sm">Jumlah: 1</p>
-                                        </div>
-                                    </div>
-                                    <p class="text-white font-semibold">Rp 1.899.000</p>
-                                </div>
-                                <div class="flex justify-between items-center">
-                                    <div class="flex items-center gap-4">
-                                        <img src="https://placehold.co/80x80/061092/FFFFFF?text=R-E" class="w-16 h-16 rounded-md">
-                                        <div>
-                                            <p class="text-white">Revorz Elegance</p>
-                                            <p class="text-secondary text-sm">Jumlah: 1</p>
-                                        </div>
-                                    </div>
-                                    <p class="text-white font-semibold">Rp 3.599.000</p>
-                                </div>
-                            </div>
-                            <div class="border-t border-secondary/20 pt-4 mt-4 text-right">
-                                <p class="text-white font-bold text-lg">Total: Rp 5.548.000</p>
-                            </div>
+                    <div class="flex items-center gap-6 py-6 border-y border-gray-900">
+                        <div class="w-20 h-20 bg-black border border-gray-800 rounded-2xl flex items-center justify-center">
+                            <i data-lucide="watch" class="text-[#1524f4] w-10 h-10"></i>
                         </div>
-                        
-                        <!-- Pesan jika tidak ada history -->
-                        <!-- 
-                        <div class="text-center py-12 border-2 border-dashed border-accent/50 rounded-lg">
-                           <i data-lucide="folder-clock" class="mx-auto text-secondary/50 w-16 h-16"></i>
-                           <p class="mt-4 text-secondary">Anda belum memiliki riwayat pesanan.</p>
-                           <a href="./products.html" class="inline-block mt-4 bg-primary text-white font-bold py-2 px-6 rounded-full hover:bg-secondary transition-colors">Mulai Belanja</a>
+                        <div class="flex-1">
+                            <h5 class="font-bold text-lg">REVORZ Titan X - Midnight Blue</h5>
+                            <p class="text-xs text-gray-500">1 Item • Pembayaran Transfer Bank</p>
                         </div>
-                        -->
+                        <div class="text-right">
+                            <p class="text-sm font-black text-white">Rp 4.301.000</p>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 flex flex-col md:flex-row justify-between items-center gap-6">
+                        <div class="flex items-center gap-4">
+                            <div class="flex -space-x-2">
+                                <div class="w-8 h-8 rounded-full bg-[#1524f4] flex items-center justify-center border-2 border-black"><i data-lucide="package" class="w-4 h-4 text-white"></i></div>
+                                <div class="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center border-2 border-black"><i data-lucide="truck" class="w-4 h-4 text-gray-500"></i></div>
+                                <div class="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center border-2 border-black"><i data-lucide="check" class="w-4 h-4 text-gray-500"></i></div>
+                            </div>
+                            <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Pesanan sedang dikemas di gudang pusat</p>
+                        </div>
+                        <button class="text-xs font-bold border border-gray-800 px-6 py-3 rounded-xl hover:bg-white hover:text-black transition-all uppercase tracking-widest">Detail Invoice</button>
                     </div>
                 </div>
             </div>
-        </section>
-    </main>
 
-    <!-- ===== FOOTER ===== -->
-    <footer class="bg-deep pt-16 pb-8">
-        <div class="container mx-auto px-6">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-                <div class="col-span-1"><h3 class="text-2xl font-black text-white mb-4">REVORZ</h3><p class="text-secondary">Teknologi terdepan dalam balutan gaya yang tak lekang oleh waktu.</p></div>
-                <div><h4 class="font-bold text-white text-lg mb-4">Navigasi</h4><ul class="space-y-2"><li><a href="./products.html" class="text-secondary hover:text-white">Produk</a></li><li><a href="./login.html" class="text-secondary hover:text-white">Akun Saya</a></li><li><a href="./cart.html" class="text-secondary hover:text-white">Keranjang</a></li><li><a href="./contact.html" class="text-secondary hover:text-white">Hubungi Kami</a></li></ul></div>
-                <div><h4 class="font-bold text-white text-lg mb-4">Ikuti Kami</h4><div class="flex space-x-4"><a href="#" class="text-secondary hover:text-white"><i data-lucide="facebook"></i></a><a href="#" class="text-secondary hover:text-white"><i data-lucide="instagram"></i></a><a href="#" class="text-secondary hover:text-white"><i data-lucide="twitter"></i></a><a href="#" class="text-secondary hover:text-white"><i data-lucide="youtube"></i></a></div></div>
-                <div><h4 class="font-bold text-white text-lg mb-4">Newsletter</h4><p class="text-secondary mb-3">Dapatkan info & promo terbaru dari kami.</p><form class="flex"><input type="email" placeholder="Email Anda" class="w-full rounded-l-md p-2 bg-accent/50 border border-transparent focus:border-primary focus:outline-none text-white"><button class="bg-primary text-white p-2 rounded-r-md hover:bg-secondary"><i data-lucide="send"></i></button></form></div>
+            <div class="glass-card rounded-[2.5rem] overflow-hidden opacity-80 hover:opacity-100">
+                <div class="p-6 md:p-8">
+                    <div class="flex flex-wrap justify-between items-start gap-4 mb-6">
+                        <div>
+                            <span class="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Order ID</span>
+                            <h4 class="font-bold text-gray-400">#RVZ-88192003</h4>
+                        </div>
+                        <div class="text-right">
+                            <span class="status-pill status-completed">Selesai</span>
+                            <p class="text-[10px] text-gray-600 font-bold mt-2 uppercase tracking-tighter">Diterima: 15 Jan 2026</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-6 py-6 border-y border-gray-900">
+                        <div class="w-20 h-20 bg-black border border-gray-800 rounded-2xl flex items-center justify-center opacity-50">
+                            <i data-lucide="watch" class="text-gray-400 w-10 h-10"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h5 class="font-bold text-lg text-gray-300">REVORZ Pro Lite - Silver Chrome</h5>
+                            <p class="text-xs text-gray-500">1 Item • Pembayaran QRIS</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-sm font-black text-gray-400">Rp 2.199.000</p>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 flex justify-between items-center">
+                        <div class="flex items-center gap-2 text-green-500">
+                            <i data-lucide="check-circle" class="w-4 h-4"></i>
+                            <span class="text-[10px] font-bold uppercase tracking-widest">Diterima oleh Pembeli</span>
+                        </div>
+                        <button class="bg-[#1524f4] text-white text-xs font-bold px-6 py-3 rounded-xl hover:bg-blue-700 transition-all uppercase tracking-widest shadow-lg shadow-blue-900/20">Beli Lagi</button>
+                    </div>
+                </div>
             </div>
-            <div class="border-t border-accent/50 pt-6 text-center text-secondary text-sm"><p>&copy; 2024 Revorz. All Rights Reserved.</p></div>
+
         </div>
-    </footer>
+    </div>
 
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            lucide.createIcons();
-            AOS.init({ duration: 800, once: true, offset: 50 });
-
-            const hamburgerBtn = document.getElementById('hamburger-btn');
-            const closeSidebarBtn = document.getElementById('close-sidebar-btn');
-            const mobileSidebar = document.getElementById('mobile-sidebar');
-            hamburgerBtn.addEventListener('click', () => mobileSidebar.classList.remove('translate-x-full'));
-            closeSidebarBtn.addEventListener('click', () => mobileSidebar.classList.add('translate-x-full'));
-             document.addEventListener('click', (event) => {
-                if (!mobileSidebar.contains(event.target) && !hamburgerBtn.contains(event.target)) {
-                    mobileSidebar.classList.add('translate-x-full');
-                }
-            });
-        });
+        lucide.createIcons();
     </script>
 </body>
 </html>

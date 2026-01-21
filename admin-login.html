@@ -3,107 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login - Revorz Dashboard</title>
-
-    <!-- Depedensi & Konfigurasi -->
+    <title>Revorz - Admin Access</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: { 'primary': '#1524F4', 'secondary': '#808DE6', 'accent': '#061092', 'deep': '#050E7E', 'light': '#F0F2FF' },
-                    fontFamily: { 'sans': ['Inter', 'sans-serif'] }
-                }
-            }
-        }
-    </script>
     <style>
-        body { background: linear-gradient(135deg, #050E7E, #03084B); color: var(--light, #F0F2FF); }
-        .form-input { @apply w-full bg-accent/50 border border-secondary/30 rounded-md p-3 text-white focus:outline-none focus:border-primary transition-colors; }
-        .form-label { @apply block text-secondary mb-2 text-sm; }
+        body { background: #000; font-family: 'Plus Jakarta Sans', sans-serif; }
+        .silver-text { background: linear-gradient(180deg, #FFF 0%, #C0C0C0 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .login-card { background: rgba(10, 10, 10, 0.8); backdrop-filter: blur(20px); border: 1px solid rgba(21, 36, 244, 0.3); }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen p-6">
-
-    <div class="w-full max-w-sm mx-auto">
-        <!-- Logo -->
-        <div class="text-center mb-8">
-            <i data-lucide="shield-check" class="w-16 h-16 text-primary mx-auto"></i>
-            <h1 class="text-3xl font-black text-white tracking-wider mt-2">REVORZ</h1>
-            <p class="text-secondary">Admin Panel</p>
+<body class="flex items-center justify-center min-h-screen">
+    <div class="w-full max-w-md p-10 rounded-[3rem] login-card">
+        <div class="text-center mb-10">
+            <h1 class="text-3xl font-black silver-text tracking-tighter">REVORZ ADMIN</h1>
+            <p class="text-[10px] text-blue-400 font-bold uppercase tracking-[0.3em] mt-2">Secure Gateway</p>
         </div>
-
-        <!-- Form Card -->
-        <div class="bg-deep/50 backdrop-blur-lg p-8 rounded-xl shadow-2xl">
-            <h2 class="text-2xl font-bold text-white text-center mb-6">Admin Login</h2>
-
-            <form id="admin-login-form" class="space-y-6">
-                <div>
-                    <label for="username" class="form-label">Username</label>
-                    <div class="relative">
-                         <i data-lucide="user-cog" class="absolute left-3 top-1/2 -translate-y-1/2 text-secondary w-5 h-5"></i>
-                         <input type="text" id="username" name="username" class="form-input pl-11" value="admin" required>
-                    </div>
-                </div>
-
-                <div>
-                    <label for="password" class="form-label">Password</label>
-                     <div class="relative">
-                         <i data-lucide="lock" class="absolute left-3 top-1/2 -translate-y-1/2 text-secondary w-5 h-5"></i>
-                        <input type="password" id="password" name="password" class="form-input pl-11" value="admin123" required>
-                    </div>
-                </div>
-
-                <div>
-                    <button type="submit" class="w-full text-center bg-primary text-white font-bold py-3 px-8 rounded-full hover:bg-secondary transition-all duration-300 mt-4">
-                        Login
-                    </button>
-                </div>
-            </form>
-        </div>
-
-        <!-- Error Alert -->
-        <div id="error-alert" class="hidden mt-4 bg-red-500/90 text-white p-3 rounded-lg shadow-lg flex items-center justify-center gap-3">
-            <i data-lucide="alert-triangle" class="w-5 h-5"></i>
-            <span>Username atau password salah!</span>
-        </div>
+        <form class="space-y-6" onsubmit="event.preventDefault(); window.location.href='admin-dashboard.html'">
+            <div class="relative">
+                <i data-lucide="shield-check" class="absolute left-4 top-4 w-5 h-5 text-gray-500"></i>
+                <input type="text" placeholder="Admin Username" class="w-full bg-black border border-gray-800 rounded-2xl p-4 pl-12 text-sm text-white focus:border-[#1524f4] outline-none">
+            </div>
+            <div class="relative">
+                <i data-lucide="key" class="absolute left-4 top-4 w-5 h-5 text-gray-500"></i>
+                <input type="password" placeholder="Passcode" class="w-full bg-black border border-gray-800 rounded-2xl p-4 pl-12 text-sm text-white focus:border-[#1524f4] outline-none">
+            </div>
+            <button class="w-full bg-[#1524f4] py-4 rounded-2xl font-bold text-white uppercase tracking-widest hover:bg-blue-700 transition-all">Authorize Access</button>
+        </form>
     </div>
-
-    <script>
-        lucide.createIcons();
-
-        // Redirect if already logged in (simple check)
-        if (localStorage.getItem('admin_logged_in') === 'true') {
-            window.location.href = './admin-dashboard.html';
-        }
-
-        const loginForm = document.getElementById('admin-login-form');
-        const errorAlert = document.getElementById('error-alert');
-        const usernameInput = document.getElementById('username');
-        const passwordInput = document.getElementById('password');
-
-        loginForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            const username = usernameInput.value;
-            const password = passwordInput.value;
-
-            // Hardcoded credentials
-            if (username === 'admin' && password === 'admin123') {
-                // Simulate successful login
-                localStorage.setItem('admin_logged_in', 'true');
-                window.location.href = './admin-dashboard.html';
-            } else {
-                // Show error message
-                errorAlert.classList.remove('hidden');
-                // Hide error message after 3 seconds
-                setTimeout(() => {
-                    errorAlert.classList.add('hidden');
-                }, 3000);
-            }
-        });
-    </script>
+    <script>lucide.createIcons();</script>
 </body>
 </html>
