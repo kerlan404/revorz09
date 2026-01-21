@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kontak Kami - Revorz Smartwatch</title>
+
+    <!-- Depedensi & Konfigurasi -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { 'primary': '#1524F4', 'secondary': '#808DE6', 'accent': '#061092', 'deep': '#050E7E', 'light': '#F0F2FF' },
+                    fontFamily: { 'sans': ['Inter', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #03084B; color: var(--light, #F0F2FF); }
+        .form-input { @apply w-full bg-accent/30 border border-secondary/30 rounded-md p-3 text-white focus:outline-none focus:border-primary transition-colors; }
+        .form-label { @apply block text-secondary mb-2 text-sm; }
+    </style>
+</head>
+<body class="overflow-x-hidden">
+
+    <!-- ===== HEADER & NAVBAR ===== -->
+    <header id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-deep/80 backdrop-blur-sm shadow-lg">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="./index.html" class="text-3xl font-black text-white tracking-wider">REVORZ</a>
+            <ul class="hidden md:flex items-center space-x-8 text-white">
+                <li><a href="./index.html" class="hover:text-secondary">Beranda</a></li>
+                <li><a href="./products.html" class="hover:text-secondary">Produk</a></li>
+                <li><a href="./contact.html" class="text-secondary font-bold">Kontak</a></li>
+            </ul>
+            <div class="flex items-center space-x-4">
+                <a href="./cart.html" class="text-white hover:text-secondary"><i data-lucide="shopping-cart"></i></a>
+                <a href="./login.html" class="text-white hover:text-secondary"><i data-lucide="user-circle"></i></a>
+                <button id="hamburger-btn" class="md:hidden text-white"><i data-lucide="menu" class="w-7 h-7"></i></button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- ===== MOBILE SIDEBAR ===== -->
+    <aside id="mobile-sidebar" class="fixed top-0 right-0 h-full w-64 bg-deep/95 backdrop-blur-sm z-50 transform translate-x-full transition-transform duration-300 ease-in-out md:hidden">
+        <div class="p-5 flex flex-col">
+            <div class="flex justify-between items-center mb-10"><h2 class="text-xl font-bold text-white">Menu</h2><button id="close-sidebar-btn" class="text-white"><i data-lucide="x" class="w-7 h-7"></i></button></div>
+            <ul class="flex flex-col space-y-5 text-white">
+                <li><a href="./index.html" class="p-2 block hover:bg-primary/50 rounded-md">Beranda</a></li>
+                <li><a href="./products.html" class="p-2 block hover:bg-primary/50 rounded-md">Produk</a></li>
+                <li><a href="./contact.html" class="p-2 block hover:bg-primary/50 rounded-md font-bold bg-primary/30">Kontak</a></li>
+                <li class="border-t border-gray-700 pt-4 mt-4"><a href="./history.html" class="p-2 flex items-center gap-2 hover:bg-primary/50 rounded-md"><i data-lucide="history"></i> Riwayat</a></li>
+                <li><a href="./login.html" class="p-2 flex items-center gap-2 hover:bg-primary/50 rounded-md"><i data-lucide="log-in"></i> Login</a></li>
+            </ul>
+        </div>
+    </aside>
+
+    <main class="pt-24">
+        <!-- ===== PAGE HEADER ===== -->
+        <section class="py-12 bg-deep text-center" data-aos="fade-in">
+            <div class="container mx-auto px-6">
+                <h1 class="text-4xl md:text-5xl font-black text-white">Hubungi Kami</h1>
+                <p class="text-secondary mt-2">Punya pertanyaan atau masukan? Kami siap membantu.</p>
+            </div>
+        </section>
+
+        <!-- ===== CONTACT CONTENT ===== -->
+        <section class="py-16">
+            <div class="container mx-auto px-6">
+                <div class="flex flex-col lg:flex-row gap-12 bg-accent/30 p-8 rounded-xl" data-aos="fade-up">
+
+                    <!-- Contact Form -->
+                    <div class="lg:w-1/2">
+                        <h2 class="text-3xl font-bold text-white mb-6">Kirim Pesan</h2>
+                        <form action="#" method="POST" class="space-y-6">
+                            <div>
+                                <label for="name" class="form-label">Nama Anda</label>
+                                <input type="text" id="name" name="name" class="form-input" required>
+                            </div>
+                            <div>
+                                <label for="email" class="form-label">Email Anda</label>
+                                <input type="email" id="email" name="email" class="form-input" required>
+                            </div>
+                            <div>
+                                <label for="message" class="form-label">Pesan Anda</label>
+                                <textarea id="message" name="message" rows="5" class="form-input" required></textarea>
+                            </div>
+                            <div>
+                                <button type="submit" class="w-full text-center bg-primary text-white font-bold py-3 px-8 rounded-full hover:bg-secondary transition-all duration-300">
+                                    Kirim
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Contact Info & Map -->
+                    <div class="lg:w-1/2">
+                        <h2 class="text-3xl font-bold text-white mb-6">Informasi Kontak</h2>
+                        <div class="space-y-6 text-secondary">
+                            <div class="flex items-start gap-4">
+                                <i data-lucide="map-pin" class="text-primary mt-1"></i>
+                                <div><p class="text-white font-semibold">Alamat</p><p>Jl. Jend. Sudirman No. 123, Jakarta, Indonesia</p></div>
+                            </div>
+                            <div class="flex items-start gap-4">
+                                <i data-lucide="mail" class="text-primary mt-1"></i>
+                                <div><p class="text-white font-semibold">Email</p><p>support@revorz.com</p></div>
+                            </div>
+                            <div class="flex items-start gap-4">
+                                <i data-lucide="phone" class="text-primary mt-1"></i>
+                                <div><p class="text-white font-semibold">Telepon</p><p>+62 21 1234 5678</p></div>
+                            </div>
+                        </div>
+                        <div class="mt-8">
+                             <div class="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden bg-deep">
+                                <!-- Dummy Map -->
+                                <div class="w-full h-full flex items-center justify-center text-center p-4">
+                                    <p class="text-secondary">Peta lokasi akan ditampilkan di sini.<br>(Contoh: Integrasi Google Maps)</p>
+                                </div>
+                             </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="bg-deep pt-16 pb-8">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div class="col-span-1"><h3 class="text-2xl font-black text-white mb-4">REVORZ</h3><p class="text-secondary">Teknologi terdepan dalam balutan gaya yang tak lekang oleh waktu.</p></div>
+                <div><h4 class="font-bold text-white text-lg mb-4">Navigasi</h4><ul class="space-y-2"><li><a href="./products.html" class="text-secondary hover:text-white">Produk</a></li><li><a href="./login.html" class="text-secondary hover:text-white">Akun Saya</a></li><li><a href="./cart.html" class="text-secondary hover:text-white">Keranjang</a></li><li><a href="./contact.html" class="text-secondary hover:text-white">Hubungi Kami</a></li></ul></div>
+                <div><h4 class="font-bold text-white text-lg mb-4">Ikuti Kami</h4><div class="flex space-x-4"><a href="#" class="text-secondary hover:text-white"><i data-lucide="facebook"></i></a><a href="#" class="text-secondary hover:text-white"><i data-lucide="instagram"></i></a><a href="#" class="text-secondary hover:text-white"><i data-lucide="twitter"></i></a><a href="#" class="text-secondary hover:text-white"><i data-lucide="youtube"></i></a></div></div>
+                <div><h4 class="font-bold text-white text-lg mb-4">Newsletter</h4><p class="text-secondary mb-3">Dapatkan info & promo terbaru dari kami.</p><form class="flex"><input type="email" placeholder="Email Anda" class="w-full rounded-l-md p-2 bg-accent/50 border border-transparent focus:border-primary focus:outline-none text-white"><button class="bg-primary text-white p-2 rounded-r-md hover:bg-secondary"><i data-lucide="send"></i></button></form></div>
+            </div>
+            <div class="border-t border-accent/50 pt-6 text-center text-secondary text-sm"><p>&copy; 2024 Revorz. All Rights Reserved.</p></div>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            lucide.createIcons();
+            AOS.init({ duration: 800, once: true, offset: 50 });
+
+            const hamburgerBtn = document.getElementById('hamburger-btn');
+            const closeSidebarBtn = document.getElementById('close-sidebar-btn');
+            const mobileSidebar = document.getElementById('mobile-sidebar');
+            hamburgerBtn.addEventListener('click', () => mobileSidebar.classList.remove('translate-x-full'));
+            closeSidebarBtn.addEventListener('click', () => mobileSidebar.classList.add('translate-x-full'));
+             document.addEventListener('click', (event) => {
+                if (!mobileSidebar.contains(event.target) && !hamburgerBtn.contains(event.target)) {
+                    mobileSidebar.classList.add('translate-x-full');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

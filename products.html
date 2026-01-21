@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Produk - Revorz Smartwatch</title>
+    <meta name="description" content="Katalog lengkap smartwatch Revorz. Temukan jam tangan pintar yang sesuai dengan gaya hidup Anda.">
+
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- AOS (Animate on Scroll) Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Kustomisasi Konfigurasi Tailwind -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#1524F4',
+                        'secondary': '#808DE6',
+                        'accent': '#061092',
+                        'deep': '#050E7E',
+                        'light': '#F0F2FF',
+                    },
+                    fontFamily: {
+                        'sans': ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            background-color: #03084B;
+            color: var(--light, #F0F2FF);
+        }
+        .filter-btn {
+            @apply px-4 py-2 border border-secondary rounded-full text-secondary transition-all duration-200;
+        }
+        .filter-btn:hover, .filter-btn.active {
+            @apply bg-primary text-white border-primary;
+        }
+    </style>
+</head>
+<body class="overflow-x-hidden">
+
+    <!-- ===== HEADER & NAVBAR ===== -->
+    <header id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-deep/80 backdrop-blur-sm shadow-lg">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="./index.html" class="text-3xl font-black text-white tracking-wider">REVORZ</a>
+            <ul class="hidden md:flex items-center space-x-8 text-white">
+                <li><a href="./index.html" class="hover:text-secondary transition-colors duration-200">Beranda</a></li>
+                <li><a href="./products.html" class="text-secondary font-bold transition-colors duration-200">Produk</a></li>
+                <li><a href="./contact.html" class="hover:text-secondary transition-colors duration-200">Kontak</a></li>
+            </ul>
+            <div class="flex items-center space-x-4">
+                <a href="./cart.html" class="text-white hover:text-secondary transition-colors"><i data-lucide="shopping-cart"></i></a>
+                <a href="./login.html" class="text-white hover:text-secondary transition-colors"><i data-lucide="user-circle"></i></a>
+                <button id="hamburger-btn" class="md:hidden text-white"><i data-lucide="menu" class="w-7 h-7"></i></button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- ===== MOBILE SIDEBAR ===== -->
+    <aside id="mobile-sidebar" class="fixed top-0 right-0 h-full w-64 bg-deep/95 backdrop-blur-sm z-50 transform translate-x-full transition-transform duration-300 ease-in-out md:hidden">
+        <div class="p-5 flex flex-col">
+            <div class="flex justify-between items-center mb-10">
+                <h2 class="text-xl font-bold text-white">Menu</h2>
+                <button id="close-sidebar-btn" class="text-white"><i data-lucide="x" class="w-7 h-7"></i></button>
+            </div>
+            <ul class="flex flex-col space-y-5 text-white">
+                <li><a href="./index.html" class="p-2 block hover:bg-primary/50 rounded-md">Beranda</a></li>
+                <li><a href="./products.html" class="p-2 block hover:bg-primary/50 rounded-md font-bold bg-primary/30">Produk</a></li>
+                <li><a href="./contact.html" class="p-2 block hover:bg-primary/50 rounded-md">Kontak</a></li>
+                <li class="border-t border-gray-700 pt-4 mt-4">
+                    <a href="./history.html" class="p-2 flex items-center gap-2 hover:bg-primary/50 rounded-md"><i data-lucide="history"></i> Riwayat</a>
+                </li>
+                 <li><a href="./login.html" class="p-2 flex items-center gap-2 hover:bg-primary/50 rounded-md"><i data-lucide="log-in"></i> Login</a></li>
+            </ul>
+        </div>
+    </aside>
+
+    <main class="pt-24">
+        <!-- ===== PAGE HEADER ===== -->
+        <section class="py-12 bg-deep text-center" data-aos="fade-in">
+            <div class="container mx-auto px-6">
+                <h1 class="text-4xl md:text-5xl font-black text-white">Katalog Produk</h1>
+                <p class="text-secondary mt-2">Temukan smartwatch yang sempurna untuk setiap momen.</p>
+            </div>
+        </section>
+
+        <!-- ===== FILTER & PRODUCT LIST ===== -->
+        <section class="py-16">
+            <div class="container mx-auto px-6">
+                <!-- Filter Buttons -->
+                <div id="filter-container" class="flex flex-wrap justify-center gap-4 mb-12" data-aos="fade-up">
+                    <button class="filter-btn active" data-filter="all">Semua</button>
+                    <button class="filter-btn" data-filter="sport">Sport & Outdoor</button>
+                    <button class="filter-btn" data-filter="daily">Daily & Fitness</button>
+                    <button class="filter-btn" data-filter="business">Business & Formal</button>
+                    <button class="filter-btn" data-filter="pro">Pro Series</button>
+                </div>
+
+                <!-- Product Grid -->
+                <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                    <!-- Products will be dynamically added here by JS, but we add them statically for this example -->
+
+                    <div class="product-card" data-category="sport" id="titan" data-aos="fade-up">
+                        <div class="group bg-accent/30 rounded-lg overflow-hidden shadow-lg hover:shadow-primary/50 transition-all duration-300 transform hover:-translate-y-2">
+                            <img src="https://placehold.co/400x400/061092/FFFFFF?text=R-Titan" alt="Revorz Titan" class="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-110">
+                            <div class="p-5">
+                                <h3 class="text-xl font-bold text-white mb-1">Revorz Titan</h3>
+                                <p class="text-secondary text-sm mb-3">Sport & Outdoor</p>
+                                <p class="text-2xl font-black text-primary">Rp 4.299.000</p>
+                            </div>
+                            <button class="block w-full bg-primary text-center text-white font-semibold p-3 hover:bg-secondary transition-colors">Tambah ke Keranjang</button>
+                        </div>
+                    </div>
+
+                    <div class="product-card" data-category="daily" id="lite" data-aos="fade-up">
+                        <div class="group bg-accent/30 rounded-lg overflow-hidden shadow-lg hover:shadow-primary/50 transition-all duration-300 transform hover:-translate-y-2">
+                            <img src="https://placehold.co/400x400/061092/FFFFFF?text=R-Lite" alt="Revorz Lite" class="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-110">
+                            <div class="p-5">
+                                <h3 class="text-xl font-bold text-white mb-1">Revorz Lite</h3>
+                                <p class="text-secondary text-sm mb-3">Daily & Fitness</p>
+                                <p class="text-2xl font-black text-primary">Rp 1.899.000</p>
+                            </div>
+                            <button class="block w-full bg-primary text-center text-white font-semibold p-3 hover:bg-secondary transition-colors">Tambah ke Keranjang</button>
+                        </div>
+                    </div>
+
+                    <div class="product-card" data-category="business" id="elegance" data-aos="fade-up">
+                        <div class="group bg-accent/30 rounded-lg overflow-hidden shadow-lg hover:shadow-primary/50 transition-all duration-300 transform hover:-translate-y-2">
+                            <img src="https://placehold.co/400x400/061092/FFFFFF?text=R-Elegance" alt="Revorz Elegance" class="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-110">
+                            <div class="p-5">
+                                <h3 class="text-xl font-bold text-white mb-1">Revorz Elegance</h3>
+                                <p class="text-secondary text-sm mb-3">Business & Formal</p>
+                                <p class="text-2xl font-black text-primary">Rp 3.599.000</p>
+                            </div>
+                            <button class="block w-full bg-primary text-center text-white font-semibold p-3 hover:bg-secondary transition-colors">Tambah ke Keranjang</button>
+                        </div>
+                    </div>
+
+                    <div class="product-card" data-category="pro" id="x1-pro" data-aos="fade-up">
+                        <div class="group bg-accent/30 rounded-lg overflow-hidden shadow-lg hover:shadow-primary/50 transition-all duration-300 transform hover:-translate-y-2">
+                            <img src="https://placehold.co/400x400/061092/FFFFFF?text=R-X1+Pro" alt="Revorz X1 Pro" class="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-110">
+                            <div class="p-5">
+                                <h3 class="text-xl font-bold text-white mb-1">Revorz X1 Pro</h3>
+                                <p class="text-secondary text-sm mb-3">Pro Series</p>
+                                <p class="text-2xl font-black text-primary">Rp 5.999.000</p>
+                            </div>
+                            <button class="block w-full bg-primary text-center text-white font-semibold p-3 hover:bg-secondary transition-colors">Tambah ke Keranjang</button>
+                        </div>
+                    </div>
+                    
+                    <div class="product-card" data-category="daily" data-aos="fade-up">
+                        <div class="group bg-accent/30 rounded-lg overflow-hidden shadow-lg hover:shadow-primary/50 transition-all duration-300 transform hover:-translate-y-2">
+                            <img src="https://placehold.co/400x400/061092/FFFFFF?text=R-Active" alt="Revorz Active" class="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-110">
+                            <div class="p-5">
+                                <h3 class="text-xl font-bold text-white mb-1">Revorz Active</h3>
+                                <p class="text-secondary text-sm mb-3">Daily & Fitness</p>
+                                <p class="text-2xl font-black text-primary">Rp 2.199.000</p>
+                            </div>
+                            <button class="block w-full bg-primary text-center text-white font-semibold p-3 hover:bg-secondary transition-colors">Tambah ke Keranjang</button>
+                        </div>
+                    </div>
+
+                    <div class="product-card" data-category="sport" data-aos="fade-up">
+                        <div class="group bg-accent/30 rounded-lg overflow-hidden shadow-lg hover:shadow-primary/50 transition-all duration-300 transform hover:-translate-y-2">
+                            <img src="https://placehold.co/400x400/061092/FFFFFF?text=R-Enduro" alt="Revorz Enduro" class="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-110">
+                            <div class="p-5">
+                                <h3 class="text-xl font-bold text-white mb-1">Revorz Enduro</h3>
+                                <p class="text-secondary text-sm mb-3">Sport & Outdoor</p>
+                                <p class="text-2xl font-black text-primary">Rp 4.999.000</p>
+                            </div>
+                            <button class="block w-full bg-primary text-center text-white font-semibold p-3 hover:bg-secondary transition-colors">Tambah ke Keranjang</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="bg-deep pt-16 pb-8">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <!-- About -->
+                <div class="col-span-1"><h3 class="text-2xl font-black text-white mb-4">REVORZ</h3><p class="text-secondary">Teknologi terdepan dalam balutan gaya yang tak lekang oleh waktu.</p></div>
+                <!-- Quick Links -->
+                <div>
+                    <h4 class="font-bold text-white text-lg mb-4">Navigasi</h4>
+                    <ul class="space-y-2">
+                        <li><a href="./products.html" class="text-secondary hover:text-white">Produk</a></li>
+                        <li><a href="./login.html" class="text-secondary hover:text-white">Akun Saya</a></li>
+                        <li><a href="./cart.html" class="text-secondary hover:text-white">Keranjang</a></li>
+                        <li><a href="./contact.html" class="text-secondary hover:text-white">Hubungi Kami</a></li>
+                    </ul>
+                </div>
+                <!-- Social Media -->
+                <div>
+                     <h4 class="font-bold text-white text-lg mb-4">Ikuti Kami</h4>
+                     <div class="flex space-x-4">
+                         <a href="#" class="text-secondary hover:text-white"><i data-lucide="facebook"></i></a>
+                         <a href="#" class="text-secondary hover:text-white"><i data-lucide="instagram"></i></a>
+                         <a href="#" class="text-secondary hover:text-white"><i data-lucide="twitter"></i></a>
+                         <a href="#" class="text-secondary hover:text-white"><i data-lucide="youtube"></i></a>
+                     </div>
+                </div>
+                <!-- Newsletter -->
+                <div>
+                    <h4 class="font-bold text-white text-lg mb-4">Newsletter</h4>
+                    <p class="text-secondary mb-3">Dapatkan info & promo terbaru dari kami.</p>
+                    <form class="flex">
+                        <input type="email" placeholder="Email Anda" class="w-full rounded-l-md p-2 bg-accent/50 border border-transparent focus:border-primary focus:outline-none text-white">
+                        <button class="bg-primary text-white p-2 rounded-r-md hover:bg-secondary"><i data-lucide="send"></i></button>
+                    </form>
+                </div>
+            </div>
+            <div class="border-t border-accent/50 pt-6 text-center text-secondary text-sm">
+                <p>&copy; 2024 Revorz. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- AOS (Animate on Scroll) JS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
+    <!-- Custom JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Inisialisasi
+            lucide.createIcons();
+            AOS.init({ duration: 800, once: true, offset: 50 });
+
+            // Logika Mobile Sidebar
+            const hamburgerBtn = document.getElementById('hamburger-btn');
+            const closeSidebarBtn = document.getElementById('close-sidebar-btn');
+            const mobileSidebar = document.getElementById('mobile-sidebar');
+            hamburgerBtn.addEventListener('click', () => mobileSidebar.classList.remove('translate-x-full'));
+            closeSidebarBtn.addEventListener('click', () => mobileSidebar.classList.add('translate-x-full'));
+            document.addEventListener('click', (event) => {
+                if (!mobileSidebar.contains(event.target) && !hamburgerBtn.contains(event.target)) {
+                    mobileSidebar.classList.add('translate-x-full');
+                }
+            });
+
+            // Logika Filter Produk
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const productCards = document.querySelectorAll('.product-card');
+
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // Update tombol aktif
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+
+                    const filter = button.dataset.filter;
+
+                    // Tampilkan/sembunyikan kartu produk
+                    productCards.forEach(card => {
+                        if (filter === 'all' || card.dataset.category === filter) {
+                            card.style.display = 'block';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>

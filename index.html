@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revorz - Smartwatch of The Future</title>
+    <meta name="description" content="Revorz - E-commerce smartwatch dengan desain modern, tech-focused, dan futuristik.">
+
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- AOS (Animate on Scroll) Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Kustomisasi Konfigurasi Tailwind -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#1524F4',   // Bluebonnet
+                        'secondary': '#808DE6', // Vista Blue
+                        'accent': '#061092',    // Dark Blue Accent
+                        'deep': '#050E7E',      // Dark Blue Deep
+                        'light': '#F0F2FF',     // Light background
+                    },
+                    fontFamily: {
+                        'sans': ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Sedikit CSS Kustom untuk efek-efek spesifik -->
+    <style>
+        body {
+            background-color: #03084B; /* Darker shade of deep blue */
+            color: var(--light, #F0F2FF);
+        }
+        .text-glow {
+            text-shadow: 0 0 8px rgba(128, 141, 230, 0.7), 0 0 20px rgba(21, 36, 244, 0.5);
+        }
+    </style>
+</head>
+<body class="overflow-x-hidden">
+
+    <!-- ===== HEADER & NAVBAR ===== -->
+    <header id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <!-- Logo -->
+            <a href="./index.html" class="text-3xl font-black text-white tracking-wider text-glow">REVORZ</a>
+
+            <!-- Desktop Menu -->
+            <ul class="hidden md:flex items-center space-x-8 text-white">
+                <li><a href="./index.html" class="hover:text-secondary transition-colors duration-200">Beranda</a></li>
+                <li><a href="./products.html" class="hover:text-secondary transition-colors duration-200">Produk</a></li>
+                <li><a href="./contact.html" class="hover:text-secondary transition-colors duration-200">Kontak</a></li>
+            </ul>
+
+            <!-- Ikon Kanan (Cart, User) & Hamburger -->
+            <div class="flex items-center space-x-4">
+                <a href="./cart.html" class="text-white hover:text-secondary transition-colors"><i data-lucide="shopping-cart"></i></a>
+                <a href="./login.html" class="text-white hover:text-secondary transition-colors"><i data-lucide="user-circle"></i></a>
+                <button id="hamburger-btn" class="md:hidden text-white">
+                    <i data-lucide="menu" class="w-7 h-7"></i>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- ===== MOBILE SIDEBAR ===== -->
+    <aside id="mobile-sidebar" class="fixed top-0 right-0 h-full w-64 bg-deep/95 backdrop-blur-sm z-50 transform translate-x-full transition-transform duration-300 ease-in-out md:hidden">
+        <div class="p-5 flex flex-col">
+            <div class="flex justify-between items-center mb-10">
+                <h2 class="text-xl font-bold text-white">Menu</h2>
+                <button id="close-sidebar-btn" class="text-white"><i data-lucide="x" class="w-7 h-7"></i></button>
+            </div>
+            <ul class="flex flex-col space-y-5 text-white">
+                <li><a href="./index.html" class="p-2 block hover:bg-primary/50 rounded-md">Beranda</a></li>
+                <li><a href="./products.html" class="p-2 block hover:bg-primary/50 rounded-md">Produk</a></li>
+                <li><a href="./contact.html" class="p-2 block hover:bg-primary/50 rounded-md">Kontak</a></li>
+                <li class="border-t border-gray-700 pt-4 mt-4">
+                    <a href="./history.html" class="p-2 flex items-center gap-2 hover:bg-primary/50 rounded-md">
+                        <i data-lucide="history"></i> Riwayat
+                    </a>
+                </li>
+                 <li>
+                    <a href="./login.html" class="p-2 flex items-center gap-2 hover:bg-primary/50 rounded-md">
+                        <i data-lucide="log-in"></i> Login
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </aside>
+
+    <main>
+        <!-- ===== HERO SECTION ===== -->
+        <section class="relative min-h-screen flex items-center justify-center pt-20 bg-gradient-to-br from-accent to-deep">
+            <div class="container mx-auto px-6 flex flex-col md:flex-row items-center gap-12">
+                <!-- Teks Kiri -->
+                <div class="md:w-1/2 text-center md:text-left" data-aos="fade-right">
+                    <h1 class="text-5xl md:text-7xl font-black text-white leading-tight mb-4 text-glow">
+                        The Future <span class="text-primary">on Your</span> Wrist.
+                    </h1>
+                    <p class="text-lg text-secondary mb-8 max-w-lg mx-auto md:mx-0">
+                        Jelajahi presisi, gaya, dan inovasi dengan koleksi smartwatch Revorz. Didesain untuk performa, dibuat untuk Anda.
+                    </p>
+                    <a href="./products.html" class="inline-block bg-primary text-white font-bold py-3 px-8 rounded-full hover:bg-secondary transition-all duration-300 transform hover:scale-105">
+                        Jelajahi Koleksi
+                    </a>
+                </div>
+                <!-- Gambar Kanan -->
+                <div class="md:w-1/2" data-aos="fade-left" data-aos-delay="200">
+                    <img src="https://placehold.co/600x600/050E7E/808DE6?text=Revorz\nWatch" alt="Smartwatch Revorz" class="w-full h-auto max-w-md mx-auto animate-pulse-slow">
+                </div>
+            </div>
+             <!-- Elemen dekoratif -->
+            <div class="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-black/20 to-transparent"></div>
+        </section>
+
+        <!-- ===== AD-BANNER SECTION ===== -->
+        <section class="py-20" data-aos="zoom-in-up">
+            <div class="container mx-auto px-6">
+                <div class="bg-gradient-to-r from-primary to-accent rounded-xl shadow-2xl p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-8">
+                    <div class="md:w-2/3 text-center md:text-left">
+                        <h2 class="text-3xl md:text-4xl font-bold text-white mb-3">Memperkenalkan Revorz X1 Pro</h2>
+                        <p class="text-secondary mb-6">Layar AMOLED ultra-jernih, GPS dual-band, dan daya tahan baterai hingga 2 minggu. Siap untuk setiap petualangan.</p>
+                        <a href="./products.html#x1-pro" class="inline-block bg-white text-primary font-bold py-3 px-6 rounded-lg hover:bg-gray-200 transition-colors">
+                            Lihat Detail
+                        </a>
+                    </div>
+                    <div class="md:w-1/3">
+                        <img src="https://placehold.co/300x300/FFFFFF/1524F4?text=X1+Pro" alt="Revorz X1 Pro" class="w-48 h-48 md:w-full md:h-auto mx-auto transform hover:rotate-6 transition-transform">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== FEATURED PRODUCTS SECTION ===== -->
+        <section class="py-20">
+            <div class="container mx-auto px-6">
+                <h2 class="text-4xl font-bold text-center mb-12" data-aos="fade-up">Produk Unggulan</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+
+                    <!-- Product Card 1 -->
+                    <div class="group bg-accent/30 rounded-lg overflow-hidden shadow-lg hover:shadow-primary/50 transition-all duration-300 transform hover:-translate-y-2" data-aos="fade-up" data-aos-delay="100">
+                        <div class="relative overflow-hidden">
+                            <img src="https://placehold.co/400x400/061092/FFFFFF?text=R-Titan" alt="Revorz Titan" class="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-110">
+                        </div>
+                        <div class="p-5">
+                            <h3 class="text-xl font-bold text-white mb-1">Revorz Titan</h3>
+                            <p class="text-secondary text-sm mb-3">Sport &amp; Outdoor</p>
+                            <p class="text-2xl font-black text-primary">Rp 4.299.000</p>
+                        </div>
+                        <a href="./products.html#titan" class="block w-full bg-primary text-center text-white font-semibold p-3 hover:bg-secondary transition-colors">Lihat Detail</a>
+                    </div>
+
+                    <!-- Product Card 2 -->
+                    <div class="group bg-accent/30 rounded-lg overflow-hidden shadow-lg hover:shadow-primary/50 transition-all duration-300 transform hover:-translate-y-2" data-aos="fade-up" data-aos-delay="200">
+                        <div class="relative overflow-hidden">
+                            <img src="https://placehold.co/400x400/061092/FFFFFF?text=R-Lite" alt="Revorz Lite" class="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-110">
+                        </div>
+                        <div class="p-5">
+                            <h3 class="text-xl font-bold text-white mb-1">Revorz Lite</h3>
+                            <p class="text-secondary text-sm mb-3">Daily &amp; Fitness</p>
+                            <p class="text-2xl font-black text-primary">Rp 1.899.000</p>
+                        </div>
+                         <a href="./products.html#lite" class="block w-full bg-primary text-center text-white font-semibold p-3 hover:bg-secondary transition-colors">Lihat Detail</a>
+                    </div>
+
+                    <!-- Product Card 3 -->
+                    <div class="group bg-accent/30 rounded-lg overflow-hidden shadow-lg hover:shadow-primary/50 transition-all duration-300 transform hover:-translate-y-2" data-aos="fade-up" data-aos-delay="300">
+                        <div class="relative overflow-hidden">
+                             <img src="https://placehold.co/400x400/061092/FFFFFF?text=R-Elegance" alt="Revorz Elegance" class="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-110">
+                        </div>
+                        <div class="p-5">
+                            <h3 class="text-xl font-bold text-white mb-1">Revorz Elegance</h3>
+                            <p class="text-secondary text-sm mb-3">Business &amp; Formal</p>
+                            <p class="text-2xl font-black text-primary">Rp 3.599.000</p>
+                        </div>
+                         <a href="./products.html#elegance" class="block w-full bg-primary text-center text-white font-semibold p-3 hover:bg-secondary transition-colors">Lihat Detail</a>
+                    </div>
+
+                    <!-- Product Card 4 -->
+                    <div class="group bg-accent/30 rounded-lg overflow-hidden shadow-lg hover:shadow-primary/50 transition-all duration-300 transform hover:-translate-y-2" data-aos="fade-up" data-aos-delay="400">
+                        <div class="relative overflow-hidden">
+                            <img src="https://placehold.co/400x400/061092/FFFFFF?text=R-X1+Pro" alt="Revorz X1 Pro" class="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-110">
+                        </div>
+                        <div class="p-5">
+                            <h3 class="text-xl font-bold text-white mb-1">Revorz X1 Pro</h3>
+                            <p class="text-secondary text-sm mb-3">Pro Series</p>
+                            <p class="text-2xl font-black text-primary">Rp 5.999.000</p>
+                        </div>
+                         <a href="./products.html#x1-pro" class="block w-full bg-primary text-center text-white font-semibold p-3 hover:bg-secondary transition-colors">Lihat Detail</a>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="bg-deep pt-16 pb-8">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <!-- About -->
+                <div class="col-span-1">
+                    <h3 class="text-2xl font-black text-white mb-4">REVORZ</h3>
+                    <p class="text-secondary">Teknologi terdepan dalam balutan gaya yang tak lekang oleh waktu.</p>
+                </div>
+
+                <!-- Quick Links -->
+                <div>
+                    <h4 class="font-bold text-white text-lg mb-4">Navigasi</h4>
+                    <ul class="space-y-2">
+                        <li><a href="./products.html" class="text-secondary hover:text-white">Produk</a></li>
+                        <li><a href="./login.html" class="text-secondary hover:text-white">Akun Saya</a></li>
+                        <li><a href="./cart.html" class="text-secondary hover:text-white">Keranjang</a></li>
+                        <li><a href="./contact.html" class="text-secondary hover:text-white">Hubungi Kami</a></li>
+                    </ul>
+                </div>
+
+                <!-- Social Media -->
+                <div>
+                     <h4 class="font-bold text-white text-lg mb-4">Ikuti Kami</h4>
+                     <div class="flex space-x-4">
+                         <a href="#" class="text-secondary hover:text-white"><i data-lucide="facebook"></i></a>
+                         <a href="#" class="text-secondary hover:text-white"><i data-lucide="instagram"></i></a>
+                         <a href="#" class="text-secondary hover:text-white"><i data-lucide="twitter"></i></a>
+                         <a href="#" class="text-secondary hover:text-white"><i data-lucide="youtube"></i></a>
+                     </div>
+                </div>
+
+                <!-- Newsletter -->
+                <div>
+                    <h4 class="font-bold text-white text-lg mb-4">Newsletter</h4>
+                    <p class="text-secondary mb-3">Dapatkan info &amp; promo terbaru dari kami.</p>
+                    <form class="flex">
+                        <input type="email" placeholder="Email Anda" class="w-full rounded-l-md p-2 bg-accent/50 border border-transparent focus:border-primary focus:outline-none text-white">
+                        <button class="bg-primary text-white p-2 rounded-r-md hover:bg-secondary"><i data-lucide="send"></i></button>
+                    </form>
+                </div>
+            </div>
+            <div class="border-t border-accent/50 pt-6 text-center text-secondary text-sm">
+                <p>&copy; 2024 Revorz. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+
+    <!-- AOS (Animate on Scroll) JS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- Custom JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Inisialisasi Lucide Icons
+            lucide.createIcons();
+
+            // Inisialisasi AOS
+            AOS.init({
+                duration: 800,
+                once: true, // Animasi hanya berjalan sekali
+                offset: 50,
+            });
+
+            // Logika Navbar
+            const navbar = document.getElementById('navbar');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    navbar.classList.add('bg-deep/80', 'backdrop-blur-sm', 'shadow-lg');
+                } else {
+                    navbar.classList.remove('bg-deep/80', 'backdrop-blur-sm', 'shadow-lg');
+                }
+            });
+
+            // Logika Mobile Sidebar
+            const hamburgerBtn = document.getElementById('hamburger-btn');
+            const closeSidebarBtn = document.getElementById('close-sidebar-btn');
+            const mobileSidebar = document.getElementById('mobile-sidebar');
+
+            hamburgerBtn.addEventListener('click', () => {
+                mobileSidebar.classList.remove('translate-x-full');
+            });
+
+            closeSidebarBtn.addEventListener('click', () => {
+                mobileSidebar.classList.add('translate-x-full');
+            });
+            
+             // Menutup sidebar jika klik di luar area
+            document.addEventListener('click', (event) => {
+                if (!mobileSidebar.contains(event.target) && !hamburgerBtn.contains(event.target)) {
+                    mobileSidebar.classList.add('translate-x-full');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

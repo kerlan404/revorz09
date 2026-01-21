@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keranjang Belanja - Revorz Smartwatch</title>
+
+    <!-- Depedensi & Konfigurasi (sama seperti halaman lain) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { 'primary': '#1524F4', 'secondary': '#808DE6', 'accent': '#061092', 'deep': '#050E7E', 'light': '#F0F2FF' },
+                    fontFamily: { 'sans': ['Inter', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #03084B; color: var(--light, #F0F2FF); }
+        .quantity-btn { @apply w-8 h-8 bg-accent/50 hover:bg-primary text-white transition-colors duration-200; }
+    </style>
+</head>
+<body class="overflow-x-hidden">
+
+    <!-- ===== HEADER & NAVBAR ===== -->
+    <header id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-deep/80 backdrop-blur-sm shadow-lg">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="./index.html" class="text-3xl font-black text-white tracking-wider">REVORZ</a>
+            <ul class="hidden md:flex items-center space-x-8 text-white">
+                <li><a href="./index.html" class="hover:text-secondary">Beranda</a></li>
+                <li><a href="./products.html" class="hover:text-secondary">Produk</a></li>
+                <li><a href="./contact.html" class="hover:text-secondary">Kontak</a></li>
+            </ul>
+            <div class="flex items-center space-x-4">
+                <a href="./cart.html" class="relative text-primary"><i data-lucide="shopping-cart"></i><span class="absolute -top-2 -right-2 bg-red-500 text-xs text-white rounded-full w-4 h-4 flex items-center justify-center">2</span></a>
+                <a href="./login.html" class="text-white hover:text-secondary"><i data-lucide="user-circle"></i></a>
+                <button id="hamburger-btn" class="md:hidden text-white"><i data-lucide="menu" class="w-7 h-7"></i></button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- ===== MOBILE SIDEBAR ===== -->
+    <aside id="mobile-sidebar" class="fixed top-0 right-0 h-full w-64 bg-deep/95 backdrop-blur-sm z-50 transform translate-x-full transition-transform duration-300 ease-in-out md:hidden">
+        <div class="p-5 flex flex-col">
+            <div class="flex justify-between items-center mb-10"><h2 class="text-xl font-bold text-white">Menu</h2><button id="close-sidebar-btn" class="text-white"><i data-lucide="x" class="w-7 h-7"></i></button></div>
+            <ul class="flex flex-col space-y-5 text-white">
+                <li><a href="./index.html" class="p-2 block hover:bg-primary/50 rounded-md">Beranda</a></li>
+                <li><a href="./products.html" class="p-2 block hover:bg-primary/50 rounded-md">Produk</a></li>
+                <li><a href="./contact.html" class="p-2 block hover:bg-primary/50 rounded-md">Kontak</a></li>
+                <li class="border-t border-gray-700 pt-4 mt-4"><a href="./history.html" class="p-2 flex items-center gap-2 hover:bg-primary/50 rounded-md"><i data-lucide="history"></i> Riwayat</a></li>
+                <li><a href="./login.html" class="p-2 flex items-center gap-2 hover:bg-primary/50 rounded-md"><i data-lucide="log-in"></i> Login</a></li>
+            </ul>
+        </div>
+    </aside>
+
+    <main class="pt-24">
+        <!-- ===== PAGE HEADER ===== -->
+        <section class="py-12 bg-deep text-center" data-aos="fade-in">
+            <div class="container mx-auto px-6">
+                <h1 class="text-4xl md:text-5xl font-black text-white">Keranjang Belanja</h1>
+                <p class="text-secondary mt-2">Periksa item Anda dan lanjutkan ke pembayaran.</p>
+            </div>
+        </section>
+
+        <!-- ===== CART CONTENT ===== -->
+        <section class="py-16">
+            <div class="container mx-auto px-6">
+                <div class="flex flex-col lg:flex-row gap-12" data-aos="fade-up">
+
+                    <!-- Cart Items List -->
+                    <div class="lg:w-2/3">
+                        <div class="space-y-6">
+
+                            <!-- Cart Item 1 -->
+                            <div class="flex flex-col sm:flex-row items-center gap-6 bg-accent/30 p-4 rounded-lg">
+                                <img src="https://placehold.co/150x150/061092/FFFFFF?text=R-Titan" alt="Product Image" class="w-28 h-28 object-cover rounded-md">
+                                <div class="flex-grow text-center sm:text-left">
+                                    <h3 class="text-xl font-bold text-white">Revorz Titan</h3>
+                                    <p class="text-secondary text-sm">Sport & Outdoor</p>
+                                    <p class="text-lg font-semibold text-primary mt-1">Rp 4.299.000</p>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <button class="quantity-btn rounded-l-md">-</button>
+                                    <input type="text" value="1" class="w-12 h-8 text-center bg-transparent border-y border-secondary text-white" readonly>
+                                    <button class="quantity-btn rounded-r-md">+</button>
+                                </div>
+                                <p class="text-lg font-bold text-white w-28 text-center">Rp 4.299.000</p>
+                                <button class="text-red-500 hover:text-red-400"><i data-lucide="trash-2"></i></button>
+                            </div>
+
+                            <!-- Cart Item 2 -->
+                            <div class="flex flex-col sm:flex-row items-center gap-6 bg-accent/30 p-4 rounded-lg">
+                                <img src="https://placehold.co/150x150/061092/FFFFFF?text=R-Lite" alt="Product Image" class="w-28 h-28 object-cover rounded-md">
+                                <div class="flex-grow text-center sm:text-left">
+                                    <h3 class="text-xl font-bold text-white">Revorz Lite</h3>
+                                    <p class="text-secondary text-sm">Daily & Fitness</p>
+                                    <p class="text-lg font-semibold text-primary mt-1">Rp 1.899.000</p>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <button class="quantity-btn rounded-l-md">-</button>
+                                    <input type="text" value="1" class="w-12 h-8 text-center bg-transparent border-y border-secondary text-white" readonly>
+                                    <button class="quantity-btn rounded-r-md">+</button>
+                                </div>
+                                <p class="text-lg font-bold text-white w-28 text-center">Rp 1.899.000</p>
+                                <button class="text-red-500 hover:text-red-400"><i data-lucide="trash-2"></i></button>
+                            </div>
+                            
+                        </div>
+                        <a href="./products.html" class="inline-flex items-center gap-2 text-secondary hover:text-white mt-8"><i data-lucide="arrow-left"></i> Lanjut Belanja</a>
+                    </div>
+
+                    <!-- Cart Summary -->
+                    <div class="lg:w-1/3">
+                        <div class="bg-accent/30 p-8 rounded-lg sticky top-28">
+                            <h2 class="text-2xl font-bold text-white mb-6">Ringkasan Belanja</h2>
+                            <div class="space-y-4 text-white">
+                                <div class="flex justify-between">
+                                    <span>Subtotal</span>
+                                    <span>Rp 6.198.000</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>Pengiriman</span>
+                                    <span>Rp 50.000</span>
+                                </div>
+                                <div class="border-t border-secondary/50 my-4"></div>
+                                <div class="flex justify-between text-xl font-bold">
+                                    <span>Total</span>
+                                    <span>Rp 6.248.000</span>
+                                </div>
+                            </div>
+                            <a href="./checkout.html" class="block w-full text-center bg-primary text-white font-bold py-3 px-8 rounded-full hover:bg-secondary transition-all duration-300 mt-8">
+                                Lanjut ke Pembayaran
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="bg-deep pt-16 pb-8">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div class="col-span-1"><h3 class="text-2xl font-black text-white mb-4">REVORZ</h3><p class="text-secondary">Teknologi terdepan dalam balutan gaya yang tak lekang oleh waktu.</p></div>
+                <div><h4 class="font-bold text-white text-lg mb-4">Navigasi</h4><ul class="space-y-2"><li><a href="./products.html" class="text-secondary hover:text-white">Produk</a></li><li><a href="./login.html" class="text-secondary hover:text-white">Akun Saya</a></li><li><a href="./cart.html" class="text-secondary hover:text-white">Keranjang</a></li><li><a href="./contact.html" class="text-secondary hover:text-white">Hubungi Kami</a></li></ul></div>
+                <div><h4 class="font-bold text-white text-lg mb-4">Ikuti Kami</h4><div class="flex space-x-4"><a href="#" class="text-secondary hover:text-white"><i data-lucide="facebook"></i></a><a href="#" class="text-secondary hover:text-white"><i data-lucide="instagram"></i></a><a href="#" class="text-secondary hover:text-white"><i data-lucide="twitter"></i></a><a href="#" class="text-secondary hover:text-white"><i data-lucide="youtube"></i></a></div></div>
+                <div><h4 class="font-bold text-white text-lg mb-4">Newsletter</h4><p class="text-secondary mb-3">Dapatkan info & promo terbaru dari kami.</p><form class="flex"><input type="email" placeholder="Email Anda" class="w-full rounded-l-md p-2 bg-accent/50 border border-transparent focus:border-primary focus:outline-none text-white"><button class="bg-primary text-white p-2 rounded-r-md hover:bg-secondary"><i data-lucide="send"></i></button></form></div>
+            </div>
+            <div class="border-t border-accent/50 pt-6 text-center text-secondary text-sm"><p>&copy; 2024 Revorz. All Rights Reserved.</p></div>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            lucide.createIcons();
+            AOS.init({ duration: 800, once: true, offset: 50 });
+
+            const hamburgerBtn = document.getElementById('hamburger-btn');
+            const closeSidebarBtn = document.getElementById('close-sidebar-btn');
+            const mobileSidebar = document.getElementById('mobile-sidebar');
+            hamburgerBtn.addEventListener('click', () => mobileSidebar.classList.remove('translate-x-full'));
+            closeSidebarBtn.addEventListener('click', () => mobileSidebar.classList.add('translate-x-full'));
+            document.addEventListener('click', (event) => {
+                if (!mobileSidebar.contains(event.target) && !hamburgerBtn.contains(event.target)) {
+                    mobileSidebar.classList.add('translate-x-full');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

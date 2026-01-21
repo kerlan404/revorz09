@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Akun - Revorz Smartwatch</title>
+
+    <!-- Depedensi & Konfigurasi -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { 'primary': '#1524F4', 'secondary': '#808DE6', 'accent': '#061092', 'deep': '#050E7E', 'light': '#F0F2FF' },
+                    fontFamily: { 'sans': ['Inter', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background: linear-gradient(135deg, #050E7E, #03084B); color: var(--light, #F0F2FF); }
+        .form-input { @apply w-full bg-accent/50 border border-secondary/30 rounded-md p-3 text-white focus:outline-none focus:border-primary transition-colors; }
+        .form-label { @apply block text-secondary mb-2 text-sm; }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-6">
+
+    <div class="w-full max-w-md mx-auto">
+        <!-- Logo -->
+        <a href="./index.html" class="block text-center text-4xl font-black text-white tracking-wider mb-8">REVORZ</a>
+
+        <!-- Form Card -->
+        <div class="bg-deep/50 backdrop-blur-lg p-8 rounded-xl shadow-2xl">
+            <h1 class="text-3xl font-bold text-white text-center mb-2">Buat Akun Baru</h1>
+            <p class="text-secondary text-center mb-8">Gabung bersama Revorz dan mulai petualanganmu.</p>
+
+            <form action="#" method="POST" class="space-y-5">
+                <div>
+                    <label for="fullname" class="form-label">Nama Lengkap</label>
+                    <div class="relative">
+                         <i data-lucide="user" class="absolute left-3 top-1/2 -translate-y-1/2 text-secondary"></i>
+                         <input type="text" id="fullname" name="fullname" class="form-input pl-12" placeholder="Nama lengkap Anda" required>
+                    </div>
+                </div>
+                
+                <div>
+                    <label for="email" class="form-label">Email</label>
+                    <div class="relative">
+                         <i data-lucide="mail" class="absolute left-3 top-1/2 -translate-y-1/2 text-secondary"></i>
+                         <input type="email" id="email" name="email" class="form-input pl-12" placeholder="email@anda.com" required>
+                    </div>
+                </div>
+
+                <div>
+                    <label for="password" class="form-label">Password</label>
+                     <div class="relative">
+                         <i data-lucide="lock" class="absolute left-3 top-1/2 -translate-y-1/2 text-secondary"></i>
+                        <input type="password" id="password" name="password" class="form-input pl-12" placeholder="Minimal 8 karakter" required>
+                    </div>
+                </div>
+                
+                <div>
+                    <label for="confirm-password" class="form-label">Konfirmasi Password</label>
+                     <div class="relative">
+                         <i data-lucide="key-round" class="absolute left-3 top-1/2 -translate-y-1/2 text-secondary"></i>
+                        <input type="password" id="confirm-password" name="confirm-password" class="form-input pl-12" placeholder="Ulangi password" required>
+                    </div>
+                </div>
+
+                <div>
+                    <button type="submit" class="w-full text-center bg-primary text-white font-bold py-3 px-8 rounded-full hover:bg-secondary transition-all duration-300 mt-4">
+                        Daftar
+                    </button>
+                </div>
+            </form>
+            
+            <div class="text-center mt-8">
+                <p class="text-secondary">
+                    Sudah punya akun? <a href="./login.html" class="font-semibold text-primary hover:underline">Login di sini</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
