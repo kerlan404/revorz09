@@ -3,103 +3,159 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Revorz Smartwatch</title>
-
-    <!-- Depedensi & Konfigurasi -->
+    <title>Revorz - Login & Register</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: { 'primary': '#1524F4', 'secondary': '#808DE6', 'accent': '#061092', 'deep': '#050E7E', 'light': '#F0F2FF' },
-                    fontFamily: { 'sans': ['Inter', 'sans-serif'] }
-                }
-            }
-        }
-    </script>
     <style>
-        body { background: linear-gradient(135deg, #050E7E, #03084B); color: var(--light, #F0F2FF); }
-        .form-input { @apply w-full bg-accent/50 border border-secondary/30 rounded-md p-3 text-white focus:outline-none focus:border-primary transition-colors; }
-        .form-label { @apply block text-secondary mb-2 text-sm; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #000000;
+            overflow: hidden;
+        }
+
+        .glass-card {
+            background: rgba(18, 18, 18, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(192, 192, 192, 0.2);
+            box-shadow: 0 0 30px rgba(21, 36, 244, 0.1);
+        }
+
+        .silver-text {
+            background: linear-gradient(145deg, #ffffff 0%, #C0C0C0 50%, #808080 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .btn-primary {
+            background-color: #1524f4;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(21, 36, 244, 0.4);
+        }
+
+        .btn-primary:hover {
+            background-color: #050e7e;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(21, 36, 244, 0.6);
+        }
+
+        /* Slide Animation Logic */
+        .form-container {
+            transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            width: 200%;
+            display: flex;
+        }
+
+        .slide-to-register { transform: translateX(-50%); }
+        .slide-to-login { transform: translateX(0%); }
+
+        .form-box { width: 50%; padding: 2.5rem; }
     </style>
 </head>
-<body class="bg-deep">
+<body class="flex items-center justify-center min-h-screen p-4">
 
-    <div class="flex items-center justify-center min-h-screen p-4">
-        <div class="grid grid-cols-1 lg:grid-cols-2 w-full max-w-4xl bg-accent/30 rounded-2xl shadow-2xl overflow-hidden">
+    <div class="absolute top-0 left-0 w-full h-full overflow-hidden z-0">
+        <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-[#1524f4] opacity-10 blur-[120px] rounded-full"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-[#050e7e] opacity-10 blur-[120px] rounded-full"></div>
+    </div>
+
+    <div class="relative z-10 w-full max-w-md overflow-hidden rounded-3xl glass-card">
+        
+        <div id="formWrapper" class="form-container">
             
-            <!-- Left Side: Image -->
-            <div class="hidden lg:block">
-                <img src="https://placehold.co/600x800/050E7E/808DE6?text=REVORZ" alt="Revorz Brand" class="w-full h-full object-cover">
-            </div>
+            <div class="form-box">
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-extrabold silver-text mb-2 tracking-tighter">REVORZ</h2>
+                    <p class="text-gray-400 text-sm">Selamat datang kembali, Explorer.</p>
+                </div>
 
-            <!-- Right Side: Form -->
-            <div class="p-8 md:p-12 flex flex-col justify-center">
-                <!-- Logo for mobile -->
-                <a href="./index.html" class="block lg:hidden text-center text-3xl font-black text-white tracking-wider mb-6">REVORZ</a>
-
-                <h1 class="text-3xl font-bold text-white mb-2">Selamat Datang Kembali</h1>
-                <p class="text-secondary mb-8">Masuk untuk mengakses dasbor Anda.</p>
-
-                <form id="login-form" class="space-y-6">
-                    <div>
-                        <label for="email" class="form-label">Email</label>
-                        <div class="relative">
-                            <i data-lucide="mail" class="absolute left-3 top-1/2 -translate-y-1/2 text-secondary w-5 h-5"></i>
-                            <input type="email" id="email" name="email" class="form-input pl-11" placeholder="email@anda.com" required>
-                        </div>
+                <form action="#" class="space-y-5">
+                    <div class="relative">
+                        <i data-lucide="mail" class="absolute left-3 top-3.5 w-5 h-5 text-gray-500"></i>
+                        <input type="email" placeholder="Email Address" required
+                            class="w-full bg-[#1a1a1a] border border-gray-800 rounded-xl py-3 px-10 text-white focus:outline-none focus:border-[#1524f4] transition-all">
+                    </div>
+                    
+                    <div class="relative">
+                        <i data-lucide="lock" class="absolute left-3 top-3.5 w-5 h-5 text-gray-500"></i>
+                        <input type="password" placeholder="Password" required
+                            class="w-full bg-[#1a1a1a] border border-gray-800 rounded-xl py-3 px-10 text-white focus:outline-none focus:border-[#1524f4] transition-all">
                     </div>
 
-                    <div>
-                        <label for="password" class="form-label">Password</label>
-                        <div class="relative">
-                            <i data-lucide="lock" class="absolute left-3 top-1/2 -translate-y-1/2 text-secondary w-5 h-5"></i>
-                            <input type="password" id="password" name="password" class="form-input pl-11" placeholder="••••••••" required>
-                        </div>
-                        <a href="#" class="text-xs text-secondary hover:text-primary float-right mt-2 transition-colors">Lupa Password?</a>
+                    <div class="text-right">
+                        <a href="#" class="text-xs text-[#1524f4] hover:underline">Lupa Password?</a>
                     </div>
 
-                    <div>
-                        <button type="submit" class="w-full text-center bg-primary text-white font-bold py-3 px-8 rounded-full hover:bg-secondary transition-all duration-300 mt-4 transform hover:scale-105">
-                            Login
-                        </button>
-                    </div>
+                    <button type="submit" class="w-full btn-primary text-white font-bold py-3 rounded-xl uppercase tracking-wider text-sm">
+                        Sign In
+                    </button>
                 </form>
-                
-                <div class="text-center mt-8">
-                    <p class="text-secondary">
-                        Belum punya akun? <a href="./register.html" class="font-semibold text-primary hover:underline">Daftar di sini</a>
+
+                <div class="mt-8 text-center">
+                    <p class="text-gray-500 text-sm">
+                        Belum punya akun? 
+                        <button onclick="toggleForm('register')" class="text-white font-semibold hover:text-[#1524f4] transition-colors">Daftar sekarang</button>
                     </p>
                 </div>
             </div>
+
+            <div class="form-box">
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-extrabold silver-text mb-2 tracking-tighter">JOIN REVORZ</h2>
+                    <p class="text-gray-400 text-sm">Mulai perjalanan teknologi Anda.</p>
+                </div>
+
+                <form action="#" class="space-y-4">
+                    <div class="relative">
+                        <i data-lucide="user" class="absolute left-3 top-3.5 w-5 h-5 text-gray-500"></i>
+                        <input type="text" placeholder="Full Name" required
+                            class="w-full bg-[#1a1a1a] border border-gray-800 rounded-xl py-3 px-10 text-white focus:outline-none focus:border-[#1524f4] transition-all">
+                    </div>
+
+                    <div class="relative">
+                        <i data-lucide="mail" class="absolute left-3 top-3.5 w-5 h-5 text-gray-500"></i>
+                        <input type="email" placeholder="Email Address" required
+                            class="w-full bg-[#1a1a1a] border border-gray-800 rounded-xl py-3 px-10 text-white focus:outline-none focus:border-[#1524f4] transition-all">
+                    </div>
+                    
+                    <div class="relative">
+                        <i data-lucide="lock" class="absolute left-3 top-3.5 w-5 h-5 text-gray-500"></i>
+                        <input type="password" placeholder="Create Password" required
+                            class="w-full bg-[#1a1a1a] border border-gray-800 rounded-xl py-3 px-10 text-white focus:outline-none focus:border-[#1524f4] transition-all">
+                    </div>
+
+                    <button type="submit" class="w-full btn-primary text-white font-bold py-3 rounded-xl uppercase tracking-wider text-sm mt-4">
+                        Create Account
+                    </button>
+                </form>
+
+                <div class="mt-8 text-center">
+                    <p class="text-gray-500 text-sm">
+                        Sudah punya akun? 
+                        <button onclick="toggleForm('login')" class="text-white font-semibold hover:text-[#1524f4] transition-colors">Masuk di sini</button>
+                    </p>
+                </div>
+            </div>
+
         </div>
     </div>
 
-    <!-- Dummy Success Alert -->
-    <div id="success-alert" class="hidden fixed top-5 right-5 bg-green-500/90 text-white p-4 rounded-lg shadow-lg flex items-center gap-3">
-        <i data-lucide="check-circle" class="w-6 h-6"></i>
-        <span>Login Berhasil! Mengalihkan...</span>
-    </div>
-
     <script>
+        // Initialize Lucide Icons
         lucide.createIcons();
 
-        const loginForm = document.getElementById('login-form');
-        const successAlert = document.getElementById('success-alert');
-
-        loginForm.addEventListener('submit', function(e) {
-            e.preventDefault(); // Mencegah form submit standar
-
-            // Tampilkan notifikasi sukses
-            successAlert.classList.remove('hidden');
-
-            // Redirect ke halaman utama setelah beberapa detik (simulasi)
-            setTimeout(() => {
-                window.location.href = './index.html'; 
-            }, 2000); // Redirect setelah 2 detik
-        });
+        // Toggle Form Animation
+        function toggleForm(type) {
+            const wrapper = document.getElementById('formWrapper');
+            if (type === 'register') {
+                wrapper.classList.add('slide-to-register');
+                wrapper.classList.remove('slide-to-login');
+            } else {
+                wrapper.classList.add('slide-to-login');
+                wrapper.classList.remove('slide-to-register');
+            }
+        }
     </script>
 </body>
 </html>
