@@ -3,83 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Revorz - Create Account</title>
+    <title>Revorz - Join The Future</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #000000; }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
         
-        .glass-card {
-            background: rgba(18, 18, 18, 0.9);
-            border: 1px solid rgba(192, 192, 192, 0.3); /* Border Silver */
-            box-shadow: 0 0 40px rgba(21, 36, 244, 0.15);
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: radial-gradient(circle at center, #061092 0%, #000000 100%);
+            color: white;
+            min-height: screen;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .silver-gradient-text {
-            background: linear-gradient(180deg, #FFFFFF 0%, #A0A0A0 100%);
+        .glass-card {
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(192, 192, 192, 0.3);
+            box-shadow: 0 0 60px rgba(21, 36, 244, 0.2);
+            animation: slideUp 0.8s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .silver-text {
+            background: linear-gradient(180deg, #FFFFFF 0%, #C0C0C0 45%, #808080 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        .input-focus:focus {
+        .input-box {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(128, 141, 230, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .input-box:focus {
             border-color: #1524f4;
-            box-shadow: 0 0 10px rgba(21, 36, 244, 0.3);
+            box-shadow: 0 0 15px rgba(21, 36, 244, 0.4);
+            background: rgba(255, 255, 255, 0.07);
+        }
+
+        .btn-blue {
+            background: linear-gradient(90deg, #1524f4, #050e7e);
+            box-shadow: 0 4px 20px rgba(21, 36, 244, 0.3);
+        }
+
+        .btn-blue:hover {
+            transform: scale(1.03);
+            filter: brightness(1.2);
         }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen">
-    
-    <div class="w-full max-w-md p-8 rounded-3xl glass-card relative overflow-hidden">
-        <div class="absolute -top-20 -right-20 w-40 h-40 bg-[#1524f4] opacity-20 blur-[80px]"></div>
+<body class="p-6">
 
-        <div class="text-center mb-10">
-            <h1 class="text-4xl font-extrabold silver-gradient-text tracking-tighter mb-2">REVORZ</h1>
-            <p class="text-gray-400">Buat akun untuk pengalaman smartwatch premium.</p>
+    <div class="w-full max-w-md glass-card p-10 rounded-[40px]">
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-extrabold silver-text tracking-tighter">REVORZ</h1>
+            <p class="text-xs text-blue-400 font-semibold tracking-[0.3em] mt-1 uppercase">Smartwatch Core</p>
         </div>
 
-        <form action="./login.html" class="space-y-4">
-            <div class="space-y-1">
-                <label class="text-xs font-semibold text-gray-400 uppercase ml-1">Full Name</label>
-                <div class="relative">
-                    <i data-lucide="user" class="absolute left-3 top-3 w-5 h-5 text-gray-500"></i>
-                    <input type="text" placeholder="John Doe" 
-                        class="w-full bg-black border border-gray-800 rounded-xl py-3 px-10 text-white input-focus transition-all outline-none">
-                </div>
+        <h2 class="text-2xl font-bold mb-6">Create Account</h2>
+
+        <form action="#" class="space-y-4">
+            <div class="relative">
+                <i data-lucide="user" class="absolute left-4 top-4 w-5 h-5 text-gray-400"></i>
+                <input type="text" placeholder="Full Name" 
+                    class="w-full input-box py-4 px-12 rounded-2xl outline-none text-sm">
             </div>
 
-            <div class="space-y-1">
-                <label class="text-xs font-semibold text-gray-400 uppercase ml-1">Email Address</label>
-                <div class="relative">
-                    <i data-lucide="mail" class="absolute left-3 top-3 w-5 h-5 text-gray-500"></i>
-                    <input type="email" placeholder="name@example.com" 
-                        class="w-full bg-black border border-gray-800 rounded-xl py-3 px-10 text-white input-focus transition-all outline-none">
-                </div>
+            <div class="relative">
+                <i data-lucide="mail" class="absolute left-4 top-4 w-5 h-5 text-gray-400"></i>
+                <input type="email" placeholder="Email Address" 
+                    class="w-full input-box py-4 px-12 rounded-2xl outline-none text-sm">
             </div>
 
-            <div class="space-y-1">
-                <label class="text-xs font-semibold text-gray-400 uppercase ml-1">Password</label>
-                <div class="relative">
-                    <i data-lucide="lock" class="absolute left-3 top-3 w-5 h-5 text-gray-500"></i>
-                    <input type="password" placeholder="••••••••" 
-                        class="w-full bg-black border border-gray-800 rounded-xl py-3 px-10 text-white input-focus transition-all outline-none">
-                </div>
+            <div class="relative">
+                <i data-lucide="lock" class="absolute left-4 top-4 w-5 h-5 text-gray-400"></i>
+                <input type="password" placeholder="Password" 
+                    class="w-full input-box py-4 px-12 rounded-2xl outline-none text-sm">
             </div>
 
-            <div class="flex items-center space-x-2 pt-2">
-                <input type="checkbox" class="accent-[#1524f4]">
-                <span class="text-xs text-gray-500">Saya setuju dengan Syarat & Ketentuan Revorz.</span>
-            </div>
-
-            <button type="submit" class="w-full bg-[#1524f4] hover:bg-[#061092] text-white font-bold py-4 rounded-xl mt-4 transition-all transform hover:scale-[1.02] active:scale-95 shadow-lg shadow-blue-900/20">
-                CREATE ACCOUNT
+            <button type="submit" class="w-full btn-blue py-4 rounded-2xl font-bold text-sm tracking-widest mt-4 transition-all">
+                JOIN REVORZ
             </button>
         </form>
 
         <div class="mt-8 text-center">
-            <p class="text-sm text-gray-500">
+            <p class="text-gray-400 text-sm">
                 Sudah punya akun? 
-                <a href="./login.html" class="text-white font-bold hover:text-[#1524f4] transition-colors">Login Sekarang</a>
+                <a href="login.html" class="text-white font-bold hover:text-blue-400 transition-colors">Login Sekarang</a>
             </p>
         </div>
     </div>
