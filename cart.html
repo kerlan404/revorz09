@@ -58,7 +58,7 @@
         </div>
     </aside>
 
-    <main class="pt-24">
+    <main class="pt-24 min-h-screen">
         <!-- ===== PAGE HEADER ===== -->
         <section class="py-12 bg-deep text-center" data-aos="fade-in">
             <div class="container mx-auto px-6">
@@ -78,59 +78,82 @@
 
                             <!-- Cart Item 1 -->
                             <div class="flex flex-col sm:flex-row items-center gap-6 bg-accent/30 p-4 rounded-lg">
-                                <img src="https://placehold.co/150x150/061092/FFFFFF?text=R-Titan" alt="Product Image" class="w-28 h-28 object-cover rounded-md">
+                                <a href="./product-detail.html">
+                                    <img src="https://placehold.co/150x150/061092/FFFFFF?text=R-Titan" alt="Product Image" class="w-28 h-28 object-cover rounded-md hover:opacity-80 transition-opacity">
+                                </a>
                                 <div class="flex-grow text-center sm:text-left">
-                                    <h3 class="text-xl font-bold text-white">Revorz Titan</h3>
+                                    <a href="./product-detail.html" class="text-xl font-bold text-white hover:text-primary">Revorz Titan</a>
                                     <p class="text-secondary text-sm">Sport & Outdoor</p>
-                                    <p class="text-lg font-semibold text-primary mt-1">Rp 4.299.000</p>
+                                    <button class="text-red-500 hover:text-red-400 text-sm mt-2 flex items-center gap-1 mx-auto sm:mx-0">
+                                        <i data-lucide="trash-2" class="w-4 h-4"></i> Hapus
+                                    </button>
                                 </div>
                                 <div class="flex items-center gap-2">
-                                    <button class="quantity-btn rounded-l-md">-</button>
-                                    <input type="text" value="1" class="w-12 h-8 text-center bg-transparent border-y border-secondary text-white" readonly>
-                                    <button class="quantity-btn rounded-r-md">+</button>
+                                    <button class="quantity-btn rounded-l-md" onclick="updateQuantity(this, -1, 4299000)">-</button>
+                                    <input type="text" value="1" class="quantity-input w-12 h-8 text-center bg-transparent border-y border-secondary text-white" readonly>
+                                    <button class="quantity-btn rounded-r-md" onclick="updateQuantity(this, 1, 4299000)">+</button>
                                 </div>
-                                <p class="text-lg font-bold text-white w-28 text-center">Rp 4.299.000</p>
-                                <button class="text-red-500 hover:text-red-400"><i data-lucide="trash-2"></i></button>
+                                <p class="item-total text-lg font-bold text-white w-32 text-center sm:text-right">Rp 4.299.000</p>
                             </div>
 
                             <!-- Cart Item 2 -->
                             <div class="flex flex-col sm:flex-row items-center gap-6 bg-accent/30 p-4 rounded-lg">
-                                <img src="https://placehold.co/150x150/061092/FFFFFF?text=R-Lite" alt="Product Image" class="w-28 h-28 object-cover rounded-md">
+                                 <a href="./product-detail.html">
+                                    <img src="https://placehold.co/150x150/061092/FFFFFF?text=R-Lite" alt="Product Image" class="w-28 h-28 object-cover rounded-md hover:opacity-80 transition-opacity">
+                                </a>
                                 <div class="flex-grow text-center sm:text-left">
-                                    <h3 class="text-xl font-bold text-white">Revorz Lite</h3>
+                                    <a href="./product-detail.html" class="text-xl font-bold text-white hover:text-primary">Revorz Lite</a>
                                     <p class="text-secondary text-sm">Daily & Fitness</p>
-                                    <p class="text-lg font-semibold text-primary mt-1">Rp 1.899.000</p>
+                                     <button class="text-red-500 hover:text-red-400 text-sm mt-2 flex items-center gap-1 mx-auto sm:mx-0">
+                                        <i data-lucide="trash-2" class="w-4 h-4"></i> Hapus
+                                    </button>
                                 </div>
                                 <div class="flex items-center gap-2">
-                                    <button class="quantity-btn rounded-l-md">-</button>
-                                    <input type="text" value="1" class="w-12 h-8 text-center bg-transparent border-y border-secondary text-white" readonly>
-                                    <button class="quantity-btn rounded-r-md">+</button>
+                                    <button class="quantity-btn rounded-l-md" onclick="updateQuantity(this, -1, 1899000)">-</button>
+                                    <input type="text" value="1" class="quantity-input w-12 h-8 text-center bg-transparent border-y border-secondary text-white" readonly>
+                                    <button class="quantity-btn rounded-r-md" onclick="updateQuantity(this, 1, 1899000)">+</button>
                                 </div>
-                                <p class="text-lg font-bold text-white w-28 text-center">Rp 1.899.000</p>
-                                <button class="text-red-500 hover:text-red-400"><i data-lucide="trash-2"></i></button>
+                                <p class="item-total text-lg font-bold text-white w-32 text-center sm:text-right">Rp 1.899.000</p>
                             </div>
                             
                         </div>
-                        <a href="./products.html" class="inline-flex items-center gap-2 text-secondary hover:text-white mt-8"><i data-lucide="arrow-left"></i> Lanjut Belanja</a>
+                        <a href="./products.html" class="inline-flex items-center gap-2 text-secondary hover:text-white mt-8 transition-colors">
+                            <i data-lucide="arrow-left" class="w-4 h-4"></i> Lanjut Belanja
+                        </a>
                     </div>
 
                     <!-- Cart Summary -->
                     <div class="lg:w-1/3">
                         <div class="bg-accent/30 p-8 rounded-lg sticky top-28">
                             <h2 class="text-2xl font-bold text-white mb-6">Ringkasan Belanja</h2>
-                            <div class="space-y-4 text-white">
+                            
+                            <!-- Coupon Code -->
+                            <div class="mb-6">
+                                <label for="coupon" class="text-sm text-secondary mb-2 block">Kode Kupon</label>
+                                <div class="flex">
+                                    <input type="text" id="coupon-input" placeholder="Contoh: REVORZ10" class="w-full rounded-l-md p-2 bg-deep/50 border border-secondary/30 text-white focus:outline-none focus:border-primary">
+                                    <button id="apply-coupon-btn" class="bg-primary text-white font-semibold px-4 rounded-r-md hover:bg-secondary transition-colors">Pakai</button>
+                                </div>
+                                <p id="coupon-status" class="text-xs mt-2 h-4"></p>
+                            </div>
+
+                            <div class="space-y-3 text-white">
                                 <div class="flex justify-between">
-                                    <span>Subtotal</span>
-                                    <span>Rp 6.198.000</span>
+                                    <span class="text-secondary">Subtotal</span>
+                                    <span id="subtotal">Rp 6.198.000</span>
                                 </div>
                                 <div class="flex justify-between">
-                                    <span>Pengiriman</span>
-                                    <span>Rp 50.000</span>
+                                    <span class="text-secondary">Diskon</span>
+                                    <span id="discount" class="text-green-400">- Rp 0</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-secondary">Pengiriman</span>
+                                    <span id="shipping">Rp 50.000</span>
                                 </div>
                                 <div class="border-t border-secondary/50 my-4"></div>
                                 <div class="flex justify-between text-xl font-bold">
                                     <span>Total</span>
-                                    <span>Rp 6.248.000</span>
+                                    <span id="total">Rp 6.248.000</span>
                                 </div>
                             </div>
                             <a href="./checkout.html" class="block w-full text-center bg-primary text-white font-bold py-3 px-8 rounded-full hover:bg-secondary transition-all duration-300 mt-8">

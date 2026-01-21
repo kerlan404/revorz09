@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Revorz Admin</title>
+
+    <!-- Depedensi & Konfigurasi -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- ApexCharts.js via CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { 'primary': '#1524F4', 'secondary': '#808DE6', 'accent': '#061092', 'deep': '#050E7E', 'light': '#F0F2FF' },
+                    fontFamily: { 'sans': ['Inter', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #03084B; color: var(--light, #F0F2FF); }
+        .sidebar-link { @apply flex items-center gap-3 px-4 py-3 text-secondary rounded-lg hover:bg-primary hover:text-white transition-colors; }
+        .sidebar-link.active { @apply bg-primary text-white; }
+        .stat-card { @apply bg-accent/30 p-6 rounded-xl flex items-center gap-4; }
+    </style>
+</head>
+<body class="bg-deep">
+
+    <div class="flex min-h-screen">
+        <!-- ===== SIDEBAR ===== -->
+        <aside class="w-64 bg-deep p-4 flex-shrink-0 hidden lg:flex flex-col">
+            <!-- Logo -->
+            <a href="./index.html" class="block text-center text-3xl font-black text-white tracking-wider mb-10">REVORZ</a>
+            
+            <!-- Navigasi -->
+            <nav class="flex-grow">
+                <ul class="space-y-2">
+                    <li><a href="#" class="sidebar-link active"><i data-lucide="layout-dashboard" class="w-5 h-5"></i> Dashboard</a></li>
+                    <li><a href="#" class="sidebar-link"><i data-lucide="package" class="w-5 h-5"></i> Produk</a></li>
+                    <li><a href="#" class="sidebar-link"><i data-lucide="shopping-cart" class="w-5 h-5"></i> Pesanan</a></li>
+                    <li><a href="#" class="sidebar-link"><i data-lucide="users" class="w-5 h-5"></i> Pengguna</a></li>
+                    <li><a href="#" class="sidebar-link"><i data-lucide="settings" class="w-5 h-5"></i> Pengaturan</a></li>
+                </ul>
+            </nav>
+
+            <!-- Logout -->
+            <div>
+                <button id="logout-btn" class="sidebar-link w-full bg-red-500/20 text-red-300 hover:bg-red-500 hover:text-white">
+                    <i data-lucide="log-out" class="w-5 h-5"></i> Logout
+                </button>
+            </div>
+        </aside>
+
+        <!-- ===== MAIN CONTENT ===== -->
+        <main class="flex-1 p-6 lg:p-10">
+            <!-- Header -->
+            <header class="flex justify-between items-center mb-8">
+                <div>
+                    <h1 class="text-3xl font-bold text-white">Dashboard</h1>
+                    <p class="text-secondary">Selamat datang kembali, Admin!</p>
+                </div>
+                <button class="lg:hidden text-white" id="mobile-menu-btn">
+                    <i data-lucide="menu" class="w-7 h-7"></i>
+                </button>
+            </header>
+
+            <!-- Stat Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
+                <div class="stat-card">
+                    <i data-lucide="dollar-sign" class="w-10 h-10 text-green-400"></i>
+                    <div>
+                        <p class="text-sm text-secondary">Total Pendapatan</p>
+                        <p class="text-2xl font-bold text-white">Rp 1.2 M</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <i data-lucide="package-check" class="w-10 h-10 text-blue-400"></i>
+                    <div>
+                        <p class="text-sm text-secondary">Produk Terjual</p>
+                        <p class="text-2xl font-bold text-white">3,205</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <i data-lucide="shopping-bag" class="w-10 h-10 text-yellow-400"></i>
+                    <div>
+                        <p class="text-sm text-secondary">Pesanan Baru</p>
+                        <p class="text-2xl font-bold text-white">82</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <i data-lucide="user-plus" class="w-10 h-10 text-indigo-400"></i>
+                    <div>
+                        <p class="text-sm text-secondary">Pengguna Baru</p>
+                        <p class="text-2xl font-bold text-white">156</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts -->
+            <div class="grid grid-cols-1 xl:grid-cols-5 gap-6 mb-8">
+                <!-- Monthly Revenue Chart -->
+                <div class="xl:col-span-3 bg-accent/30 p-6 rounded-xl">
+                    <h2 class="text-xl font-semibold text-white mb-4">Pemasukan Bulanan</h2>
+                    <div id="revenue-chart"></div>
+                </div>
+                <!-- Product Stock Chart -->
+                <div class="xl:col-span-2 bg-accent/30 p-6 rounded-xl">
+                    <h2 class="text-xl font-semibold text-white mb-4">Stok Produk</h2>
+                    <div id="stock-chart"></div>
+                </div>
+            </div>
+
+            <!-- Tables -->
+            <div class="space-y-8">
+                 <!-- Payment Verification Table -->
+                <div class="bg-accent/30 p-6 rounded-xl">
+                    <h2 class="text-xl font-semibold text-white mb-4">Verifikasi Pembayaran User</h2>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left text-secondary">
+                            <thead class="text-xs text-white uppercase bg-deep/50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3">Nama User</th>
+                                    <th scope="col" class="px-6 py-3">ID Pesanan</th>
+                                    <th scope="col" class="px-6 py-3">Jumlah</th>
+                                    <th scope="col" class="px-6 py-3">Status</th>
+                                    <th scope="col" class="px-6 py-3">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b border-deep/50">
+                                    <td class="px-6 py-4 text-white">Budi Santoso</td>
+                                    <td class="px-6 py-4">#RVZ-10580</td>
+                                    <td class="px-6 py-4">Rp 1.899.000</td>
+                                    <td class="px-6 py-4"><span class="px-2 py-1 text-xs font-medium rounded-full bg-yellow-500/20 text-yellow-300">Menunggu</span></td>
+                                    <td class="px-6 py-4"><button class="font-medium text-primary hover:underline">Verifikasi</button></td>
+                                </tr>
+                                <tr class="border-b border-deep/50">
+                                    <td class="px-6 py-4 text-white">Citra Lestari</td>
+                                    <td class="px-6 py-4">#RVZ-10579</td>
+                                    <td class="px-6 py-4">Rp 5.999.000</td>
+                                    <td class="px-6 py-4"><span class="px-2 py-1 text-xs font-medium rounded-full bg-green-500/20 text-green-300">Terverifikasi</span></td>
+                                    <td class="px-6 py-4"><button class="font-medium text-gray-500 cursor-not-allowed">Selesai</button></td>
+                                </tr>
+                                <tr class="border-b border-deep/50">
+                                    <td class="px-6 py-4 text-white">Ahmad Fauzi</td>
+                                    <td class="px-6 py-4">#RVZ-10578</td>
+                                    <td class="px-6 py-4">Rp 3.599.000</td>
+                                    <td class="px-6 py-4"><span class="px-2 py-1 text-xs font-medium rounded-full bg-red-500/20 text-red-300">Ditolak</span></td>
+                                    <td class="px-6 py-4"><button class="font-medium text-primary hover:underline">Cek Ulang</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- User Login History Table -->
+                 <div class="bg-accent/30 p-6 rounded-xl">
+                    <h2 class="text-xl font-semibold text-white mb-4">Riwayat Login User</h2>
+                     <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left text-secondary">
+                            <thead class="text-xs text-white uppercase bg-deep/50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3">Username</th>
+                                    <th scope="col" class="px-6 py-3">Waktu Login</th>
+                                    <th scope="col" class="px-6 py-3">IP Address</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b border-deep/50">
+                                    <td class="px-6 py-4 text-white">budi.s</td>
+                                    <td class="px-6 py-4">2024-07-28 10:30:15</td>
+                                    <td class="px-6 py-4">103.45.12.89</td>
+                                </tr>
+                                <tr class="border-b border-deep/50">
+                                    <td class="px-6 py-4 text-white">citra.lestari</td>
+                                    <td class="px-6 py-4">2024-07-28 09:45:02</td>
+                                    <td class="px-6 py-4">182.50.1.204</td>
+                                </tr>
+                                 <tr class="border-b border-deep/50">
+                                    <td class="px-6 py-4 text-white">ahmadf</td>
+                                    <td class="px-6 py-4">2024-07-27 21:15:55</td>
+                                    <td class="px-6 py-4">202.11.88.14</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Mobile Sidebar (same as public pages but for admin) -->
+    <div id="mobile-admin-sidebar" class="fixed top-0 left-0 h-full w-64 bg-deep/95 backdrop-blur-sm z-50 transform -translate-x-full transition-transform duration-300 ease-in-out lg:hidden">
+        <!-- Content is cloned via JS -->
+    </div>
+
+
+    <script>
+        // Simple auth guard
+        if (localStorage.getItem('admin_logged_in') !== 'true') {
+            window.location.href = './admin-login.html';
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            lucide.createIcons();
+            
+            // Logout functionality
+            const logoutBtn = document.getElementById('logout-btn');
+            logoutBtn.addEventListener('click', () => {
+                localStorage.removeItem('admin_logged_in');
+                window.location.href = './admin-login.html';
+            });
+            
+            // --- CHARTS ---
+            const chartOptions = {
+                colors: ['#1524F4', '#808DE6'],
+                chart: {
+                    toolbar: { show: false },
+                    zoom: { enabled: false },
+                    foreColor: '#808DE6', // secondary color for labels
+                },
+                dataLabels: { enabled: false },
+                stroke: { curve: 'smooth', width: 3 },
+                grid: {
+                    borderColor: 'rgba(128, 141, 230, 0.1)', // secondary with alpha
+                    strokeDashArray: 5,
+                },
+                xaxis: {
+                    axisBorder: { show: false },
+                    axisTicks: { show: false },
+                },
+                yaxis: {
+                    labels: {
+                        formatter: function (value) { return "Rp " + (value/1000000) + "Jt" },
+                    }
+                },
+                tooltip: {
+                    theme: 'dark',
+                    style: {
+                        background: '#050E7E',
+                    },
+                },
+            };
+
+            // Revenue Chart
+            const revenueChartOptions = {
+                ...chartOptions,
+                series: [{
+                    name: 'Pendapatan',
+                    data: [31000000, 40000000, 28000000, 51000000, 42000000, 109000000, 120000000]
+                }],
+                chart: { ...chartOptions.chart, type: 'area', height: 350 },
+                xaxis: { ...chartOptions.xaxis, categories: ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul"] },
+                fill: {
+                    type: "gradient",
+                    gradient: {
+                        shadeIntensity: 1,
+                        opacityFrom: 0.7,
+                        opacityTo: 0.1,
+                        stops: [0, 90, 100]
+                    }
+                },
+            };
+            const revenueChart = new ApexCharts(document.querySelector("#revenue-chart"), revenueChartOptions);
+            revenueChart.render();
+
+            // Stock Chart
+            const stockChartOptions = {
+                ...chartOptions,
+                chart: { ...chartOptions.chart, type: 'bar', height: 350 },
+                plotOptions: { bar: { horizontal: false, columnWidth: '55%', endingShape: 'rounded' } },
+                xaxis: { ...chartOptions.xaxis, categories: ['R-Titan', 'R-Lite', 'R-Elegance', 'X1-Pro', 'R-Active'] },
+                yaxis: { labels: { formatter: (val) => val.toFixed(0) } },
+                tooltip: { y: { formatter: (val) => val + " unit" } }
+            };
+            stockChartOptions.series = [{ name: 'Stok', data: [44, 55, 57, 56, 61] }];
+            const stockChart = new ApexCharts(document.querySelector("#stock-chart"), stockChartOptions);
+            stockChart.render();
+
+            // Mobile Menu Logic
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileAdminSidebar = document.getElementById('mobile-admin-sidebar');
+            // Clone sidebar content to mobile
+            const desktopSidebarContent = document.querySelector('aside').innerHTML;
+            mobileAdminSidebar.innerHTML = desktopSidebarContent;
+            
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileAdminSidebar.classList.toggle('-translate-x-full');
+            });
+            // Clone logout functionality for mobile
+            mobileAdminSidebar.querySelector('#logout-btn').addEventListener('click', () => {
+                localStorage.removeItem('admin_logged_in');
+                window.location.href = './admin-login.html';
+            });
+        });
+    </script>
+</body>
+</html>
