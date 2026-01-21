@@ -3,94 +3,142 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Revorz - Admin Panel</title>
+    <title>Revorz - Ultra Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        body { background: #000; font-family: 'Plus Jakarta Sans', sans-serif; color: #fff; }
-        .glass-sidebar { background: #0a0a0a; border-right: 1px solid rgba(192, 192, 192, 0.1); }
-        .stat-card { background: #0d0d0d; border: 1px solid rgba(21, 36, 244, 0.1); transition: 0.3s; }
-        .stat-card:hover { border-color: #1524f4; }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #050505; color: #fff; scroll-behavior: smooth; }
+        .glass-card { background: rgba(15, 15, 15, 0.6); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .sidebar-item { transition: all 0.3s; cursor: pointer; display: flex; align-items: center; gap: 12px; padding: 12px 20px; border-radius: 12px; color: #666; }
+        .sidebar-item:hover, .sidebar-item.active { background: rgba(21, 36, 244, 0.1); color: #fff; }
+        .silver-text { background: linear-gradient(180deg, #FFF 0%, #888 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .custom-scroll::-webkit-scrollbar { width: 5px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #1524f4; border-radius: 10px; }
     </style>
 </head>
-<body class="flex">
+<body class="flex min-h-screen overflow-hidden">
 
-    <aside class="w-64 h-screen glass-sidebar fixed p-8 flex flex-col justify-between">
-        <div class="space-y-10">
-            <h1 class="text-2xl font-black text-white tracking-tighter">REVORZ <span class="text-[#1524f4]">.</span></h1>
-            <nav class="space-y-6">
-                <a href="#" class="flex items-center gap-4 text-[#1524f4] font-bold text-sm"><i data-lucide="layout-grid"></i> DASHBOARD</a>
-                <a href="#" class="flex items-center gap-4 text-gray-500 hover:text-white transition text-sm"><i data-lucide="box"></i> STOCK</a>
-                <a href="#" class="flex items-center gap-4 text-gray-500 hover:text-white transition text-sm"><i data-lucide="credit-card"></i> VERIFIKASI</a>
-            </nav>
+    <aside class="w-72 glass-card border-r border-white/5 p-6 flex flex-col gap-8 hidden lg:flex">
+        <div class="px-4">
+            <h1 class="text-2xl font-black silver-text tracking-tighter">REVORZ.OS</h1>
         </div>
-        <a href="index.html" class="flex items-center gap-4 text-red-500 font-bold text-sm"><i data-lucide="log-out"></i> LOGOUT</a>
+        
+        <nav class="flex flex-col gap-2 flex-1">
+            <div class="sidebar-item active"><i data-lucide="layout-dashboard"></i> Overview</div>
+            <div class="sidebar-item" onclick="alert('Fitur Tambah Produk Segera Hadir')"><i data-lucide="package-plus"></i> Tambah Produk</div>
+            <div class="sidebar-item" onclick="alert('Manajemen Stok Terhubung')"><i data-lucide="boxes"></i> Kelola Stok</div>
+            <div class="sidebar-item" onclick="alert('Menu Promo Aktif')"><i data-lucide="ticket-percent"></i> Buat Promo</div>
+            <div class="sidebar-item"><i data-lucide="users"></i> Riwayat Login</div>
+            <div class="sidebar-item"><i data-lucide="settings"></i> Settings</div>
+        </nav>
+
+        <div class="p-4 bg-red-500/10 rounded-2xl border border-red-500/20">
+            <button onclick="resetData()" class="w-full text-red-500 text-xs font-bold uppercase flex items-center justify-center gap-2">
+                <i data-lucide="trash-2" class="w-4 h-4"></i> Wipe All Data
+            </button>
+        </div>
     </aside>
 
-    <main class="flex-1 ml-64 p-10">
+    <main class="flex-1 h-screen overflow-y-auto custom-scroll p-8">
+        
         <header class="flex justify-between items-center mb-10">
-            <h2 class="text-3xl font-black uppercase tracking-tighter">Command Center</h2>
-            <div class="bg-gray-900 px-4 py-2 rounded-xl flex items-center gap-3 border border-gray-800">
-                <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                <span class="text-xs font-bold uppercase tracking-widest text-gray-400">System Online</span>
+            <div>
+                <h2 class="text-3xl font-black">Performance Dashboard</h2>
+                <p class="text-gray-500 text-sm">Selamat datang kembali, Admin Revorz.</p>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="text-right">
+                    <p class="text-xs font-bold text-green-500">SYSTEM ONLINE</p>
+                    <p class="text-[10px] text-gray-500">Jan 2026, 23:38 WIB</p>
+                </div>
+                <div class="w-12 h-12 bg-[#1524f4] rounded-full flex items-center justify-center border-2 border-white/10">
+                    <i data-lucide="user"></i>
+                </div>
             </div>
         </header>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-            <div class="stat-card p-8 rounded-[2rem]">
-                <p class="text-gray-500 text-[10px] font-bold uppercase tracking-[0.2em]">Pemasukan Hari Ini</p>
-                <h3 class="text-3xl font-black mt-2">Rp 24.500.000</h3>
-                <span class="text-green-500 text-xs">+12% dari kemarin</span>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="glass-card p-6 rounded-3xl">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="p-3 bg-blue-500/10 rounded-xl text-blue-500"><i data-lucide="dollar-sign"></i></div>
+                    <span class="text-xs text-green-500">+12%</span>
+                </div>
+                <p class="text-gray-500 text-xs font-bold uppercase">Total Revenue</p>
+                <h3 id="totalPemasukan" class="text-2xl font-black mt-1">Rp 0</h3>
             </div>
-            <div class="stat-card p-8 rounded-[2rem]">
-                <p class="text-gray-500 text-[10px] font-bold uppercase tracking-[0.2em]">Pesanan Perlu Verifikasi</p>
-                <h3 class="text-3xl font-black mt-2 text-[#1524f4]">18</h3>
-                <span class="text-gray-500 text-xs">Butuh approval segera</span>
+            <div class="glass-card p-6 rounded-3xl">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="p-3 bg-purple-500/10 rounded-xl text-purple-500"><i data-lucide="shopping-bag"></i></div>
+                </div>
+                <p class="text-gray-500 text-xs font-bold uppercase">Orders</p>
+                <h3 id="totalPesanan" class="text-2xl font-black mt-1">0</h3>
             </div>
-            <div class="stat-card p-8 rounded-[2rem]">
-                <p class="text-gray-500 text-[10px] font-bold uppercase tracking-[0.2em]">Riwayat Login (24h)</p>
-                <div class="flex flex-col gap-2 mt-4">
-                    <div class="flex justify-between text-[10px] border-b border-gray-800 pb-1"><span>Admin_Main</span><span>10:22 AM</span></div>
-                    <div class="flex justify-between text-[10px] border-b border-gray-800 pb-1"><span>Super_User</span><span>08:15 AM</span></div>
+            <div class="glass-card p-6 rounded-3xl">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="p-3 bg-orange-500/10 rounded-xl text-orange-500"><i data-lucide="box"></i></div>
+                </div>
+                <p class="text-gray-500 text-xs font-bold uppercase">Ready Stock</p>
+                <h3 class="text-2xl font-black mt-1">124</h3>
+            </div>
+            <div class="glass-card p-6 rounded-3xl">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="p-3 bg-green-500/10 rounded-xl text-green-500"><i data-lucide="user-check"></i></div>
+                </div>
+                <p class="text-gray-500 text-xs font-bold uppercase">Active Promo</p>
+                <h3 class="text-2xl font-black mt-1">REVORZ2026</h3>
+            </div>
+        </div>
+
+        <div class="grid lg:grid-cols-12 gap-8">
+            <div class="lg:col-span-8 glass-card p-8 rounded-[2.5rem]">
+                <h3 class="font-bold mb-6 flex items-center gap-2"><i data-lucide="trending-up"></i> Sales Analytics</h3>
+                <canvas id="salesChart" height="150"></canvas>
+            </div>
+
+            <div class="lg:col-span-4 glass-card p-8 rounded-[2.5rem]">
+                <h3 class="font-bold mb-6 flex items-center gap-2"><i data-lucide="shield-check"></i> User Auth Log</h3>
+                <div class="space-y-4">
+                    <div class="flex gap-3 text-xs">
+                        <div class="w-1 h-8 bg-green-500 rounded-full"></div>
+                        <div>
+                            <p class="font-bold">Admin-01 Login</p>
+                            <p class="text-gray-500">Jakarta, ID • Just Now</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-3 text-xs text-gray-400">
+                        <div class="w-1 h-8 bg-gray-700 rounded-full"></div>
+                        <div>
+                            <p class="font-bold">Session Restored</p>
+                            <p class="text-gray-500">Chrome Mobile • 2h ago</p>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
-            <div class="stat-card p-8 rounded-[3rem]">
-                <h4 class="text-sm font-bold mb-6 text-gray-400">GRAFIK PEMASUKAN BULANAN</h4>
-                <div id="revenueChart"></div>
-            </div>
-            <div class="stat-card p-8 rounded-[3rem]">
-                <h4 class="text-sm font-bold mb-6 text-gray-400">STATUS STOCK PRODUK</h4>
-                <div id="stockChart"></div>
-            </div>
-        </div>
-
-        <div class="stat-card p-8 rounded-[3rem]">
-            <h4 class="text-sm font-bold mb-8 text-gray-400 uppercase tracking-widest">Verifikasi Pembayaran User</h4>
-            <div class="overflow-x-auto">
-                <table class="w-full text-left text-sm">
-                    <thead>
-                        <tr class="text-gray-600 border-b border-gray-800">
-                            <th class="pb-4">USER</th>
-                            <th class="pb-4">TOTAL</th>
-                            <th class="pb-4">BUKTI</th>
-                            <th class="pb-4 text-right">AKSI</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-900">
-                        <tr>
-                            <td class="py-4 font-bold">Rizky Ardiansyah</td>
-                            <td class="py-4">Rp 4.301.000</td>
-                            <td class="py-4 text-blue-500 underline cursor-pointer">Lihat_Bukti.jpg</td>
-                            <td class="py-4 text-right">
-                                <button class="bg-[#1524f4] px-4 py-2 rounded-lg text-xs font-bold hover:bg-green-500 transition-all">VERIFIKASI</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="lg:col-span-12 glass-card p-8 rounded-[2.5rem]">
+                <div class="flex justify-between items-center mb-8">
+                    <h3 class="text-xl font-bold silver-text uppercase tracking-widest">Recent Transactions</h3>
+                    <div class="flex gap-2">
+                        <button class="px-4 py-2 bg-white/5 rounded-xl text-xs font-bold border border-white/10 hover:bg-white/10 transition">Download Report</button>
+                    </div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr class="text-gray-500 text-[10px] uppercase tracking-widest border-b border-white/5">
+                                <th class="pb-4">Order ID</th>
+                                <th class="pb-4">Customer</th>
+                                <th class="pb-4">Method</th>
+                                <th class="pb-4">Amount</th>
+                                <th class="pb-4 text-right">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orderTable" class="text-sm">
+                            </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </main>
@@ -98,29 +146,76 @@
     <script>
         lucide.createIcons();
 
-        // Revenue Chart
-        var options1 = {
-            series: [{ name: 'Income', data: [31, 40, 28, 51, 42, 109, 100] }],
-            chart: { type: 'area', height: 250, toolbar: {show: false}, background: 'transparent' },
-            colors: ['#1524f4'],
-            theme: { mode: 'dark' },
-            stroke: { curve: 'smooth' },
-            grid: { show: false },
-            xaxis: { labels: {show: false} },
-            yaxis: { labels: {show: false} }
-        };
-        new ApexCharts(document.querySelector("#revenueChart"), options1).render();
+        // 1. DATA LOADING
+        function loadDashboard() {
+            const total = localStorage.getItem('revorz_total') || 0;
+            const orders = JSON.parse(localStorage.getItem('revorz_orders')) || [];
+            
+            document.getElementById('totalPemasukan').innerText = 'Rp ' + parseInt(total).toLocaleString('id-ID');
+            document.getElementById('totalPesanan').innerText = orders.length;
 
-        // Stock Chart
-        var options2 = {
-            series: [{ name: 'Stock', data: [44, 55, 41, 67, 22] }],
-            chart: { type: 'bar', height: 250, toolbar: {show: false} },
-            colors: ['#C0C0C0'],
-            theme: { mode: 'dark' },
-            grid: { show: false },
-            xaxis: { categories: ['Titan X', 'Pro Lite', 'Elite', 'Alpha', 'Sport'], labels: {style: {colors: '#555'}} }
-        };
-        new ApexCharts(document.querySelector("#stockChart"), options2).render();
+            const table = document.getElementById('orderTable');
+            table.innerHTML = "";
+            
+            orders.reverse().forEach((item, index) => {
+                table.innerHTML += `
+                    <tr class="border-b border-white/5 group hover:bg-white/[0.02] transition">
+                        <td class="py-5 font-mono text-[10px] text-blue-500">#RVZ-${1000 + index}</td>
+                        <td class="py-5">
+                            <p class="font-bold">${item.nama}</p>
+                            <p class="text-[10px] text-gray-500">${item.tgl}</p>
+                        </td>
+                        <td class="py-5">
+                            <span class="px-3 py-1 bg-[#1524f4]/10 text-[#1524f4] rounded-full text-[10px] font-bold uppercase tracking-tighter border border-[#1524f4]/20">${item.method}</span>
+                        </td>
+                        <td class="py-5 font-bold">Rp ${item.total.toLocaleString('id-ID')}</td>
+                        <td class="py-5 text-right">
+                             <button class="bg-white text-black text-[10px] font-black px-4 py-2 rounded-lg uppercase tracking-widest hover:bg-[#1524f4] hover:text-white transition">Details</button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            initChart(orders);
+        }
+
+        // 2. VISUALISASI DATA (CHART)
+        function initChart(orders) {
+            const ctx = document.getElementById('salesChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: [{
+                        label: 'Sales Velocity',
+                        data: [12, 19, 15, 25, 22, 30, orders.length],
+                        borderColor: '#1524f4',
+                        backgroundColor: 'rgba(21, 36, 244, 0.1)',
+                        fill: true,
+                        tension: 0.4,
+                        borderWidth: 4,
+                        pointRadius: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { display: false },
+                        x: { grid: { display: false }, ticks: { color: '#444' } }
+                    }
+                }
+            });
+        }
+
+        function resetData() {
+            if(confirm("PERINGATAN: Hapus semua data permanen?")) {
+                localStorage.clear();
+                location.reload();
+            }
+        }
+
+        window.onload = loadDashboard;
     </script>
 </body>
 </html>
