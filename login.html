@@ -3,179 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Revorz - Experience the Future</title>
+    <title>Revorz - Login Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
-        
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #000000;
-            overflow: hidden;
-            color: white;
-        }
-
-        /* Efek Teks Silver Metalik */
-        .silver-text {
-            background: linear-gradient(180deg, #FFFFFF 0%, #C0C0C0 45%, #808080 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 1px rgba(255,255,255,0.3));
-        }
-
-        /* Glassmorphism Card */
-        .glass-card {
-            background: rgba(10, 10, 10, 0.7);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(192, 192, 192, 0.2);
-            box-shadow: 0 0 50px rgba(21, 36, 244, 0.15);
-        }
-
-        /* Kontainer Slide */
-        .slider-container {
-            display: flex;
-            width: 200%; /* Dua kali lebar card */
-            transition: transform 0.7s cubic-bezier(0.85, 0, 0.15, 1);
-        }
-
-        .slide-active-register {
-            transform: translateX(-50%);
-        }
-
-        .form-section {
-            width: 50%;
-            padding: 2.5rem;
-        }
-
-        /* Animasi Glow Biru di Background */
-        .blue-glow {
-            position: absolute;
-            width: 400px;
-            height: 400px;
-            background: radial-gradient(circle, rgba(21, 36, 244, 0.2) 0%, rgba(0,0,0,0) 70%);
-            border-radius: 50%;
-            filter: blur(60px);
-            z-index: -1;
-            animation: move 10s infinite alternate;
-        }
-
-        @keyframes move {
-            from { transform: translate(-10%, -10%); }
-            to { transform: translate(20%, 20%); }
-        }
-
-        /* Input Styling */
-        input:focus {
-            border-color: #1524f4 !important;
-            box-shadow: 0 0 15px rgba(21, 36, 244, 0.3);
-        }
-
-        .btn-revorz {
-            background: linear-gradient(90deg, #1524f4, #061092);
-            transition: all 0.4s ease;
-        }
-
-        .btn-revorz:hover {
-            box-shadow: 0 0 25px rgba(21, 36, 244, 0.5);
-            transform: scale(1.02);
-        }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #050505; color: #fff; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+        .glass-card { background: rgba(15, 15, 15, 0.8); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .input-field { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); color: white; width: 100%; padding: 1.25rem 1rem 1.25rem 3.5rem; border-radius: 1.25rem; outline: none; transition: 0.3s; }
+        .input-field:focus { border-color: #1524f4; background: rgba(21, 36, 244, 0.05); }
+        .input-icon { position: absolute; left: 1.25rem; top: 50%; transform: translateY(-50%); color: #4b5563; pointer-events: none; }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen">
+<body>
+    <div class="max-w-md w-full px-6">
+        <div class="text-center mb-10">
+            <h1 class="text-5xl font-black italic tracking-tighter mb-2">REVORZ</h1>
+            <p class="text-gray-500 text-[10px] font-bold uppercase tracking-[0.4em]">Secure Access Point</p>
+        </div>
 
-    <div class="blue-glow top-0 left-0"></div>
-    <div class="blue-glow bottom-0 right-0" style="animation-delay: -5s; background: radial-gradient(circle, rgba(6, 16, 146, 0.2) 0%, rgba(0,0,0,0) 70%);"></div>
-
-    <div class="relative w-full max-w-md overflow-hidden rounded-[35px] glass-card">
-        
-        <div id="slider" class="slider-container">
-            
-            <div class="form-section">
-                <div class="text-center mb-10">
-                    <h1 class="text-4xl font-extrabold silver-text tracking-widest mb-2">REVORZ</h1>
-                    <p class="text-gray-400 text-sm">Elevate Your Lifestyle</p>
+        <div class="glass-card p-10 rounded-[3rem]">
+            <div class="space-y-6">
+                <div class="relative w-full">
+                    <input type="text" id="username" placeholder="Username" class="input-field" autocomplete="off">
+                    <i data-lucide="user" class="input-icon w-5 h-5"></i>
+                </div>
+                <div class="relative w-full">
+                    <input type="password" id="password" placeholder="Password" class="input-field">
+                    <i data-lucide="lock" class="input-icon w-5 h-5"></i>
                 </div>
 
-                <div class="space-y-5">
-                    <div class="relative">
-                        <i data-lucide="mail" class="absolute left-4 top-3.5 w-5 h-5 text-gray-500"></i>
-                        <input type="email" placeholder="Email Address" 
-                            class="w-full bg-black/50 border border-gray-800 rounded-2xl py-3.5 px-12 text-white outline-none transition-all">
-                    </div>
-
-                    <div class="relative">
-                        <i data-lucide="lock" class="absolute left-4 top-3.5 w-5 h-5 text-gray-500"></i>
-                        <input type="password" placeholder="Password" 
-                            class="w-full bg-black/50 border border-gray-800 rounded-2xl py-3.5 px-12 text-white outline-none transition-all">
-                    </div>
-
-                    <button class="w-full btn-revorz text-white font-bold py-4 rounded-2xl mt-4 uppercase tracking-widest text-xs">
-                        Sign In
-                    </button>
+                <div id="errorMsg" class="hidden text-red-500 text-[10px] font-bold uppercase text-center tracking-widest bg-red-500/10 p-3 rounded-xl">
+                    Invalid Credentials
                 </div>
 
-                <div class="mt-10 text-center">
-                    <p class="text-gray-500 text-sm">
-                        Baru di Revorz? 
-                        <button onclick="toRegister()" class="text-blue-500 font-bold hover:text-white transition-all underline decoration-2 underline-offset-4">Buat Akun</button>
-                    </p>
-                </div>
+                <button onclick="handleLogin()" class="w-full bg-[#1524f4] text-white py-5 rounded-2xl font-black hover:bg-blue-700 transition-all uppercase tracking-widest text-xs">
+                    Sign In
+                </button>
             </div>
 
-            <div class="form-section">
-                <div class="text-center mb-10">
-                    <h1 class="text-4xl font-extrabold silver-text tracking-widest mb-2">JOIN US</h1>
-                    <p class="text-gray-400 text-sm">Become part of the future</p>
-                </div>
-
-                <div class="space-y-4">
-                    <div class="relative">
-                        <i data-lucide="user" class="absolute left-4 top-3.5 w-5 h-5 text-gray-500"></i>
-                        <input type="text" placeholder="Nama Lengkap" 
-                            class="w-full bg-black/50 border border-gray-800 rounded-2xl py-3.5 px-12 text-white outline-none transition-all">
-                    </div>
-
-                    <div class="relative">
-                        <i data-lucide="mail" class="absolute left-4 top-3.5 w-5 h-5 text-gray-500"></i>
-                        <input type="email" placeholder="Email" 
-                            class="w-full bg-black/50 border border-gray-800 rounded-2xl py-3.5 px-12 text-white outline-none transition-all">
-                    </div>
-
-                    <div class="relative">
-                        <i data-lucide="lock" class="absolute left-4 top-3.5 w-5 h-5 text-gray-500"></i>
-                        <input type="password" placeholder="Buat Password" 
-                            class="w-full bg-black/50 border border-gray-800 rounded-2xl py-3.5 px-12 text-white outline-none transition-all">
-                    </div>
-
-                    <button class="w-full btn-revorz text-white font-bold py-4 rounded-2xl mt-4 uppercase tracking-widest text-xs">
-                        Create Account
-                    </button>
-                </div>
-
-                <div class="mt-10 text-center">
-                    <p class="text-gray-500 text-sm">
-                        Sudah punya akun? 
-                        <button onclick="toLogin()" class="text-blue-500 font-bold hover:text-white transition-all underline decoration-2 underline-offset-4">Kembali Login</button>
-                    </p>
-                </div>
+            <div class="mt-8 text-center">
+                <p class="text-xs text-gray-500">Belum punya akun? <a href="register.html" class="text-white font-bold underline hover:text-[#1524f4]">Daftar</a></p>
             </div>
-
         </div>
     </div>
 
     <script>
-        // Inisialisasi Ikon
         lucide.createIcons();
 
-        const slider = document.getElementById('slider');
+        function handleLogin() {
+            // .trim() menghapus spasi di depan/belakang, .toLowerCase() membuat jadi huruf kecil semua
+            const u = document.getElementById('username').value.trim().toLowerCase();
+            const p = document.getElementById('password').value.trim().toLowerCase();
+            const err = document.getElementById('errorMsg');
 
-        function toRegister() {
-            slider.classList.add('slide-active-register');
-        }
+            err.classList.add('hidden');
 
-        function toLogin() {
-            slider.classList.remove('slide-active-register');
+            // Debug: Log nilai yang dimasukkan (hapus ini setelah testing)
+            console.log('Username input (processed):', u);
+            console.log('Password input (processed):', p);
+
+            // --- 1. CEK ADMIN ---
+            console.log('Checking admin login...');
+            if (u === "admin" && p === "revorz123") {
+                console.log('Admin login successful');
+                alert('Admin login berhasil! Redirecting...');
+                sessionStorage.setItem('isLoggedIn', 'true');
+                sessionStorage.setItem('role', 'ADMIN');
+                sessionStorage.setItem('username', 'Master Admin');
+                window.location.href = "admin-dashboard.html";
+                return;
+            } else {
+                console.log('Admin check failed - credentials do not match');
+            }
+
+            // --- 2. CEK USER (LocalStorage) ---
+            let userDB = JSON.parse(localStorage.getItem('revorz_users')) || [];
+            const foundUser = userDB.find(user => user.u.toLowerCase() === u && user.p === p);
+
+            if (foundUser) {
+                sessionStorage.setItem('isLoggedIn', 'true');
+                sessionStorage.setItem('role', 'CUSTOMER');
+                sessionStorage.setItem('username', foundUser.u);
+                window.location.href = "index.html";
+            } else {
+                console.log('Login failed: Invalid credentials');
+                err.classList.remove('hidden');
+                // Beri getaran pada card jika salah
+                const card = document.querySelector('.glass-card');
+                card.style.transform = "translateX(10px)";
+                setTimeout(() => card.style.transform = "translateX(-10px)", 50);
+                setTimeout(() => card.style.transform = "translateX(0)", 100);
+            }
         }
     </script>
 </body>

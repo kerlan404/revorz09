@@ -3,41 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Revorz - Ultra Admin</title>
+    <title>Revorz - Master Control Panel</title>
+    <script>
+        if (sessionStorage.getItem('isLoggedIn') !== 'true' || sessionStorage.getItem('role') !== 'ADMIN') {
+            window.location.href = "login.html";
+        }
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #050505; color: #fff; scroll-behavior: smooth; }
-        .glass-card { background: rgba(15, 15, 15, 0.6); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.05); }
-        .sidebar-item { transition: all 0.3s; cursor: pointer; display: flex; align-items: center; gap: 12px; padding: 12px 20px; border-radius: 12px; color: #666; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #050505; color: #fff; overflow-x: hidden; }
+        .glass-card { background: rgba(15, 15, 15, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .sidebar-item { transition: 0.3s; cursor: pointer; display: flex; align-items: center; gap: 12px; padding: 12px 20px; border-radius: 12px; color: #666; }
         .sidebar-item:hover, .sidebar-item.active { background: rgba(21, 36, 244, 0.1); color: #fff; }
-        .silver-text { background: linear-gradient(180deg, #FFF 0%, #888 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .custom-scroll::-webkit-scrollbar { width: 5px; }
         .custom-scroll::-webkit-scrollbar-thumb { background: #1524f4; border-radius: 10px; }
     </style>
 </head>
-<body class="flex min-h-screen overflow-hidden">
+<body class="flex min-h-screen">
 
     <aside class="w-72 glass-card border-r border-white/5 p-6 flex flex-col gap-8 hidden lg:flex">
-        <div class="px-4">
-            <h1 class="text-2xl font-black silver-text tracking-tighter">REVORZ.OS</h1>
-        </div>
-        
-        <nav class="flex flex-col gap-2 flex-1">
-            <div class="sidebar-item active"><i data-lucide="layout-dashboard"></i> Overview</div>
-            <div class="sidebar-item" onclick="alert('Fitur Tambah Produk Segera Hadir')"><i data-lucide="package-plus"></i> Tambah Produk</div>
-            <div class="sidebar-item" onclick="alert('Manajemen Stok Terhubung')"><i data-lucide="boxes"></i> Kelola Stok</div>
-            <div class="sidebar-item" onclick="alert('Menu Promo Aktif')"><i data-lucide="ticket-percent"></i> Buat Promo</div>
-            <div class="sidebar-item"><i data-lucide="users"></i> Riwayat Login</div>
-            <div class="sidebar-item"><i data-lucide="settings"></i> Settings</div>
+        <h1 class="text-2xl font-black italic tracking-tighter text-blue-600 px-4">REVORZ.OS</h1>
+        <nav class="flex flex-col gap-2 flex-1 overflow-y-auto custom-scroll">
+            <div class="sidebar-item active" onclick="showSection('overview')"><i data-lucide="layout-dashboard"></i> Overview</div>
+            <div class="sidebar-item" onclick="showSection('produk')"><i data-lucide="package"></i> Manajemen Produk</div>
+            <div class="sidebar-item" onclick="showSection('pembayaran')"><i data-lucide="credit-card"></i> Verifikasi Bayar</div>
+            <div class="sidebar-item" onclick="showSection('promo')"><i data-lucide="ticket-percent"></i> Kelola Promo</div>
         </nav>
-
-        <div class="p-4 bg-red-500/10 rounded-2xl border border-red-500/20">
-            <button onclick="resetData()" class="w-full text-red-500 text-xs font-bold uppercase flex items-center justify-center gap-2">
-                <i data-lucide="trash-2" class="w-4 h-4"></i> Wipe All Data
-            </button>
+        <div class="border-t border-white/5 pt-4">
+            <button onclick="logout()" class="sidebar-item text-red-500 w-full"><i data-lucide="log-out"></i> Sign Out</button>
         </div>
     </aside>
 
@@ -45,177 +40,255 @@
         
         <header class="flex justify-between items-center mb-10">
             <div>
-                <h2 class="text-3xl font-black">Performance Dashboard</h2>
-                <p class="text-gray-500 text-sm">Selamat datang kembali, Admin Revorz.</p>
+                <h2 class="text-3xl font-black uppercase">Control Panel</h2>
+                <p id="adminGreet" class="text-gray-500 text-sm italic"></p>
             </div>
-            <div class="flex items-center gap-4">
-                <div class="text-right">
-                    <p class="text-xs font-bold text-green-500">SYSTEM ONLINE</p>
-                    <p class="text-[10px] text-gray-500">Jan 2026, 23:38 WIB</p>
-                </div>
-                <div class="w-12 h-12 bg-[#1524f4] rounded-full flex items-center justify-center border-2 border-white/10">
-                    <i data-lucide="user"></i>
-                </div>
+            <div class="text-right">
+                <p class="text-xs font-bold text-blue-500 uppercase tracking-widest">Master Admin</p>
+                <p id="liveClock" class="text-[10px] text-gray-600"></p>
             </div>
         </header>
 
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-            <div class="glass-card p-6 rounded-3xl">
-                <div class="flex justify-between items-start mb-4">
-                    <div class="p-3 bg-blue-500/10 rounded-xl text-blue-500"><i data-lucide="dollar-sign"></i></div>
-                    <span class="text-xs text-green-500">+12%</span>
+        <section id="section-overview" class="admin-section space-y-10">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <div class="glass-card p-6 rounded-3xl border-l-4 border-blue-600">
+                    <p class="text-gray-500 text-[10px] font-bold uppercase">Total Pemasukan</p>
+                    <h3 id="statRevenue" class="text-2xl font-black mt-1">Rp 0</h3>
                 </div>
-                <p class="text-gray-500 text-xs font-bold uppercase">Total Revenue</p>
-                <h3 id="totalPemasukan" class="text-2xl font-black mt-1">Rp 0</h3>
-            </div>
-            <div class="glass-card p-6 rounded-3xl">
-                <div class="flex justify-between items-start mb-4">
-                    <div class="p-3 bg-purple-500/10 rounded-xl text-purple-500"><i data-lucide="shopping-bag"></i></div>
+                <div class="glass-card p-6 rounded-3xl border-l-4 border-purple-600">
+                    <p class="text-gray-500 text-[10px] font-bold uppercase">Total Produk</p>
+                    <h3 id="statProductCount" class="text-2xl font-black mt-1">0</h3>
                 </div>
-                <p class="text-gray-500 text-xs font-bold uppercase">Orders</p>
-                <h3 id="totalPesanan" class="text-2xl font-black mt-1">0</h3>
-            </div>
-            <div class="glass-card p-6 rounded-3xl">
-                <div class="flex justify-between items-start mb-4">
-                    <div class="p-3 bg-orange-500/10 rounded-xl text-orange-500"><i data-lucide="box"></i></div>
+                <div class="glass-card p-6 rounded-3xl border-l-4 border-orange-600">
+                    <p class="text-gray-500 text-[10px] font-bold uppercase">Stok Menipis</p>
+                    <h3 id="statLowStock" class="text-2xl font-black mt-1 text-red-500">0</h3>
                 </div>
-                <p class="text-gray-500 text-xs font-bold uppercase">Ready Stock</p>
-                <h3 class="text-2xl font-black mt-1">124</h3>
-            </div>
-            <div class="glass-card p-6 rounded-3xl">
-                <div class="flex justify-between items-start mb-4">
-                    <div class="p-3 bg-green-500/10 rounded-xl text-green-500"><i data-lucide="user-check"></i></div>
-                </div>
-                <p class="text-gray-500 text-xs font-bold uppercase">Active Promo</p>
-                <h3 class="text-2xl font-black mt-1">REVORZ2026</h3>
-            </div>
-        </div>
-
-        <div class="grid lg:grid-cols-12 gap-8">
-            <div class="lg:col-span-8 glass-card p-8 rounded-[2.5rem]">
-                <h3 class="font-bold mb-6 flex items-center gap-2"><i data-lucide="trending-up"></i> Sales Analytics</h3>
-                <canvas id="salesChart" height="150"></canvas>
-            </div>
-
-            <div class="lg:col-span-4 glass-card p-8 rounded-[2.5rem]">
-                <h3 class="font-bold mb-6 flex items-center gap-2"><i data-lucide="shield-check"></i> User Auth Log</h3>
-                <div class="space-y-4">
-                    <div class="flex gap-3 text-xs">
-                        <div class="w-1 h-8 bg-green-500 rounded-full"></div>
-                        <div>
-                            <p class="font-bold">Admin-01 Login</p>
-                            <p class="text-gray-500">Jakarta, ID • Just Now</p>
-                        </div>
-                    </div>
-                    <div class="flex gap-3 text-xs text-gray-400">
-                        <div class="w-1 h-8 bg-gray-700 rounded-full"></div>
-                        <div>
-                            <p class="font-bold">Session Restored</p>
-                            <p class="text-gray-500">Chrome Mobile • 2h ago</p>
-                        </div>
-                    </div>
+                <div class="glass-card p-6 rounded-3xl border-l-4 border-green-600">
+                    <p class="text-gray-500 text-[10px] font-bold uppercase">Riwayat Login</p>
+                    <h3 id="statLoginCount" class="text-2xl font-black mt-1">0</h3>
                 </div>
             </div>
 
-            <div class="lg:col-span-12 glass-card p-8 rounded-[2.5rem]">
-                <div class="flex justify-between items-center mb-8">
-                    <h3 class="text-xl font-bold silver-text uppercase tracking-widest">Recent Transactions</h3>
-                    <div class="flex gap-2">
-                        <button class="px-4 py-2 bg-white/5 rounded-xl text-xs font-bold border border-white/10 hover:bg-white/10 transition">Download Report</button>
-                    </div>
+            <div class="grid lg:grid-cols-2 gap-8">
+                <div class="glass-card p-8 rounded-[2.5rem]">
+                    <h3 class="font-bold mb-6 flex items-center gap-2"><i data-lucide="user-check"></i> Recent User Login</h3>
+                    <div id="loginList" class="space-y-4"></div>
                 </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left">
-                        <thead>
-                            <tr class="text-gray-500 text-[10px] uppercase tracking-widest border-b border-white/5">
-                                <th class="pb-4">Order ID</th>
-                                <th class="pb-4">Customer</th>
-                                <th class="pb-4">Method</th>
-                                <th class="pb-4">Amount</th>
-                                <th class="pb-4 text-right">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="orderTable" class="text-sm">
-                            </tbody>
-                    </table>
+                <div class="glass-card p-8 rounded-[2.5rem]">
+                    <h3 class="font-bold mb-6 flex items-center gap-2"><i data-lucide="info"></i> Info Sistem</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed">Sistem beroperasi menggunakan <b>LocalStorage</b>. Semua data tersimpan di browser ini. Lakukan backup data secara berkala.</p>
                 </div>
             </div>
-        </div>
+        </section>
+
+        <section id="section-produk" class="admin-section hidden space-y-6">
+            <div class="flex justify-between items-center">
+                <h3 class="text-xl font-bold italic">Inventory Produk</h3>
+                <button onclick="openModal('modalProduk')" class="bg-blue-600 px-6 py-3 rounded-xl font-bold text-xs uppercase tracking-widest">+ Tambah Produk</button>
+            </div>
+            <div class="glass-card rounded-[2.5rem] overflow-hidden">
+                <table class="w-full text-left">
+                    <thead class="bg-white/5 text-[10px] uppercase text-gray-500">
+                        <tr>
+                            <th class="p-6">Produk</th>
+                            <th class="p-6">Harga</th>
+                            <th class="p-6">Stok</th>
+                            <th class="p-6">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productTableBody" class="text-sm"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="section-promo" class="admin-section hidden space-y-6">
+            <div class="flex justify-between items-center">
+                <h3 class="text-xl font-bold italic">Voucher & Promo</h3>
+                <button onclick="openModal('modalPromo')" class="bg-yellow-600 px-6 py-3 rounded-xl font-bold text-xs uppercase tracking-widest">Buat Promo</button>
+            </div>
+            <div id="promoDisplay" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+        </section>
+
+        <section id="section-pembayaran" class="admin-section hidden space-y-6">
+            <h3 class="text-xl font-bold italic">Verifikasi Pembayaran User</h3>
+            <div class="glass-card rounded-[2.5rem] overflow-hidden">
+                <table class="w-full text-left">
+                    <tbody id="paymentTableBody"></tbody>
+                </table>
+            </div>
+        </section>
+
     </main>
+
+    <div id="modalProduk" class="fixed inset-0 bg-black/90 backdrop-blur-md hidden flex items-center justify-center z-50 p-6">
+        <div class="glass-card p-8 rounded-[2.5rem] w-full max-w-lg">
+            <h3 class="text-xl font-black mb-6 italic text-blue-500">POST NEW ITEM</h3>
+            <div class="space-y-4">
+                <input type="text" id="p_nama" placeholder="Nama Produk" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-blue-600">
+                <input type="text" id="p_img" placeholder="URL Gambar Produk (Pinterest/ImgBB)" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-blue-600">
+                <div class="grid grid-cols-2 gap-4">
+                    <input type="number" id="p_harga" placeholder="Harga" class="bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-blue-600">
+                    <input type="number" id="p_stok" placeholder="Stok" class="bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-blue-600">
+                </div>
+                <textarea id="p_desc" placeholder="Deskripsi Singkat" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-blue-600 h-24"></textarea>
+                <div class="flex gap-4 pt-4">
+                    <button onclick="closeModal('modalProduk')" class="flex-1 py-4 font-bold text-xs uppercase bg-white/5 rounded-2xl">Cancel</button>
+                    <button onclick="saveProduct()" class="flex-1 py-4 font-bold text-xs uppercase bg-blue-600 rounded-2xl">Publish</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalPromo" class="fixed inset-0 bg-black/90 backdrop-blur-md hidden flex items-center justify-center z-50 p-6">
+        <div class="glass-card p-8 rounded-[2.5rem] w-full max-w-sm text-center">
+            <h3 class="text-xl font-black mb-6 text-yellow-500">CREATE PROMO</h3>
+            <div class="space-y-4">
+                <input type="text" id="pr_kode" placeholder="KODE (Contoh: RAMADAN)" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl text-center font-bold">
+                <input type="number" id="pr_diskon" placeholder="Diskon (%)" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl text-center">
+                <button onclick="savePromo()" class="w-full py-4 font-bold text-xs uppercase bg-yellow-600 rounded-2xl">Aktifkan Voucher</button>
+                <button onclick="closeModal('modalPromo')" class="text-xs text-gray-500 underline">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    
 
     <script>
         lucide.createIcons();
 
-        // 1. DATA LOADING
-        function loadDashboard() {
-            const total = localStorage.getItem('revorz_total') || 0;
-            const orders = JSON.parse(localStorage.getItem('revorz_orders')) || [];
+        // 1. NAVIGATION LOGIC
+        function showSection(id) {
+            document.querySelectorAll('.admin-section').forEach(s => s.classList.add('hidden'));
+            document.getElementById('section-' + id).classList.remove('hidden');
             
-            document.getElementById('totalPemasukan').innerText = 'Rp ' + parseInt(total).toLocaleString('id-ID');
-            document.getElementById('totalPesanan').innerText = orders.length;
+            document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            renderAll();
+        }
 
-            const table = document.getElementById('orderTable');
-            table.innerHTML = "";
+        // 2. DATA CRUD (PRODUK)
+        function saveProduct() {
+            const nama = document.getElementById('p_nama').value;
+            const img = document.getElementById('p_img').value;
+            const harga = document.getElementById('p_harga').value;
+            const stok = document.getElementById('p_stok').value;
+            const desc = document.getElementById('p_desc').value;
+
+            if(!nama || !harga || !img) return alert("Data produk tidak lengkap!");
+
+            let db = JSON.parse(localStorage.getItem('revorz_products')) || [];
+            db.push({ id: Date.now(), nama, img, harga: parseInt(harga), stok: parseInt(stok), desc });
+            localStorage.setItem('revorz_products', JSON.stringify(db));
             
-            orders.reverse().forEach((item, index) => {
-                table.innerHTML += `
-                    <tr class="border-b border-white/5 group hover:bg-white/[0.02] transition">
-                        <td class="py-5 font-mono text-[10px] text-blue-500">#RVZ-${1000 + index}</td>
-                        <td class="py-5">
-                            <p class="font-bold">${item.nama}</p>
-                            <p class="text-[10px] text-gray-500">${item.tgl}</p>
+            closeModal('modalProduk');
+            renderAll();
+        }
+
+        function deleteProduct(id) {
+            if(confirm("Hapus item ini?")) {
+                let db = JSON.parse(localStorage.getItem('revorz_products')) || [];
+                db = db.filter(x => x.id !== id);
+                localStorage.setItem('revorz_products', JSON.stringify(db));
+                renderAll();
+            }
+        }
+
+        // 3. RENDER FUNCTIONS
+        function renderAll() {
+            const products = JSON.parse(localStorage.getItem('revorz_products')) || [];
+            const logs = JSON.parse(localStorage.getItem('revorz_login_logs')) || [];
+            const promos = JSON.parse(localStorage.getItem('revorz_promos')) || [];
+            const orders = JSON.parse(localStorage.getItem('revorz_orders')) || [];
+
+            // Greet
+            document.getElementById('adminGreet').innerText = "Logged in as: " + sessionStorage.getItem('username');
+
+            // Stats
+            let rev = orders.reduce((a, b) => a + (b.total || 0), 0);
+            document.getElementById('statRevenue').innerText = "Rp " + rev.toLocaleString('id-ID');
+            document.getElementById('statProductCount').innerText = products.length;
+            document.getElementById('statLoginCount').innerText = logs.length;
+            document.getElementById('statLowStock').innerText = products.filter(p => p.stok < 5).length;
+
+            // Render Table Produk
+            const pTable = document.getElementById('productTableBody');
+            pTable.innerHTML = "";
+            products.forEach(p => {
+                pTable.innerHTML += `
+                    <tr class="border-b border-white/5 hover:bg-white/[0.02]">
+                        <td class="p-6">
+                            <div class="flex items-center gap-4">
+                                <img src="${p.img}" class="w-10 h-10 rounded-lg object-cover">
+                                <span class="font-bold">${p.nama}</span>
+                            </div>
                         </td>
-                        <td class="py-5">
-                            <span class="px-3 py-1 bg-[#1524f4]/10 text-[#1524f4] rounded-full text-[10px] font-bold uppercase tracking-tighter border border-[#1524f4]/20">${item.method}</span>
-                        </td>
-                        <td class="py-5 font-bold">Rp ${item.total.toLocaleString('id-ID')}</td>
-                        <td class="py-5 text-right">
-                             <button class="bg-white text-black text-[10px] font-black px-4 py-2 rounded-lg uppercase tracking-widest hover:bg-[#1524f4] hover:text-white transition">Details</button>
+                        <td class="p-6 text-blue-500 font-bold">Rp ${p.harga.toLocaleString('id-ID')}</td>
+                        <td class="p-6">${p.stok}</td>
+                        <td class="p-6">
+                            <button onclick="deleteProduct(${p.id})" class="text-red-500 hover:scale-110 transition"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
                         </td>
                     </tr>
                 `;
             });
 
-            initChart(orders);
-        }
-
-        // 2. VISUALISASI DATA (CHART)
-        function initChart(orders) {
-            const ctx = document.getElementById('salesChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                    datasets: [{
-                        label: 'Sales Velocity',
-                        data: [12, 19, 15, 25, 22, 30, orders.length],
-                        borderColor: '#1524f4',
-                        backgroundColor: 'rgba(21, 36, 244, 0.1)',
-                        fill: true,
-                        tension: 0.4,
-                        borderWidth: 4,
-                        pointRadius: 0
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        y: { display: false },
-                        x: { grid: { display: false }, ticks: { color: '#444' } }
-                    }
-                }
+            // Render Logs
+            const lTable = document.getElementById('loginList');
+            lTable.innerHTML = "";
+            logs.reverse().slice(0, 5).forEach(l => {
+                lTable.innerHTML += `
+                    <div class="flex justify-between items-center p-4 bg-white/5 rounded-2xl border border-white/5">
+                        <div class="flex items-center gap-3">
+                            <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                            <span class="text-xs font-bold">${l.u}</span>
+                        </div>
+                        <span class="text-[10px] text-gray-500">${l.time}</span>
+                    </div>
+                `;
             });
+
+            // Render Promos
+            const prDisp = document.getElementById('promoDisplay');
+            prDisp.innerHTML = "";
+            promos.forEach((pr, index) => {
+                prDisp.innerHTML += `
+                    <div class="glass-card p-6 rounded-3xl border-2 border-dashed border-yellow-500/30 text-center">
+                        <h4 class="text-2xl font-black text-yellow-500">${pr.kode}</h4>
+                        <p class="text-xs text-gray-500 mt-1">Discount ${pr.diskon}%</p>
+                        <button onclick="deletePromo(${index})" class="mt-4 text-[10px] text-red-500 font-bold uppercase underline">Hapus</button>
+                    </div>
+                `;
+            });
+
+            lucide.createIcons();
         }
 
-        function resetData() {
-            if(confirm("PERINGATAN: Hapus semua data permanen?")) {
-                localStorage.clear();
-                location.reload();
-            }
+        // 4. PROMO LOGIC
+        function savePromo() {
+            const kode = document.getElementById('pr_kode').value.toUpperCase();
+            const diskon = document.getElementById('pr_diskon').value;
+            if(!kode || !diskon) return;
+
+            let db = JSON.parse(localStorage.getItem('revorz_promos')) || [];
+            db.push({ kode, diskon });
+            localStorage.setItem('revorz_promos', JSON.stringify(db));
+            closeModal('modalPromo');
+            renderAll();
         }
 
-        window.onload = loadDashboard;
+        function deletePromo(index) {
+            let db = JSON.parse(localStorage.getItem('revorz_promos')) || [];
+            db.splice(index, 1);
+            localStorage.setItem('revorz_promos', JSON.stringify(db));
+            renderAll();
+        }
+
+        // UI HELPERS
+        function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+        function logout() { sessionStorage.clear(); window.location.href = "login.html"; }
+        setInterval(() => { document.getElementById('liveClock').innerText = new Date().toLocaleString(); }, 1000);
+
+        window.onload = renderAll;
     </script>
 </body>
 </html>

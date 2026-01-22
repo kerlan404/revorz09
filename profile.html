@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Member Profile - Revorz</title>
+</head>
+<body class="bg-[#050505] text-white p-8 font-['Plus_Jakarta_Sans']">
+    <div class="max-w-4xl mx-auto">
+        <div class="flex justify-between items-center mb-12">
+            <h1 class="text-4xl font-black italic">MY ACCOUNT</h1>
+            <button onclick="logout()" class="text-xs font-bold text-red-500 uppercase tracking-widest">Logout</button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+            <div class="md:col-span-1 bg-white/5 p-8 rounded-[2.5rem] border border-white/5 text-center">
+                <div class="w-24 h-24 bg-blue-600 rounded-full mx-auto mb-4 flex items-center justify-center text-3xl font-black italic">R</div>
+                <h3 id="userName" class="text-xl font-bold">User</h3>
+                <p id="userEmail" class="text-gray-500 text-xs"></p>
+            </div>
+
+            <div class="md:col-span-2 bg-white/5 p-8 rounded-[2.5rem] border border-white/5">
+                <h4 class="font-black mb-6 flex items-center gap-2 uppercase text-xs tracking-widest text-blue-500">Order History</h4>
+                <div id="orderHistory" class="space-y-4"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function initProfile() {
+            const user = sessionStorage.getItem('username');
+            if(!user) window.location.href = "login.html";
+
+            document.getElementById('userName').innerText = user;
+            
+            const orders = JSON.parse(localStorage.getItem('revorz_orders')) || [];
+            const myOrders = orders.filter(o => o.nama === user);
+            const container = document.getElementById('orderHistory');
+
+            if(myOrders.length === 0) container.innerHTML = "<p class='text-gray-600 text-sm'>No orders yet.</p>";
+            
+            myOrders.reverse().forEach(o => {
+                container.innerHTML += `
+                    <div class="p-6 bg-black/40 rounded-2xl border border-white/5 flex justify-between items-center">
+                        <div>
+                            <p class="text-[10px] font-bold text-blue-600 uppercase mb-1">${o.orderID}</p>
+                            <p class="text-sm font-bold">Rp ${o.total.toLocaleString('id-ID')}</p>
+                            <p class="text-[10px] text-gray-500 mt-1">${o.time}</p>
+                        </div>
+                        <span class="px-4 py-2 bg-yellow-500/10 text-yellow-500 text-[10px] font-black rounded-lg uppercase">${o.status}</span>
+                    </div>
+                `;
+            });
+        }
+        function logout() { sessionStorage.clear(); window.location.href = "login.html"; }
+        window.onload = initProfile;
+    </script>
+</body>
+</html>
