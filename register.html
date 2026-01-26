@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Revorz - Login Portal</title>
+    <title>Revorz - Register Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
@@ -20,31 +20,35 @@
     <div class="max-w-md w-full px-6">
         <div class="text-center mb-10">
             <h1 class="text-5xl font-black italic tracking-tighter mb-2">REVORZ</h1>
-            <p class="text-gray-500 text-[10px] font-bold uppercase tracking-[0.4em]">Secure Access Point</p>
+            <p class="text-gray-500 text-[10px] font-bold uppercase tracking-[0.4em]">Secure Registration</p>
         </div>
 
         <div class="glass-card p-10 rounded-[3rem]">
             <div class="space-y-6">
                 <div class="input-group">
-                    <input type="text" id="username" placeholder="Username" class="input-field" autocomplete="off">
+                    <input type="text" id="reg_username" placeholder="Username" class="input-field" autocomplete="off">
                     <i data-lucide="user" class="input-icon w-5 h-5"></i>
                 </div>
                 <div class="input-group">
-                    <input type="password" id="password" placeholder="Password" class="input-field">
+                    <input type="password" id="reg_password" placeholder="Password" class="input-field">
+                    <i data-lucide="lock" class="input-icon w-5 h-5"></i>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="confirm_password" placeholder="Confirm Password" class="input-field">
                     <i data-lucide="lock" class="input-icon w-5 h-5"></i>
                 </div>
 
                 <div id="errorMsg" class="hidden text-red-500 text-[10px] font-bold uppercase text-center tracking-widest bg-red-500/10 p-3 rounded-xl">
-                    Invalid Credentials
+                    Registration Error
                 </div>
 
-                <button onclick="handleLogin()" class="w-full bg-[#1524f4] text-white py-5 rounded-2xl font-black hover:bg-blue-700 transition-all uppercase tracking-widest text-xs">
-                    Sign In
+                <button onclick="handleRegister()" class="w-full bg-[#1524f4] text-white py-5 rounded-2xl font-black hover:bg-blue-700 transition-all uppercase tracking-widest text-xs">
+                    Create Account
                 </button>
             </div>
-            
+
             <div class="mt-8 text-center space-y-4">
-                <p class="text-xs text-gray-500">Belum punya akun? <a href="register.html" class="text-white font-bold underline">Daftar</a></p>
+                <p class="text-xs text-gray-500">Sudah punya akun? <a href="login.html" class="text-white font-bold underline">Masuk</a></p>
                 <button onclick="clearSystem()" class="text-[9px] text-gray-700 uppercase tracking-widest hover:text-red-500 transition">Reset System Memory</button>
             </div>
         </div>
@@ -53,43 +57,123 @@
     <script>
         lucide.createIcons();
 
-        function handleLogin() {
-            // Kita paksa semua jadi huruf kecil dan hapus spasi
-            const u = document.getElementById('username').value.trim().toLowerCase();
-            const p = document.getElementById('password').value.trim();
+        function handleRegister() {
+            const u = document.getElementById('reg_username').value.trim().toLowerCase();
+            const p = document.getElementById('reg_password').value.trim();
+            const cp = document.getElementById('confirm_password').value.trim();
             const err = document.getElementById('errorMsg');
 
-            console.log("Input:", u, p); // Cek di F12 Console
-
-            // 1. CEK ADMIN (Data Tetap)
-            if (u === "admin" && p === "revorz123") {
-                sessionStorage.setItem('isLoggedIn', 'true');
-                sessionStorage.setItem('role', 'ADMIN');
-                sessionStorage.setItem('username', 'Master Admin');
-                window.location.href = "admin-dashboard.html";
+            // Validasi input
+            if (!u || !p) {
+                showNotification('Username dan password harus diisi!', 'error');
                 return;
             }
 
-            // 2. CEK USER DARI REGISTER
-            let userDB = JSON.parse(localStorage.getItem('revorz_users')) || [];
-            const foundUser = userDB.find(user => user.u.toLowerCase() === u && user.p === p);
-
-            if (foundUser) {
-                sessionStorage.setItem('isLoggedIn', 'true');
-                sessionStorage.setItem('role', 'CUSTOMER');
-                sessionStorage.setItem('username', foundUser.u);
-                window.location.href = "index.html";
-            } else {
-                err.classList.remove('hidden');
+            if (p !== cp) {
+                showNotification('Password dan konfirmasi password tidak cocok!', 'error');
+                return;
             }
+
+            if (p.length < 6) {
+                showNotification('Password minimal 6 karakter!', 'error');
+                return;
+            }
+
+            // Ambil data pengguna dari localStorage
+            let userDB = JSON.parse(localStorage.getItem('revorz_users')) || [];
+
+            // Cek apakah username sudah ada
+            const existingUser = userDB.find(user => user.u.toLowerCase() === u);
+            if (existingUser) {
+                showNotification('Username sudah terdaftar!', 'error');
+                return;
+            }
+
+            // Tambahkan pengguna baru
+            userDB.push({ u: u, p: p });
+            localStorage.setItem('revorz_users', JSON.stringify(userDB));
+
+            // Tampilkan notifikasi sukses
+            showNotification('Registrasi berhasil! Silakan login.', 'success');
+
+            // Reset form
+            document.getElementById('reg_username').value = '';
+            document.getElementById('reg_password').value = '';
+            document.getElementById('confirm_password').value = '';
+
+            // Redirect ke halaman login setelah 2 detik
+            setTimeout(() => {
+                window.location.href = "login.html";
+            }, 2000);
         }
 
         function clearSystem() {
             if(confirm("Hapus semua data akun?")) {
                 localStorage.clear();
                 sessionStorage.clear();
-                alert("Sistem dibersihkan. Coba login admin kembali.");
+                showNotification("Sistem dibersihkan. Coba login admin kembali.", 'info');
                 location.reload();
+            }
+        }
+
+        // Fungsi notifikasi global
+        function showNotification(message, type = 'info') {
+            // Hapus notifikasi sebelumnya jika ada
+            let existingNotification = document.getElementById('web-notification');
+            if(existingNotification) {
+                existingNotification.remove();
+            }
+
+            // Tentukan warna berdasarkan tipe notifikasi
+            let bgColor = '#1524f4'; // Biru default untuk info
+            if(type === 'success') bgColor = '#10b981'; // Hijau untuk sukses
+            if(type === 'error') bgColor = '#ef4444'; // Merah untuk error
+            if(type === 'warning') bgColor = '#f59e0b'; // Kuning untuk warning
+
+            // Buat elemen notifikasi
+            const notification = document.createElement('div');
+            notification.id = 'web-notification';
+            notification.className = 'fixed top-6 right-6 px-6 py-4 rounded-xl shadow-lg z-[1000] max-w-sm';
+            notification.style.backgroundColor = bgColor;
+            notification.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+            notification.style.color = 'white';
+            notification.innerHTML = `
+                <div class="flex items-start">
+                    <div class="mr-3">
+                        <i data-lucide="${type === 'success' ? 'check-circle' : type === 'error' ? 'alert-circle' : type === 'warning' ? 'alert-triangle' : 'info'}" class="w-5 h-5"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="font-bold text-sm">${type.charAt(0).toUpperCase() + type.slice(1)}</p>
+                        <p class="text-xs opacity-80">${message}</p>
+                    </div>
+                    <button onclick="closeNotification()" class="ml-2 text-white">×</button>
+                </div>
+            `;
+
+            // Tambahkan ke body
+            document.body.appendChild(notification);
+            lucide.createIcons();
+
+            // Tampilkan dengan animasi
+            setTimeout(() => {
+                notification.style.opacity = '1';
+                notification.style.transform = 'translateY(0)';
+            }, 10);
+
+            // Otomatis hilangkan setelah 5 detik
+            setTimeout(() => {
+                closeNotification();
+            }, 5000);
+        }
+
+        function closeNotification() {
+            const notification = document.getElementById('web-notification');
+            if(notification) {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateY(-20px)';
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
             }
         }
     </script>

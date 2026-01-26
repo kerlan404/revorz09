@@ -53,25 +53,94 @@
         <div class="lg:col-span-5">
             <div class="glass-card p-8 rounded-[3rem] sticky top-10 text-center">
                 <p class="text-gray-500 text-[10px] font-bold uppercase tracking-widest mb-2">Total Tagihan</p>
-                <h2 class="text-4xl font-black text-white mb-8">Rp 4.301.000</h2>
+                <h2 class="text-4xl font-black text-white mb-8" id="totalAmount">Rp 0</h2>
                 <button onclick="handleProses()" class="w-full bg-[#1524f4] text-white py-5 rounded-2xl font-black hover:bg-blue-700 transition-all uppercase tracking-[0.2em] text-xs">Konfirmasi Pesanan</button>
             </div>
         </div>
     </main>
 
-    <div id="modalQris" class="fixed inset-0 bg-black/95 z-[999] hidden items-center justify-center p-6 backdrop-blur-md">
-        <div class="glass-card p-8 rounded-[3rem] max-w-sm w-full text-center">
-            <h3 class="text-xl font-bold mb-6 silver-text">SCAN QRIS DISINI</h3>
-            <div class="bg-white p-4 rounded-3xl mb-6">
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=REVORZ-PAYMENT" class="w-full">
+    <!-- Modal untuk upload bukti pembayaran WA -->
+    <div id="modalWA" class="fixed inset-0 bg-black/95 z-[999] hidden items-center justify-center p-6 backdrop-blur-md">
+        <div class="glass-card p-8 rounded-[3rem] max-w-md w-full text-center">
+            <h3 class="text-xl font-bold mb-6 silver-text">KIRIM BUKTI PEMBAYARAN</h3>
+            <p class="text-gray-400 text-sm mb-6">Silakan kirim bukti pembayaran melalui WhatsApp</p>
+
+            <div class="mb-6">
+                <button onclick="kirimPesan('WhatsApp')" class="w-full py-4 bg-[#1524f4] text-white font-bold rounded-2xl text-xs uppercase tracking-widest mb-4">KIRIM VIA WHATSAPP</button>
+
+                <p class="text-gray-500 text-xs mb-4">ATAU</p>
+
+                <label class="block mb-4">
+                    <span class="text-gray-400 text-sm">Upload Bukti Pembayaran:</span>
+                    <input type="file" id="uploadWA" accept="image/*" class="mt-2 w-full text-sm text-gray-400
+                        file:mr-4 file:py-2 file:px-4
+                        file:rounded-full file:border-0
+                        file:text-sm file:font-semibold
+                        file:bg-[#1524f4] file:text-white
+                        hover:file:bg-blue-700">
+                </label>
+
+                <button onclick="uploadBukti('WhatsApp')" class="w-full py-3 bg-green-600 text-white font-bold rounded-2xl text-xs uppercase tracking-widest">UPLOAD BUKTI</button>
             </div>
-            <button onclick="kirimPesan('QRIS')" class="w-full py-4 bg-[#1524f4] text-white font-bold rounded-2xl text-xs uppercase tracking-widest">SAYA SUDAH BAYAR</button>
+
+            <button onclick="closeModal('modalWA')" class="text-xs text-gray-500 underline">Tutup</button>
+        </div>
+    </div>
+
+    <!-- Modal untuk QRIS -->
+    <div id="modalQris" class="fixed inset-0 bg-black/95 z-[999] hidden items-center justify-center p-6 backdrop-blur-md">
+        <div class="glass-card p-8 rounded-[3rem] max-w-md w-full text-center">
+            <h3 class="text-xl font-bold mb-6 silver-text">SCAN QRIS DISINI</h3>
+            <div class="bg-white p-4 rounded-3xl mb-6 flex justify-center">
+                <img src="qris-code.jpg" class="w-48 h-48 object-contain">
+            </div>
+
+            <div class="mb-6">
+                <p class="text-gray-400 text-sm mb-4">Setelah melakukan pembayaran, silakan upload bukti pembayaran</p>
+
+                <label class="block mb-4">
+                    <span class="text-gray-400 text-sm">Upload Bukti Pembayaran QRIS:</span>
+                    <input type="file" id="uploadQRIS" accept="image/*" class="mt-2 w-full text-sm text-gray-400
+                        file:mr-4 file:py-2 file:px-4
+                        file:rounded-full file:border-0
+                        file:text-sm file:font-semibold
+                        file:bg-[#1524f4] file:text-white
+                        hover:file:bg-blue-700">
+                </label>
+
+                <button onclick="uploadBukti('QRIS')" class="w-full py-4 bg-[#1524f4] text-white font-bold rounded-2xl text-xs uppercase tracking-widest">UPLOAD BUKTI</button>
+            </div>
+
+            <button onclick="closeModal('modalQris')" class="text-xs text-gray-500 underline">Tutup</button>
         </div>
     </div>
 
     <script>
+        // Check if user is logged in by checking sessionStorage
+        if (!sessionStorage.getItem('isLoggedIn')) {
+            window.location.href = 'login.html';
+        }
+        
+        // Check if user is admin and redirect if needed
+        if (sessionStorage.getItem('role') === 'ADMIN') {
+            window.location.href = 'admin-dashboard.html';
+        }
+        
         lucide.createIcons();
         let method = 'wa';
+
+        // Calculate and display total from cart
+        function updateTotal() {
+            const cart = JSON.parse(localStorage.getItem('revorz_cart')) || [];
+            const total = cart.reduce((sum, item) => sum + (item.harga * item.qty), 0);
+            document.getElementById('totalAmount').textContent = `Rp ${total.toLocaleString('id-ID')}`;
+        }
+
+        // Call updateTotal when page loads
+        window.onload = function() {
+            updateTotal();
+        };
+
         function setPayment(m) {
             method = m;
             document.querySelectorAll('.payment-card').forEach(c => c.classList.remove('active'));
@@ -80,24 +149,200 @@
 
         function handleProses() {
             const n = document.getElementById('nama').value;
-            if(!n || !document.getElementById('wa').value) return alert("Isi data lengkap!");
-            if(method === 'qris') document.getElementById('modalQris').classList.replace('hidden', 'flex');
-            else kirimPesan('WhatsApp');
+            const phone = document.getElementById('wa').value;
+            const address = document.getElementById('alamat').value;
+
+            if(!n || !phone || !address) {
+                showNotification('Mohon lengkapi data alamat Anda!', 'error');
+                return;
+            }
+
+            if(method === 'qris') {
+                document.getElementById('modalQris').classList.replace('hidden', 'flex');
+            } else {
+                // Untuk WA, tampilkan modal WA
+                document.getElementById('modalWA').classList.replace('hidden', 'flex');
+            }
         }
 
         function kirimPesan(metode) {
             const n = document.getElementById('nama').value;
-            const total = 4301000;
+            const phone = document.getElementById('wa').value;
+            const address = document.getElementById('alamat').value;
             
+            // Calculate total from cart
+            const cart = JSON.parse(localStorage.getItem('revorz_cart')) || [];
+            const total = cart.reduce((sum, item) => sum + (item.harga * item.qty), 0);
+
+            if(total <= 0) {
+                showNotification('Keranjang Anda kosong!', 'error');
+                return;
+            }
+
             // SIMPAN KE DATABASE LOKAL
             let currentTotal = parseInt(localStorage.getItem('revorz_total')) || 0;
             localStorage.setItem('revorz_total', currentTotal + total);
-            
+
             let orders = JSON.parse(localStorage.getItem('revorz_orders')) || [];
-            orders.push({ nama: n, total: total, method: metode, tgl: new Date().toLocaleString() });
+            orders.push({
+                nama: n,
+                total: total,
+                method: metode,
+                phone: phone,
+                address: address,
+                tgl: new Date().toLocaleString(),
+                status: 'Menunggu Verifikasi',
+                orderID: 'RVZ-' + Date.now()
+            });
             localStorage.setItem('revorz_orders', JSON.stringify(orders));
 
-            window.location.href = `https://api.whatsapp.com/send?phone=628659102765755&text=Halo Admin Revorz! Nama saya ${n}, saya pesan via ${metode} senilai Rp 4.301.000`;
+            // Clear cart after order
+            localStorage.removeItem('revorz_cart');
+
+            // Tutup modal
+            closeModal('modalWA');
+
+            // Tampilkan notifikasi
+            showNotification('Silakan lanjutkan pembayaran melalui WhatsApp dan kirim bukti pembayaran.');
+
+            // Arahkan ke WhatsApp
+            window.open(`https://api.whatsapp.com/send?phone=62859102765755&text=Halo%20Admin%20Revorz!%20Nama%20saya%20${encodeURIComponent(n)},%20saya%20pesan%20via%20${encodeURIComponent(metode)}%20senilai%20Rp%20${total.toLocaleString('id-ID')}`, '_blank');
+        }
+
+        function uploadBukti(metode) {
+            let fileInputId = metode === 'WhatsApp' ? 'uploadWA' : 'uploadQRIS';
+            let file = document.getElementById(fileInputId).files[0];
+
+            if (!file) {
+                showNotification('Silakan pilih file bukti pembayaran terlebih dahulu!', 'error');
+                return;
+            }
+
+            // Calculate total from cart
+            const cart = JSON.parse(localStorage.getItem('revorz_cart')) || [];
+            const total = cart.reduce((sum, item) => sum + (item.harga * item.qty), 0);
+
+            if(total <= 0) {
+                showNotification('Keranjang Anda kosong!', 'error');
+                return;
+            }
+
+            // Simulasikan proses upload
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const n = document.getElementById('nama').value;
+                const phone = document.getElementById('wa').value;
+                const address = document.getElementById('alamat').value;
+
+                // SIMPAN KE DATABASE LOKAL termasuk bukti pembayaran
+                let currentTotal = parseInt(localStorage.getItem('revorz_total')) || 0;
+                localStorage.setItem('revorz_total', currentTotal + total);
+
+                let orders = JSON.parse(localStorage.getItem('revorz_orders')) || [];
+                orders.push({
+                    nama: n,
+                    total: total,
+                    method: metode,
+                    phone: phone,
+                    address: address,
+                    tgl: new Date().toLocaleString(),
+                    status: 'Menunggu Verifikasi',
+                    orderID: 'RVZ-' + Date.now(),
+                    bukti_pembayaran: e.target.result // simpan data URL gambar
+                });
+                localStorage.setItem('revorz_orders', JSON.stringify(orders));
+
+                // Clear cart after order
+                localStorage.removeItem('revorz_cart');
+
+                // Tutup modal
+                if(metode === 'WhatsApp') {
+                    closeModal('modalWA');
+                } else {
+                    closeModal('modalQris');
+                }
+
+                // Tampilkan notifikasi
+                showNotification('Bukti pembayaran berhasil diupload. Pesanan Anda sedang diproses.');
+
+                // Arahkan kembali ke halaman utama
+                setTimeout(function() {
+                    window.location.href = "index.html";
+                }, 2000);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.replace('flex', 'hidden');
+        }
+
+        function handleLogout() {
+            sessionStorage.clear();
+            showNotification('Anda telah logout dari akun Anda.', 'info');
+            setTimeout(() => {
+                window.location.href = "login.html";
+            }, 1500);
+        }
+
+        function showNotification(message, type = 'info') {
+            // Hapus notifikasi sebelumnya jika ada
+            let existingNotification = document.getElementById('web-notification');
+            if(existingNotification) {
+                existingNotification.remove();
+            }
+
+            // Tentukan warna berdasarkan tipe notifikasi
+            let bgColor = '#1524f4'; // Biru default untuk info
+            if(type === 'success') bgColor = '#10b981'; // Hijau untuk sukses
+            if(type === 'error') bgColor = '#ef4444'; // Merah untuk error
+            if(type === 'warning') bgColor = '#f59e0b'; // Kuning untuk warning
+
+            // Buat elemen notifikasi
+            const notification = document.createElement('div');
+            notification.id = 'web-notification';
+            notification.className = 'fixed top-6 right-6 px-6 py-4 rounded-xl shadow-lg z-[1000] max-w-sm';
+            notification.style.backgroundColor = bgColor;
+            notification.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+            notification.style.color = 'white';
+            notification.innerHTML = `
+                <div class="flex items-start">
+                    <div class="mr-3">
+                        <i data-lucide="${type === 'success' ? 'check-circle' : type === 'error' ? 'alert-circle' : type === 'warning' ? 'alert-triangle' : 'info'}" class="w-5 h-5"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="font-bold text-sm">${type.charAt(0).toUpperCase() + type.slice(1)}</p>
+                        <p class="text-xs opacity-80">${message}</p>
+                    </div>
+                    <button onclick="closeNotification()" class="ml-2 text-white">×</button>
+                </div>
+            `;
+
+            // Tambahkan ke body
+            document.body.appendChild(notification);
+            lucide.createIcons();
+
+            // Tampilkan dengan animasi
+            setTimeout(() => {
+                notification.style.opacity = '1';
+                notification.style.transform = 'translateY(0)';
+            }, 10);
+
+            // Otomatis hilangkan setelah 5 detik
+            setTimeout(() => {
+                closeNotification();
+            }, 5000);
+        }
+
+        function closeNotification() {
+            const notification = document.getElementById('web-notification');
+            if(notification) {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateY(-20px)';
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
+            }
         }
     </script>
 </body>

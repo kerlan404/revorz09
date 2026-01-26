@@ -3,187 +3,581 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>REVORZ — The Pinnacle of Precision</title>
+    <title>REVORZ — Engineering the Future</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;400;600;800&family=Space+Grotesk:wght@300;500;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;400;600;800&display=swap');
         
-        :root {
-            --brand-blue: #1524f4;
-            --tech-gold: #c5a358;
+        :root { --brand-blue: #1524f4; }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: #000;
+            color: #fff;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
         }
 
-        body { 
-            font-family: 'Plus Jakarta Sans', sans-serif; 
-            background: #000; 
-            color: #fff; 
-            overflow-x: hidden; 
+        /* Theme Styles */
+        [data-theme="light"] {
+            --bg-color: #ffffff;
+            --text-color: #000000;
+            --card-bg: rgba(255, 255, 255, 0.8);
+            --glass-bg: rgba(255, 255, 255, 0.8);
         }
 
-        .font-tech { font-family: 'Space Grotesk', sans-serif; }
-
-        /* Smooth Gradient Background */
-        .bg-mesh {
-            background-image: radial-gradient(at 0% 0%, rgba(21, 36, 244, 0.15) 0px, transparent 50%),
-                              radial-gradient(at 100% 100%, rgba(197, 163, 88, 0.1) 0px, transparent 50%);
+        [data-theme="dark"] {
+            --bg-color: #000000;
+            --text-color: #ffffff;
+            --card-bg: rgba(15, 15, 15, 0.8);
+            --glass-bg: rgba(0, 0, 0, 0.8);
         }
 
-        /* Glassmorphism Ultra */
-        .glass-nav { background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255, 255, 255, 0.03); }
+        body[data-theme="light"] {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        body[data-theme="dark"] {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
         
-        /* Floating Animation */
-        .float { animation: floating 3s ease-in-out infinite; }
-        @keyframes floating {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-15px); }
-            100% { transform: translateY(0px); }
-        }
+        /* Reveal Animation */
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
 
-        /* Video Masking */
+        /* Navbar Glassmorphism */
+        .glass-nav {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        /* Video Container Fixes */
         .video-container {
-            clip-path: inset(0% 0% 0% 0% rounded 3rem);
+            position: relative;
+            width: 100%;
+            height: 75vh;
+            overflow: hidden;
+            border-radius: 3rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
+
+        .video-content {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            object-fit: cover;
+            z-index: 0;
+        }
+
+        .video-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.8));
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Card Image Logic */
+        .product-card { 
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            border: 1px solid rgba(255,255,255,0.05); 
+            background: rgba(255,255,255,0.02);
+        }
+        .product-card:hover { 
+            border-color: var(--brand-blue); 
+            transform: translateY(-12px); 
+            background: rgba(21, 36, 244, 0.04);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        .floating { animation: float 6s ease-in-out infinite; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: #1524f4; border-radius: 10px; }
     </style>
 </head>
-<body class="bg-mesh">
+<body class="bg-[#030303]">
 
-    <nav class="sticky top-0 z-50 glass-nav px-10 py-6 flex justify-between items-center">
-        <div class="flex gap-10 items-center">
-            <h1 class="text-2xl font-black italic tracking-tighter text-white">REVORZ<span class="text-blue-600">.</span></h1>
-            <div class="hidden md:flex gap-8 text-[10px] font-bold tracking-[0.3em] text-gray-400">
-                <a href="index.html" class="hover:text-white transition">CHRONOS</a>
-                <a href="products.html" class="hover:text-white transition">COLLECTIONS</a>
-                <a href="about.html" class="hover:text-white transition">ENGINEERING</a>
+    <script>
+        // Check if user is logged in by checking sessionStorage
+        if (!sessionStorage.getItem('isLoggedIn')) {
+            window.location.href = 'login.html';
+        }
+
+        // Check if user is admin and redirect if needed
+        if (sessionStorage.getItem('role') === 'ADMIN') {
+            window.location.href = 'admin-dashboard.html';
+        }
+    </script>
+
+    <nav class="sticky top-0 z-[100] glass-nav px-6 md:px-12 py-5 flex justify-between items-center">
+        <div class="flex items-center gap-6">
+            <div class="flex items-center gap-3">
+                <img src="logo.png" class="w-10 h-10 rounded-full" alt="Revorz Logo">
+                <h1 class="text-2xl font-extrabold italic tracking-tighter cursor-pointer" onclick="window.scrollTo(0,0)">
+                    REVORZ<span class="text-blue-600">.</span>
+                </h1>
+            </div>
+            <div class="hidden lg:flex gap-8 text-[10px] font-bold tracking-[0.3em] text-gray-400">
+                <a href="#collections" class="hover:text-white transition">COLLECTIONS</a>
+                <a href="#" class="hover:text-white transition">TECHNOLOGY</a>
             </div>
         </div>
-        
-        <div class="flex gap-6 items-center">
-            <a href="cart.html" class="relative"><i data-lucide="shopping-cart" class="w-5 h-5"></i></a>
-            <a href="profile.html" class="bg-white/10 p-2 rounded-full border border-white/10 hover:bg-blue-600 transition">
-                <i data-lucide="user" class="w-4 h-4 text-white"></i>
-            </a>
+        <div class="flex items-center gap-6">
+            <button id="themeToggle" class="p-2.5 bg-white/5 rounded-full hover:bg-white/10 transition active:scale-90">
+                <i data-lucide="sun" class="w-5 h-5 theme-icon"></i>
+            </button>
+            <button onclick="window.location.href='cart.html'" class="relative p-2.5 bg-white/5 rounded-full hover:bg-white/10 transition active:scale-90">
+                <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+                <span id="cart-dot" class="absolute top-1 right-1 w-2.5 h-2.5 bg-blue-600 rounded-full border-2 border-black hidden"></span>
+            </button>
+            <button onclick="window.location.href='profile.html'" class="bg-white/5 border border-white/10 px-6 py-2.5 rounded-full text-[10px] font-black tracking-widest hover:bg-white/10 transition-all uppercase active:scale-95">
+                <i data-lucide="user" class="w-4 h-4 mr-2"></i>
+                <span>PROFILE</span>
+            </button>
+            <button onclick="handleLogout()" class="bg-white/5 border border-white/10 px-6 py-2.5 rounded-full text-[10px] font-black tracking-widest hover:bg-red-600 hover:text-white hover:border-red-600 transition-all uppercase active:scale-95">
+                Logout
+            </button>
         </div>
     </nav>
 
-    <section class="min-h-screen flex items-center justify-center relative px-8 overflow-hidden">
-        <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10"></div>
-        
-        <div class="max-w-7xl mx-auto grid lg:grid-cols-2 items-center gap-16 relative z-10">
-            <div class="space-y-8">
-                <span class="border border-blue-600 text-blue-500 px-5 py-2 rounded-full text-[10px] font-black tracking-widest uppercase">Series X — Titanium Edition</span>
-                <h2 class="text-8xl font-black italic tracking-tighter leading-[0.9]">FUTURE <br> <span class="text-gray-600">ON YOUR</span> <br> WRIST.</h2>
-                <p class="text-gray-400 max-w-md text-sm leading-relaxed font-light">
-                    Menggabungkan estetika horologi klasik dengan teknologi sensorik tercanggih di dunia. Revorz Series X diciptakan bagi mereka yang menghargai waktu dan harga diri.
+    <section class="min-h-screen flex items-center justify-center px-6 relative overflow-hidden">
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-blue-600/10 blur-[150px] rounded-full"></div>
+
+        <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center relative z-10">
+            <div class="reveal active">
+                <div class="flex items-center gap-3 mb-6">
+                    <span class="w-12 h-[1px] bg-blue-600 shadow-[0_0_10px_#1524f4]"></span>
+                    <span class="text-blue-500 text-[10px] font-black tracking-[0.5em] uppercase">Limited Release 2026</span>
+                </div>
+                <h2 class="text-7xl md:text-9xl font-black italic tracking-tighter leading-[0.8] mb-8">PURE <br><span class="text-gray-700">TITANIUM.</span></h2>
+                <p class="text-gray-400 max-w-sm text-sm mb-10 leading-relaxed">
+                    Material aerospace untuk pergelangan tangan Anda. Ketangguhan mutlak dalam balutan desain minimalis yang presisi.
                 </p>
-                <div class="flex gap-6">
-                    <button class="bg-blue-600 px-10 py-5 rounded-2xl font-black text-xs uppercase tracking-widest hover:scale-105 transition shadow-2xl shadow-blue-600/30">Order Now</button>
-                    <button class="bg-white/5 border border-white/10 backdrop-blur-md px-10 py-5 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-white/10 transition">Specs Detail</button>
+                <div class="flex flex-wrap gap-4">
+                    <button onclick="smoothScrollTo('#collections')" class="bg-blue-600 px-10 py-5 rounded-2xl font-bold text-[10px] tracking-widest hover:shadow-[0_0_40px_rgba(21,36,244,0.5)] transition-all active:scale-95">ACQUIRE NOW</button>
+                    <button class="bg-white/5 border border-white/10 px-10 py-5 rounded-2xl font-bold text-[10px] tracking-widest hover:bg-white/10 transition active:scale-95">TECH SPECS</button>
                 </div>
             </div>
-            
-            <div class="relative flex justify-center items-center">
-                <div class="absolute w-[500px] h-[500px] bg-blue-600/20 blur-[120px] rounded-full"></div>
-                <img src="https://images.unsplash.com/photo-1544117518-30df578096a4?q=80&w=1964&auto=format&fit=crop" 
-                     alt="Smartwatch Revorz" 
-                     class="w-[450px] relative z-20 float drop-shadow-[0_35px_35px_rgba(0,0,0,0.8)] rounded-[4rem]">
+            <div class="reveal active flex justify-center">
+                <div class="relative group p-4 bg-white/5 rounded-[4rem] border border-white/10 overflow-hidden">
+                    <img id="mainProductImage" src="product-black.png"
+                         class="w-full max-w-md rounded-[3.5rem] floating drop-shadow-2xl transition-transform duration-700 group-hover:scale-105 object-cover h-96"
+                         alt="Revorz Premium - Black">
+                </div>
             </div>
         </div>
     </section>
 
-    <section class="max-w-7xl mx-auto px-8 py-32">
-        <div class="flex justify-between items-center mb-16 border-b border-white/5 pb-8">
-            <h3 class="text-2xl font-bold italic tracking-tighter">SELECT YOUR MODEL</h3>
-            <div class="flex gap-4">
-                <button class="p-2 border border-white/10 rounded-full hover:bg-white hover:text-black transition"><i data-lucide="chevron-left"></i></button>
-                <button class="p-2 border border-white/10 rounded-full hover:bg-white hover:text-black transition"><i data-lucide="chevron-right"></i></button>
+    <section id="collections" class="max-w-7xl mx-auto px-6 py-32">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-20 reveal">
+            <div>
+                <h3 class="text-5xl font-black italic tracking-tighter uppercase">Available Models</h3>
+                <p class="text-gray-500 text-[10px] font-bold tracking-[0.4em] mt-3 uppercase">Engineered for perfection</p>
+            </div>
+            <div class="mt-6 md:mt-0 text-gray-400 text-[10px] font-bold tracking-widest border-b border-blue-600 pb-2">VIEW ALL 2026 SERIES</div>
+        </div>
+        <div id="productGrid" class="grid grid-cols-1 md:grid-cols-3 gap-12">
+            <div class="product-card p-6 rounded-[3rem] reveal">
+                <div class="relative aspect-square mb-8 overflow-hidden rounded-[2.5rem] bg-black border border-white/5">
+                    <img src="product-black.png" class="w-full h-full object-cover opacity-80 hover:scale-110 hover:opacity-100 transition duration-700" alt="REVORZ Premium - Black">
+                    <div class="absolute bottom-5 right-5 w-14 h-14 bg-white text-black rounded-full flex items-center justify-center shadow-2xl hover:bg-blue-600 hover:text-white transition-all transform active:scale-75" onclick="window.location.href='product.html'">
+                        <i data-lucide="eye" class="w-6 h-6"></i>
+                    </div>
+                </div>
+                <div class="px-2">
+                    <h4 class="text-2xl font-black tracking-tighter mb-2 uppercase">REVORZ Premium</h4>
+                    <div class="flex justify-between items-center">
+                        <p class="text-blue-500 font-bold text-sm">Rp 75.000</p>
+                        <span class="text-[9px] font-black text-gray-600 tracking-widest uppercase">New 2026</span>
+                    </div>
+                </div>
+            </div>
+            <div class="product-card p-6 rounded-[3rem] reveal">
+                <div class="relative aspect-square mb-8 overflow-hidden rounded-[2.5rem] bg-black border border-white/5">
+                    <img src="product-blue.png" class="w-full h-full object-cover opacity-80 hover:scale-110 hover:opacity-100 transition duration-700" alt="REVORZ Premium - Blue">
+                    <div class="absolute bottom-5 right-5 w-14 h-14 bg-white text-black rounded-full flex items-center justify-center shadow-2xl hover:bg-blue-600 hover:text-white transition-all transform active:scale-75" onclick="window.location.href='product.html'">
+                        <i data-lucide="eye" class="w-6 h-6"></i>
+                    </div>
+                </div>
+                <div class="px-2">
+                    <h4 class="text-2xl font-black tracking-tighter mb-2 uppercase">REVORZ Premium</h4>
+                    <div class="flex justify-between items-center">
+                        <p class="text-blue-500 font-bold text-sm">Rp 75.000</p>
+                        <span class="text-[9px] font-black text-gray-600 tracking-widest uppercase">New 2026</span>
+                    </div>
+                </div>
+            </div>
+            <div class="product-card p-6 rounded-[3rem] reveal">
+                <div class="relative aspect-square mb-8 overflow-hidden rounded-[2.5rem] bg-black border border-white/5">
+                    <img src="product-white.png" class="w-full h-full object-cover opacity-80 hover:scale-110 hover:opacity-100 transition duration-700" alt="REVORZ Premium - White">
+                    <div class="absolute bottom-5 right-5 w-14 h-14 bg-white text-black rounded-full flex items-center justify-center shadow-2xl hover:bg-blue-600 hover:text-white transition-all transform active:scale-75" onclick="window.location.href='product.html'">
+                        <i data-lucide="eye" class="w-6 h-6"></i>
+                    </div>
+                </div>
+                <div class="px-2">
+                    <h4 class="text-2xl font-black tracking-tighter mb-2 uppercase">REVORZ Premium</h4>
+                    <div class="flex justify-between items-center">
+                        <p class="text-blue-500 font-bold text-sm">Rp 75.000</p>
+                        <span class="text-[9px] font-black text-gray-600 tracking-widest uppercase">New 2026</span>
+                    </div>
+                </div>
             </div>
         </div>
-        
-        <div id="productGrid" class="grid grid-cols-1 md:grid-cols-3 gap-10">
-            </div>
     </section>
 
-    <section class="max-w-7xl mx-auto px-8 py-20">
-        <div class="text-center mb-16">
-            <h3 class="text-xs font-black tracking-[0.6em] text-blue-600 uppercase mb-4">Engineering Excellence</h3>
-            <h2 class="text-5xl font-black italic tracking-tighter uppercase">Harga Diri Dalam Setiap Detik.</h2>
-        </div>
-        
-        <div class="video-container relative h-[70vh] bg-zinc-900 overflow-hidden shadow-2xl">
-            <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover opacity-60">
-                <source src="https://player.vimeo.com/external/494163966.sd.mp4?s=807e7740f4e3c914e6665c52c78160b73c4ca3c0&profile_id=164&oauth2_token_id=57447761" type="video/mp4">
-                Browser kamu tidak mendukung video.
+    <section class="max-w-[1400px] mx-auto px-6 py-20 reveal">
+        <div class="video-container shadow-2xl relative overflow-hidden rounded-3xl">
+            <video id="mainVideo" autoplay muted loop playsinline class="video-content w-full h-full object-cover">
+                <source src="demo.mp4" type="video/mp4">
             </video>
-            
-            <div class="absolute inset-0 flex flex-col items-center justify-center text-center p-6 bg-gradient-to-t from-black via-transparent to-transparent">
-                <div class="w-20 h-20 border-2 border-white/30 rounded-full flex items-center justify-center backdrop-blur-md mb-6 hover:scale-110 transition cursor-pointer">
-                    <i data-lucide="play" class="fill-white w-8 h-8"></i>
-                </div>
-                <p class="text-sm font-bold tracking-[0.4em] uppercase opacity-70">Watch the Film: Crafting Perfection</p>
+            <div id="videoOverlay" class="video-overlay absolute inset-0 flex flex-col items-center justify-center text-center p-6 bg-gradient-to-b from-black/70 to-black/30 z-10 transition-opacity duration-500">
+                <span class="text-blue-500 font-black tracking-[1em] text-[10px] uppercase mb-8">Brand Film</span>
+                <h2 class="text-5xl md:text-8xl font-black italic tracking-tighter uppercase mb-12 leading-[0.9]">
+                    HARGA DIRI <br> <span class="text-white">DALAM AKURASI.</span>
+                </h2>
+                <button id="playButton" class="w-24 h-24 bg-white/10 backdrop-blur-3xl border border-white/20 rounded-full flex items-center justify-center hover:scale-110 hover:bg-white hover:text-black transition-all duration-500 group">
+                    <i data-lucide="play" class="w-10 h-10 fill-current ml-1"></i>
+                </button>
             </div>
         </div>
     </section>
 
-    <footer class="p-20 border-t border-white/5 bg-black mt-20">
-        <div class="max-w-7xl mx-auto grid md:grid-cols-4 gap-12">
+
+    <footer class="bg-black py-24 border-t border-white/5">
+        <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-4 gap-16">
             <div class="col-span-2">
-                <h1 class="text-4xl font-black italic mb-6">REVORZ<span class="text-blue-600">.</span></h1>
-                <p class="text-gray-500 text-sm max-w-xs leading-relaxed">
-                    Kami tidak hanya membuat alat penunjuk waktu. Kami membangun masa depan di pergelangan tangan Anda.
-                </p>
+                <h2 class="text-4xl font-black italic mb-8">REVORZ<span class="text-blue-600">.</span></h2>
+                <p class="text-gray-500 text-sm max-w-sm leading-relaxed uppercase tracking-wider font-medium">Mendefinisikan ulang hubungan antara manusia dan waktu melalui teknologi titanium tercanggih.</p>
             </div>
             <div>
-                <h4 class="font-bold text-[10px] tracking-widest uppercase mb-6 text-blue-500">Navigation</h4>
-                <ul class="space-y-4 text-xs font-semibold text-gray-400">
-                    <li><a href="#" class="hover:text-white">Shop All</a></li>
-                    <li><a href="#" class="hover:text-white">Technology</a></li>
-                    <li><a href="#" class="hover:text-white">Privacy Policy</a></li>
+                <h5 class="text-white font-black text-[10px] tracking-widest uppercase mb-8">Directory</h5>
+                <ul class="text-gray-500 text-xs space-y-5 font-bold tracking-widest">
+                    <li><a href="#" class="hover:text-blue-500 transition">Collections</a></li>
+                    <li><a href="#" class="hover:text-blue-500 transition">Tech Lab</a></li>
+                    <li><a href="#" class="hover:text-blue-500 transition">Support</a></li>
                 </ul>
             </div>
             <div>
-                <h4 class="font-bold text-[10px] tracking-widest uppercase mb-6 text-blue-500">HQ Office</h4>
-                <p class="text-xs text-gray-400 leading-loose">
-                    Sudirman Central Business District,<br>
-                    Jakarta, Indonesia.
-                </p>
+                <h5 class="text-white font-black text-[10px] tracking-widest uppercase mb-8">Newsletter</h5>
+                <div class="flex gap-2">
+                    <input type="email" placeholder="ENTER EMAIL" class="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-[10px] font-bold outline-none focus:border-blue-600 transition">
+                    <button class="bg-white text-black p-4 rounded-xl hover:bg-blue-600 hover:text-white transition"><i data-lucide="arrow-right" class="w-5 h-5"></i></button>
+                </div>
+            </div>
+        </div>
+        <div class="mt-24 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
+            <p class="text-[8px] text-gray-700 tracking-[0.6em] uppercase font-black">© 2026 REVORZ CORP. ENGINEERED IN JAKARTA.</p>
+            <div class="flex gap-8 text-[8px] font-bold tracking-widest text-gray-600 uppercase">
+                <span>Privacy Policy</span>
+                <span>Terms of Service</span>
             </div>
         </div>
     </footer>
 
     <script>
-        function renderContent() {
+        // Logout Logic
+        function handleLogout() {
+            localStorage.removeItem('revorz_user');
+            window.location.href = 'login.html';
+        }
+
+        // Scroll Reveal
+        function reveal() {
+            const reveals = document.querySelectorAll(".reveal");
+            reveals.forEach(el => {
+                let windowHeight = window.innerHeight;
+                let elementTop = el.getBoundingClientRect().top;
+                if (elementTop < windowHeight - 50) el.classList.add("active");
+            });
+        }
+        window.addEventListener("scroll", reveal);
+
+        // Product Rendering (Gambar Masuk Card)
+        function loadProducts() {
             const products = JSON.parse(localStorage.getItem('revorz_products')) || [];
             const grid = document.getElementById('productGrid');
+            const cart = JSON.parse(localStorage.getItem('revorz_cart')) || [];
             
-            products.slice(0, 3).forEach(p => {
+            if(cart.length > 0) document.getElementById('cart-dot').classList.remove('hidden');
+
+
+            grid.innerHTML = '';
+            displayItems.slice(0, 3).forEach(p => {
                 grid.innerHTML += `
-                    <div class="group cursor-pointer bg-white/[0.02] border border-white/5 p-8 rounded-[3rem] hover:bg-white/[0.05] transition duration-500" onclick="toDetail(${p.id})">
-                        <div class="relative mb-8 overflow-hidden rounded-[2rem] aspect-square flex items-center justify-center">
-                            <img src="${p.img}" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                    <div class="product-card p-6 rounded-[3rem] reveal">
+                        <div class="relative aspect-square mb-8 overflow-hidden rounded-[2.5rem] bg-black border border-white/5">
+                            <img src="${p.img}" class="w-full h-full object-cover opacity-80 hover:scale-110 hover:opacity-100 transition duration-700" alt="${p.nama}">
+                            
+                            <button onclick="addToCart(${p.id}, '${p.nama}', ${p.harga}, '${p.img}')" 
+                                class="absolute bottom-5 right-5 w-14 h-14 bg-white text-black rounded-full flex items-center justify-center shadow-2xl hover:bg-blue-600 hover:text-white transition-all transform active:scale-75">
+                                <i data-lucide="plus" class="w-6 h-6"></i>
+                            </button>
                         </div>
-                        <div class="space-y-2">
-                            <p class="text-[10px] font-black text-blue-600 tracking-widest uppercase">Available Now</p>
-                            <h4 class="text-2xl font-bold">${p.nama}</h4>
-                            <div class="flex justify-between items-center pt-4">
-                                <span class="text-xl font-light text-gray-400">Rp ${p.harga.toLocaleString('id-ID')}</span>
-                                <button class="bg-white text-black w-10 h-10 rounded-full flex items-center justify-center hover:bg-blue-600 hover:text-white transition">
-                                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                                </button>
+                        <div class="px-2">
+                            <h4 class="text-2xl font-black tracking-tighter mb-2 uppercase">${p.nama}</h4>
+                            <div class="flex justify-between items-center">
+                                <p class="text-blue-500 font-bold text-sm">Rp ${parseInt(p.harga).toLocaleString('id-ID')}</p>
+                                <span class="text-[9px] font-black text-gray-600 tracking-widest uppercase">New 2026</span>
                             </div>
                         </div>
                     </div>
                 `;
             });
             lucide.createIcons();
+            setTimeout(reveal, 100);
         }
 
-        function toDetail(id) {
-            localStorage.setItem('current_pid', id);
-            window.location.href = "product-detail.html";
+        function addToCart(id, nama, harga, img) {
+            let cart = JSON.parse(localStorage.getItem('revorz_cart')) || [];
+            let exist = cart.find(x => x.id == id);
+            if(exist) exist.qty += 1;
+            else cart.push({ id, nama, harga, img, qty: 1 });
+            localStorage.setItem('revorz_cart', JSON.stringify(cart));
+            document.getElementById('cart-dot').classList.remove('hidden');
+            
+            // Visual feedback singkat
+            const btn = event.currentTarget;
+            btn.innerHTML = '<i data-lucide="check" class="w-6 h-6"></i>';
+            lucide.createIcons();
+            setTimeout(() => {
+                btn.innerHTML = '<i data-lucide="plus" class="w-6 h-6"></i>';
+                lucide.createIcons();
+            }, 1000);
         }
 
-        window.onload = renderContent;
+        // Theme Toggle
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const currentTheme = savedTheme || (prefersDarkScheme ? 'dark' : 'light');
+
+            setTheme(currentTheme);
+
+            const themeToggle = document.getElementById('themeToggle');
+            const themeIcon = themeToggle.querySelector('.theme-icon');
+
+            themeToggle.addEventListener('click', () => {
+                const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                setTheme(newTheme);
+                localStorage.setItem('theme', newTheme);
+
+                // Update icon based on new theme
+                if (newTheme === 'light') {
+                    themeIcon.setAttribute('data-lucide', 'moon');
+                } else {
+                    themeIcon.setAttribute('data-lucide', 'sun');
+                }
+                lucide.createIcons();
+            });
+
+            // Initialize theme icon based on current theme
+            if (currentTheme === 'light') {
+                themeIcon.setAttribute('data-lucide', 'moon');
+            } else {
+                themeIcon.setAttribute('data-lucide', 'sun');
+            }
+            lucide.createIcons();
+        }
+
+        function setTheme(theme) {
+            if (theme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                document.body.setAttribute('data-theme', 'dark');
+
+                // Update theme icon if needed
+                const themeIcon = document.querySelector('#themeToggle .theme-icon');
+                if (themeIcon) {
+                    themeIcon.setAttribute('data-lucide', 'sun');
+                }
+            } else {
+                document.documentElement.setAttribute('data-theme', 'light');
+                document.body.setAttribute('data-theme', 'light');
+
+                // Update theme icon if needed
+                const themeIcon = document.querySelector('#themeToggle .theme-icon');
+                if (themeIcon) {
+                    themeIcon.setAttribute('data-lucide', 'moon');
+                }
+            }
+        }
+
+        // Video functionality
+        // Smooth scroll function
+        function smoothScrollTo(target) {
+            const element = document.querySelector(target);
+            if (element) {
+                element.scrollIntoView({
+                    behavior: 'smooth'
+                });
+            }
+        }
+
+        // Product image cycling functionality
+        function initProductImage() {
+            const mainProductImage = document.getElementById('mainProductImage');
+            const colors = ['product-black.png', 'product-blue.png', 'product-white.png'];
+            let currentIndex = 0;
+
+            // Cycle through images every 5 seconds
+            setInterval(() => {
+                currentIndex = (currentIndex + 1) % colors.length;
+                mainProductImage.src = colors[currentIndex];
+
+                // Update alt text based on current color
+                const colorNames = ['Black', 'Blue', 'White'];
+                mainProductImage.alt = `Revorz Premium - ${colorNames[currentIndex]}`;
+            }, 5000);
+        }
+
+        function initVideo() {
+            const video = document.getElementById('mainVideo');
+            const overlay = document.getElementById('videoOverlay');
+            const playButton = document.getElementById('playButton');
+
+            // Initially show the overlay since video is autoplaying but muted
+            overlay.style.opacity = '1';
+            overlay.style.pointerEvents = 'auto';
+
+            // Toggle play/pause when clicking the play button
+            playButton.addEventListener('click', function(e) {
+                e.preventDefault();
+
+                if (video.paused) {
+                    // Play the video
+                    video.play().then(() => {
+                        // Unmute when user initiates playback
+                        video.muted = false;
+                    }).catch(error => {
+                        console.log('Play failed:', error);
+                        // If autoplay fails, try to unmute and play again
+                        video.muted = false;
+                        video.play().catch(e => console.log('Still failed to play:', e));
+                    });
+
+                    // Hide the overlay
+                    overlay.style.opacity = '0';
+                    overlay.style.pointerEvents = 'none';
+                } else {
+                    // Pause the video
+                    video.pause();
+
+                    // Show the overlay
+                    overlay.style.opacity = '1';
+                    overlay.style.pointerEvents = 'auto';
+                }
+            });
+
+            // Also hide overlay when video starts playing (in case of auto-play)
+            video.addEventListener('play', function() {
+                overlay.style.opacity = '0';
+                overlay.style.pointerEvents = 'none';
+            });
+
+            // Show overlay when video is paused
+            video.addEventListener('pause', function() {
+                overlay.style.opacity = '1';
+                overlay.style.pointerEvents = 'auto';
+            });
+
+            // Clicking anywhere on the video should also toggle play/pause
+            video.addEventListener('click', function() {
+                if (video.paused) {
+                    video.play();
+                    overlay.style.opacity = '0';
+                    overlay.style.pointerEvents = 'none';
+                } else {
+                    video.pause();
+                    overlay.style.opacity = '1';
+                    overlay.style.pointerEvents = 'auto';
+                }
+            });
+        }
+
+        function handleLogout() {
+            sessionStorage.clear();
+            showNotification('Anda telah logout dari akun Anda.', 'info');
+            setTimeout(() => {
+                window.location.href = "login.html";
+            }, 1500);
+        }
+
+        // Fungsi notifikasi global
+        function showNotification(message, type = 'info') {
+            // Hapus notifikasi sebelumnya jika ada
+            let existingNotification = document.getElementById('web-notification');
+            if(existingNotification) {
+                existingNotification.remove();
+            }
+
+            // Tentukan warna berdasarkan tipe notifikasi
+            let bgColor = '#1524f4'; // Biru default untuk info
+            if(type === 'success') bgColor = '#10b981'; // Hijau untuk sukses
+            if(type === 'error') bgColor = '#ef4444'; // Merah untuk error
+            if(type === 'warning') bgColor = '#f59e0b'; // Kuning untuk warning
+
+            // Buat elemen notifikasi
+            const notification = document.createElement('div');
+            notification.id = 'web-notification';
+            notification.className = 'fixed top-6 right-6 px-6 py-4 rounded-xl shadow-lg z-[1000] max-w-sm';
+            notification.style.backgroundColor = bgColor;
+            notification.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+            notification.style.color = 'white';
+            notification.innerHTML = `
+                <div class="flex items-start">
+                    <div class="mr-3">
+                        <i data-lucide="${type === 'success' ? 'check-circle' : type === 'error' ? 'alert-circle' : type === 'warning' ? 'alert-triangle' : 'info'}" class="w-5 h-5"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="font-bold text-sm">${type.charAt(0).toUpperCase() + type.slice(1)}</p>
+                        <p class="text-xs opacity-80">${message}</p>
+                    </div>
+                    <button onclick="closeNotification()" class="ml-2 text-white">×</button>
+                </div>
+            `;
+
+            // Tambahkan ke body
+            document.body.appendChild(notification);
+            lucide.createIcons();
+
+            // Tampilkan dengan animasi
+            setTimeout(() => {
+                notification.style.opacity = '1';
+                notification.style.transform = 'translateY(0)';
+            }, 10);
+
+            // Otomatis hilangkan setelah 5 detik
+            setTimeout(() => {
+                closeNotification();
+            }, 5000);
+        }
+
+        function closeNotification() {
+            const notification = document.getElementById('web-notification');
+            if(notification) {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateY(-20px)';
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
+            }
+        }
+
+        window.onload = function() {
+            loadProducts();
+            initTheme();
+            initVideo();
+            initProductImage();
+        };
     </script>
 </body>
 </html>

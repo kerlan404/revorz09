@@ -54,7 +54,10 @@
         <h1 class="text-xl font-black silver-text tracking-tighter uppercase">REVORZ</h1>
         <div class="flex items-center gap-6">
             <a href="index.html" class="text-xs font-bold hover:text-[#1524f4] transition-all tracking-widest uppercase">Beranda</a>
-            <a href="login.html" class="bg-gray-900 p-2 rounded-full border border-gray-800"><i data-lucide="user" class="w-4 h-4"></i></a>
+            <a href="profile.html" class="bg-gray-900 p-2 rounded-full border border-gray-800"><i data-lucide="user" class="w-4 h-4"></i></a>
+            <button onclick="handleLogout()" class="bg-white/5 border border-white/10 px-4 py-2 rounded-full text-[10px] font-black tracking-widest hover:bg-red-600 hover:text-white hover:border-red-600 transition-all uppercase">
+                Logout
+            </button>
         </div>
     </nav>
 
@@ -152,7 +155,193 @@
     </div>
 
     <script>
+        // Check if user is logged in by checking sessionStorage
+        if (!sessionStorage.getItem('isLoggedIn')) {
+            window.location.href = 'login.html';
+        }
+
+        // Check if user is admin and redirect if needed
+        if (sessionStorage.getItem('role') === 'ADMIN') {
+            window.location.href = 'admin-dashboard.html';
+        }
+
+        // Load order history from localStorage
+        function loadOrderHistory() {
+            const orderContainer = document.querySelector('.space-y-6');
+            const user = sessionStorage.getItem('username');
+
+            // Ambil semua order dari localStorage
+            const orders = JSON.parse(localStorage.getItem('revorz_orders')) || [];
+
+            // Filter hanya order milik user saat ini jika user terdaftar
+            const userOrders = user ? orders.filter(order => order.nama === user) : orders;
+
+            if(userOrders.length === 0) {
+                orderContainer.innerHTML = `
+                    <div class="glass-card rounded-[2.5rem] overflow-hidden">
+                        <div class="p-12 text-center">
+                            <i data-lucide="package-open" class="w-16 h-16 mx-auto text-gray-600 mb-4"></i>
+                            <h3 class="text-xl font-bold mb-2">Belum Ada Riwayat Pesanan</h3>
+                            <p class="text-gray-500 mb-6">Pesanan Anda akan muncul di sini setelah Anda melakukan pembelian</p>
+                            <a href="products.html" class="inline-block bg-[#1524f4] text-white py-3 px-8 rounded-2xl font-bold hover:bg-blue-700 transition-all">Mulai Belanja</a>
+                        </div>
+                    </div>
+                `;
+                lucide.createIcons();
+                return;
+            }
+
+            // Urutkan berdasarkan tanggal terbaru
+            userOrders.sort((a, b) => new Date(b.tgl) - new Date(a.tgl));
+
+            // Bersihkan container
+            orderContainer.innerHTML = '';
+
+            // Tampilkan setiap order
+            userOrders.forEach(order => {
+                const orderCard = document.createElement('div');
+                orderCard.className = 'glass-card rounded-[2.5rem] overflow-hidden';
+
+                // Status badge
+                let statusClass = '';
+                let statusText = '';
+                switch(order.status) {
+                    case 'Lunas':
+                        statusClass = 'status-completed';
+                        statusText = 'Selesai';
+                        break;
+                    case 'Ditolak':
+                        statusClass = 'status-process';
+                        statusText = 'Ditolak';
+                        break;
+                    case 'Menunggu Verifikasi':
+                        statusClass = 'status-process';
+                        statusText = 'Menunggu';
+                        break;
+                    default:
+                        statusClass = 'status-process';
+                        statusText = order.status || 'Diproses';
+                }
+
+                orderCard.innerHTML = `
+                    <div class="p-6 md:p-8">
+                        <div class="flex flex-wrap justify-between items-start gap-4 mb-6">
+                            <div>
+                                <span class="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Order ID</span>
+                                <h4 class="font-bold text-[#1524f4]">${order.orderID || '-'}</h4>
+                            </div>
+                            <div class="text-right">
+                                <span class="status-pill ${statusClass}">${statusText}</span>
+                                <p class="text-[10px] text-gray-600 font-bold mt-2 uppercase tracking-tighter">${order.tgl || ''}</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-6 py-6 border-y border-gray-900">
+                            <div class="w-20 h-20 bg-black border border-gray-800 rounded-2xl flex items-center justify-center">
+                                <i data-lucide="watch" class="text-[#1524f4] w-10 h-10"></i>
+                            </div>
+                            <div class="flex-1">
+                                <h5 class="font-bold text-lg">Smartwatch Premium</h5>
+                                <p class="text-xs text-gray-500">1 Item • ${order.method || 'Pembayaran'}</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-sm font-black text-white">Rp ${order.total ? order.total.toLocaleString('id-ID') : '0'}</p>
+                            </div>
+                        </div>
+
+                        <div class="mt-8 flex flex-col md:flex-row justify-between items-center gap-6">
+                            <div class="flex items-center gap-4">
+                                <div class="flex -space-x-2">
+                                    <div class="w-8 h-8 rounded-full bg-[#1524f4] flex items-center justify-center border-2 border-black"><i data-lucide="package" class="w-4 h-4 text-white"></i></div>
+                                    <div class="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center border-2 border-black"><i data-lucide="truck" class="w-4 h-4 text-gray-500"></i></div>
+                                    <div class="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center border-2 border-black"><i data-lucide="check" class="w-4 h-4 text-gray-500"></i></div>
+                                </div>
+                                <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Pesanan sedang diproses</p>
+                            </div>
+                            <button class="text-xs font-bold border border-gray-800 px-6 py-3 rounded-xl hover:bg-white hover:text-black transition-all uppercase tracking-widest">Detail Invoice</button>
+                        </div>
+                    </div>
+                `;
+
+                orderContainer.appendChild(orderCard);
+            });
+
+            lucide.createIcons();
+        }
+
+        // Initialize when page loads
+        window.onload = loadOrderHistory;
+
         lucide.createIcons();
+
+        function handleLogout() {
+            sessionStorage.clear();
+            showNotification('Anda telah logout dari akun Anda.', 'info');
+            setTimeout(() => {
+                window.location.href = "login.html";
+            }, 1500);
+        }
+
+        // Fungsi notifikasi global
+        function showNotification(message, type = 'info') {
+            // Hapus notifikasi sebelumnya jika ada
+            let existingNotification = document.getElementById('web-notification');
+            if(existingNotification) {
+                existingNotification.remove();
+            }
+
+            // Tentukan warna berdasarkan tipe notifikasi
+            let bgColor = '#1524f4'; // Biru default untuk info
+            if(type === 'success') bgColor = '#10b981'; // Hijau untuk sukses
+            if(type === 'error') bgColor = '#ef4444'; // Merah untuk error
+            if(type === 'warning') bgColor = '#f59e0b'; // Kuning untuk warning
+
+            // Buat elemen notifikasi
+            const notification = document.createElement('div');
+            notification.id = 'web-notification';
+            notification.className = 'fixed top-6 right-6 px-6 py-4 rounded-xl shadow-lg z-[1000] max-w-sm';
+            notification.style.backgroundColor = bgColor;
+            notification.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+            notification.style.color = 'white';
+            notification.innerHTML = `
+                <div class="flex items-start">
+                    <div class="mr-3">
+                        <i data-lucide="${type === 'success' ? 'check-circle' : type === 'error' ? 'alert-circle' : type === 'warning' ? 'alert-triangle' : 'info'}" class="w-5 h-5"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="font-bold text-sm">${type.charAt(0).toUpperCase() + type.slice(1)}</p>
+                        <p class="text-xs opacity-80">${message}</p>
+                    </div>
+                    <button onclick="closeNotification()" class="ml-2 text-white">×</button>
+                </div>
+            `;
+
+            // Tambahkan ke body
+            document.body.appendChild(notification);
+            lucide.createIcons();
+
+            // Tampilkan dengan animasi
+            setTimeout(() => {
+                notification.style.opacity = '1';
+                notification.style.transform = 'translateY(0)';
+            }, 10);
+
+            // Otomatis hilangkan setelah 5 detik
+            setTimeout(() => {
+                closeNotification();
+            }, 5000);
+        }
+
+        function closeNotification() {
+            const notification = document.getElementById('web-notification');
+            if(notification) {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateY(-20px)';
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
+            }
+        }
     </script>
 </body>
 </html>

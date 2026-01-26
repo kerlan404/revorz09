@@ -69,6 +69,116 @@
         </div>
     </div>
 
-    <script>lucide.createIcons();</script>
+    <script>
+        // Check if user is logged in by checking sessionStorage
+        if (!sessionStorage.getItem('isLoggedIn')) {
+            window.location.href = 'login.html';
+        }
+
+        // Check if user is admin and redirect if needed
+        if (sessionStorage.getItem('role') === 'ADMIN') {
+            window.location.href = 'admin-dashboard.html';
+        }
+
+        // Handle form submission
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            // Get form values
+            const name = document.querySelector('input[type="text"]').value;
+            const email = document.querySelector('input[type="email"]').value;
+            const message = document.querySelector('textarea').value;
+
+            // Validate form
+            if(!name || !email || !message) {
+                showNotification('Mohon lengkapi semua field yang wajib diisi!', 'error');
+                return;
+            }
+
+            // Simple email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if(!emailRegex.test(email)) {
+                showNotification('Format email tidak valid!', 'error');
+                return;
+            }
+
+            // In a real application, you would send the form data to a server here
+            // For this demo, we'll just show a success notification
+
+            // Show success notification
+            showNotification('Pesan Anda telah terkirim! Kami akan segera menghubungi Anda.', 'success');
+
+            // Reset form
+            document.querySelector('input[type="text"]').value = '';
+            document.querySelector('input[type="email"]').value = '';
+            document.querySelector('textarea').value = '';
+        }
+
+        // Add event listener to form
+        document.querySelector('form').addEventListener('submit', handleSubmit);
+
+        lucide.createIcons();
+
+        // Fungsi notifikasi global
+        function showNotification(message, type = 'info') {
+            // Hapus notifikasi sebelumnya jika ada
+            let existingNotification = document.getElementById('web-notification');
+            if(existingNotification) {
+                existingNotification.remove();
+            }
+
+            // Tentukan warna berdasarkan tipe notifikasi
+            let bgColor = '#1524f4'; // Biru default untuk info
+            if(type === 'success') bgColor = '#10b981'; // Hijau untuk sukses
+            if(type === 'error') bgColor = '#ef4444'; // Merah untuk error
+            if(type === 'warning') bgColor = '#f59e0b'; // Kuning untuk warning
+
+            // Buat elemen notifikasi
+            const notification = document.createElement('div');
+            notification.id = 'web-notification';
+            notification.className = 'fixed top-6 right-6 px-6 py-4 rounded-xl shadow-lg z-[1000] max-w-sm';
+            notification.style.backgroundColor = bgColor;
+            notification.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+            notification.style.color = 'white';
+            notification.innerHTML = `
+                <div class="flex items-start">
+                    <div class="mr-3">
+                        <i data-lucide="${type === 'success' ? 'check-circle' : type === 'error' ? 'alert-circle' : type === 'warning' ? 'alert-triangle' : 'info'}" class="w-5 h-5"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="font-bold text-sm">${type.charAt(0).toUpperCase() + type.slice(1)}</p>
+                        <p class="text-xs opacity-80">${message}</p>
+                    </div>
+                    <button onclick="closeNotification()" class="ml-2 text-white">×</button>
+                </div>
+            `;
+
+            // Tambahkan ke body
+            document.body.appendChild(notification);
+            lucide.createIcons();
+
+            // Tampilkan dengan animasi
+            setTimeout(() => {
+                notification.style.opacity = '1';
+                notification.style.transform = 'translateY(0)';
+            }, 10);
+
+            // Otomatis hilangkan setelah 5 detik
+            setTimeout(() => {
+                closeNotification();
+            }, 5000);
+        }
+
+        function closeNotification() {
+            const notification = document.getElementById('web-notification');
+            if(notification) {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateY(-20px)';
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
+            }
+        }
+    </script>
 </body>
 </html>

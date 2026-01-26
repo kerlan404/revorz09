@@ -3,57 +3,303 @@
 <head>
     <meta charset="UTF-8">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
     <title>Member Profile - Revorz</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #050505; color: #fff; }
+        .glass-card { background: rgba(15, 15, 15, 0.8); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .status-completed { background: rgba(34, 197, 94, 0.1); color: #22c55e; border: 1px solid rgba(34, 197, 94, 0.2); }
+        .status-pending { background: rgba(21, 36, 244, 0.1); color: #1524f4; border: 1px solid rgba(21, 36, 244, 0.2); }
+        .status-shipped { background: rgba(168, 85, 247, 0.1); color: #a855f7; border: 1px solid rgba(168, 85, 247, 0.2); }
+        .status-cancelled { background: rgba(244, 63, 94, 0.1); color: #f43f5e; border: 1px solid rgba(244, 63, 94, 0.2); }
+    </style>
 </head>
 <body class="bg-[#050505] text-white p-8 font-['Plus_Jakarta_Sans']">
-    <div class="max-w-4xl mx-auto">
-        <div class="flex justify-between items-center mb-12">
-            <h1 class="text-4xl font-black italic">MY ACCOUNT</h1>
-            <button onclick="logout()" class="text-xs font-bold text-red-500 uppercase tracking-widest">Logout</button>
-        </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-            <div class="md:col-span-1 bg-white/5 p-8 rounded-[2.5rem] border border-white/5 text-center">
-                <div class="w-24 h-24 bg-blue-600 rounded-full mx-auto mb-4 flex items-center justify-center text-3xl font-black italic">R</div>
-                <h3 id="userName" class="text-xl font-bold">User</h3>
-                <p id="userEmail" class="text-gray-500 text-xs"></p>
+    <div class="max-w-6xl mx-auto">
+        <!-- Navigation -->
+        <nav class="fixed top-0 w-full left-0 z-50 bg-black/90 border-b border-gray-900 px-8 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <img src="logo.png" class="w-10 h-10 rounded-full" alt="Revorz Logo">
+                <h1 class="text-xl font-black italic tracking-tighter uppercase">REVORZ</h1>
+            </div>
+            <div class="flex items-center gap-6">
+                <a href="index.html" class="text-xs font-bold hover:text-[#1524f4] transition-all tracking-widest uppercase">Beranda</a>
+                <button onclick="handleLogout()" class="bg-white/5 border border-white/10 px-4 py-2 rounded-full text-[10px] font-black tracking-widest hover:bg-red-600 hover:text-white hover:border-red-600 transition-all uppercase">
+                    Logout
+                </button>
+            </div>
+        </nav>
+
+        <div class="pt-24 pb-12">
+            <div class="flex justify-between items-center mb-12">
+                <h1 class="text-4xl font-black italic">MY ACCOUNT</h1>
             </div>
 
-            <div class="md:col-span-2 bg-white/5 p-8 rounded-[2.5rem] border border-white/5">
-                <h4 class="font-black mb-6 flex items-center gap-2 uppercase text-xs tracking-widest text-blue-500">Order History</h4>
-                <div id="orderHistory" class="space-y-4"></div>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+                <div class="lg:col-span-1 glass-card p-8 rounded-[2.5rem] border border-white/5 text-center">
+                    <div class="w-24 h-24 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full mx-auto mb-4 flex items-center justify-center text-3xl font-black italic">
+                        <span id="initialLetter">U</span>
+                    </div>
+                    <h3 id="userName" class="text-xl font-bold">User</h3>
+                    <p id="userEmail" class="text-gray-500 text-xs">Member since 2026</p>
+                    <div class="mt-6 pt-6 border-t border-white/10">
+                        <div class="grid grid-cols-3 gap-4 text-center">
+                            <div>
+                                <p class="text-2xl font-black text-white" id="totalOrders">0</p>
+                                <p class="text-[10px] text-gray-500 uppercase">Orders</p>
+                            </div>
+                            <div>
+                                <p class="text-2xl font-black text-white" id="totalSpent">Rp 0</p>
+                                <p class="text-[10px] text-gray-500 uppercase">Spent</p>
+                            </div>
+                            <div>
+                                <p class="text-2xl font-black text-white" id="completedOrders">0</p>
+                                <p class="text-[10px] text-gray-500 uppercase">Completed</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-2 glass-card p-8 rounded-[2.5rem] border border-white/5">
+                    <div class="flex justify-between items-center mb-6">
+                        <h4 class="font-black flex items-center gap-2 uppercase text-xs tracking-widest text-blue-500">
+                            <i data-lucide="package" class="w-4 h-4"></i> Order History
+                        </h4>
+                        <button onclick="location.href='history.html'" class="text-xs font-bold text-blue-500 hover:text-white transition-all tracking-widest uppercase">
+                            View All
+                        </button>
+                    </div>
+                    <div id="orderHistory" class="space-y-4">
+                        <p class="text-gray-600 text-sm text-center py-8">Loading order history...</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card p-8 rounded-[2.5rem] border border-white/5 mb-12">
+                <h4 class="font-black flex items-center gap-2 uppercase text-xs tracking-widest text-blue-500 mb-6">
+                    <i data-lucide="shopping-cart" class="w-4 h-4"></i> Shopping Cart
+                </h4>
+                <div id="cartPreview" class="space-y-4">
+                    <p class="text-gray-600 text-sm text-center py-4">Loading cart items...</p>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
+        // Check if user is logged in by checking sessionStorage
+        if (!sessionStorage.getItem('isLoggedIn')) {
+            window.location.href = 'login.html';
+        }
+        
+        // Check if user is admin and redirect if needed
+        if (sessionStorage.getItem('role') === 'ADMIN') {
+            window.location.href = 'admin-dashboard.html';
+        }
+
         function initProfile() {
             const user = sessionStorage.getItem('username');
             if(!user) window.location.href = "login.html";
 
+            // Set user name and initial
             document.getElementById('userName').innerText = user;
+            document.getElementById('initialLetter').innerText = user.charAt(0).toUpperCase();
+
+            // Load cart preview
+            loadCartPreview();
             
-            const orders = JSON.parse(localStorage.getItem('revorz_orders')) || [];
-            const myOrders = orders.filter(o => o.nama === user);
+            // Load order history
+            loadOrderHistory();
+            
+            // Load stats
+            loadStats();
+        }
+
+        function loadCartPreview() {
+            const cart = JSON.parse(localStorage.getItem('revorz_cart')) || [];
+            const container = document.getElementById('cartPreview');
+            
+            if(cart.length === 0) {
+                container.innerHTML = `<p class="text-gray-600 text-sm text-center py-4">Your cart is empty</p>`;
+                return;
+            }
+            
+            let cartHTML = '';
+            const total = cart.reduce((sum, item) => sum + (item.harga * item.qty), 0);
+            
+            cartHTML += `
+                <div class="space-y-4">
+                    ${cart.slice(0, 3).map(item => `
+                        <div class="flex items-center gap-4 p-4 bg-black/30 rounded-xl border border-white/5">
+                            <img src="${item.img}" class="w-16 h-16 object-cover rounded-lg" alt="${item.nama}">
+                            <div class="flex-1">
+                                <h5 class="font-bold text-sm">${item.nama}</h5>
+                                <p class="text-xs text-gray-500">Qty: ${item.qty}</p>
+                            </div>
+                            <p class="font-bold text-blue-500">Rp ${(item.harga * item.qty).toLocaleString('id-ID')}</p>
+                        </div>
+                    `).join('')}
+                    <div class="flex justify-between pt-4 border-t border-white/10">
+                        <span class="font-bold">Total:</span>
+                        <span class="font-black text-blue-500">Rp ${total.toLocaleString('id-ID')}</span>
+                    </div>
+                    <div class="pt-4">
+                        <a href="checkout.html" class="w-full block bg-[#1524f4] text-white py-3 rounded-xl font-bold text-center text-xs hover:bg-blue-700 transition-all">Proceed to Checkout</a>
+                    </div>
+                </div>
+            `;
+            
+            container.innerHTML = cartHTML;
+        }
+
+        function loadOrderHistory() {
+            const user = sessionStorage.getItem('username');
             const container = document.getElementById('orderHistory');
 
-            if(myOrders.length === 0) container.innerHTML = "<p class='text-gray-600 text-sm'>No orders yet.</p>";
-            
-            myOrders.reverse().forEach(o => {
-                container.innerHTML += `
-                    <div class="p-6 bg-black/40 rounded-2xl border border-white/5 flex justify-between items-center">
+            const orders = JSON.parse(localStorage.getItem('revorz_orders')) || [];
+            const userOrders = orders.filter(o => o.nama === user);
+
+            if(userOrders.length === 0) {
+                container.innerHTML = `<p class="text-gray-600 text-sm text-center py-4">No orders yet</p>`;
+                return;
+            }
+
+            // Show only latest 3 orders
+            const latestOrders = userOrders.slice(0, 3);
+
+            let ordersHTML = '';
+            latestOrders.forEach(o => {
+                // Determine status badge class
+                let statusClass = 'status-pending';
+                let statusText = o.status || 'Processing';
+                
+                if(statusText.toLowerCase().includes('selesai') || statusText.toLowerCase().includes('lunas') || statusText.toLowerCase().includes('completed')) {
+                    statusClass = 'status-completed';
+                    statusText = 'Completed';
+                } else if(statusText.toLowerCase().includes('dikirim') || statusText.toLowerCase().includes('shipped')) {
+                    statusClass = 'status-shipped';
+                    statusText = 'Shipped';
+                } else if(statusText.toLowerCase().includes('ditolak') || statusText.toLowerCase().includes('cancelled')) {
+                    statusClass = 'status-cancelled';
+                    statusText = 'Cancelled';
+                }
+
+                ordersHTML += `
+                    <div class="p-4 bg-black/40 rounded-2xl border border-white/5 flex justify-between items-center">
                         <div>
                             <p class="text-[10px] font-bold text-blue-600 uppercase mb-1">${o.orderID}</p>
                             <p class="text-sm font-bold">Rp ${o.total.toLocaleString('id-ID')}</p>
-                            <p class="text-[10px] text-gray-500 mt-1">${o.time}</p>
+                            <p class="text-[10px] text-gray-500 mt-1">${o.tgl}</p>
                         </div>
-                        <span class="px-4 py-2 bg-yellow-500/10 text-yellow-500 text-[10px] font-black rounded-lg uppercase">${o.status}</span>
+                        <span class="status-badge ${statusClass}">${statusText}</span>
                     </div>
                 `;
             });
+
+            container.innerHTML = ordersHTML;
         }
-        function logout() { sessionStorage.clear(); window.location.href = "login.html"; }
+
+        function loadStats() {
+            const user = sessionStorage.getItem('username');
+            const orders = JSON.parse(localStorage.getItem('revorz_orders')) || [];
+            const userOrders = orders.filter(o => o.nama === user);
+
+            // Total orders
+            document.getElementById('totalOrders').textContent = userOrders.length;
+
+            // Total spent
+            const totalSpent = userOrders.reduce((sum, order) => sum + order.total, 0);
+            document.getElementById('totalSpent').textContent = `Rp ${totalSpent.toLocaleString('id-ID')}`;
+
+            // Completed orders
+            const completedOrders = userOrders.filter(o => 
+                o.status.toLowerCase().includes('selesai') || 
+                o.status.toLowerCase().includes('lunas') || 
+                o.status.toLowerCase().includes('completed')
+            ).length;
+            document.getElementById('completedOrders').textContent = completedOrders;
+        }
+
+        function handleLogout() {
+            sessionStorage.clear();
+            showNotification('Anda telah logout dari akun Anda.', 'info');
+            setTimeout(() => {
+                window.location.href = "login.html";
+            }, 1500);
+        }
+
+        function showNotification(message, type = 'info') {
+            // Hapus notifikasi sebelumnya jika ada
+            let existingNotification = document.getElementById('web-notification');
+            if(existingNotification) {
+                existingNotification.remove();
+            }
+
+            // Tentukan warna berdasarkan tipe notifikasi
+            let bgColor = '#1524f4'; // Biru default untuk info
+            if(type === 'success') bgColor = '#10b981'; // Hijau untuk sukses
+            if(type === 'error') bgColor = '#ef4444'; // Merah untuk error
+            if(type === 'warning') bgColor = '#f59e0b'; // Kuning untuk warning
+
+            // Buat elemen notifikasi
+            const notification = document.createElement('div');
+            notification.id = 'web-notification';
+            notification.className = 'fixed top-6 right-6 px-6 py-4 rounded-xl shadow-lg z-[1000] max-w-sm';
+            notification.style.backgroundColor = bgColor;
+            notification.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+            notification.style.color = 'white';
+            notification.innerHTML = `
+                <div class="flex items-start">
+                    <div class="mr-3">
+                        <i data-lucide="${type === 'success' ? 'check-circle' : type === 'error' ? 'alert-circle' : type === 'warning' ? 'alert-triangle' : 'info'}" class="w-5 h-5"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="font-bold text-sm">${type.charAt(0).toUpperCase() + type.slice(1)}</p>
+                        <p class="text-xs opacity-80">${message}</p>
+                    </div>
+                    <button onclick="closeNotification()" class="ml-2 text-white">×</button>
+                </div>
+            `;
+
+            // Tambahkan ke body
+            document.body.appendChild(notification);
+            lucide.createIcons();
+
+            // Tampilkan dengan animasi
+            setTimeout(() => {
+                notification.style.opacity = '1';
+                notification.style.transform = 'translateY(0)';
+            }, 10);
+
+            // Otomatis hilangkan setelah 5 detik
+            setTimeout(() => {
+                closeNotification();
+            }, 5000);
+        }
+
+        function closeNotification() {
+            const notification = document.getElementById('web-notification');
+            if(notification) {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateY(-20px)';
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
+            }
+        }
+
         window.onload = initProfile;
+        lucide.createIcons();
     </script>
 </body>
 </html>

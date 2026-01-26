@@ -19,6 +19,16 @@
     <div id="detailView" class="max-w-6xl mx-auto"></div>
 
     <script>
+        // Check if user is logged in by checking sessionStorage
+        if (!sessionStorage.getItem('isLoggedIn')) {
+            window.location.href = 'login.html';
+        }
+
+        // Check if user is admin and redirect if needed
+        if (sessionStorage.getItem('role') === 'ADMIN') {
+            window.location.href = 'admin-dashboard.html';
+        }
+
         function loadDetail() {
             const pid = localStorage.getItem('current_pid');
             const products = JSON.parse(localStorage.getItem('revorz_products')) || [];
@@ -34,7 +44,7 @@
                     <div class="flex flex-col justify-center">
                         <h1 class="text-6xl font-black italic tracking-tighter mb-4">${p.nama}</h1>
                         <p class="text-4xl text-blue-600 font-black mb-8">Rp ${p.harga.toLocaleString('id-ID')}</p>
-                        
+
                         <div class="glass-card p-8 rounded-[2rem] mb-8">
                             <h4 class="text-xs font-black uppercase tracking-widest text-gray-500 mb-2">Description</h4>
                             <p class="text-gray-400 leading-relaxed">${p.desc}</p>
@@ -66,15 +76,81 @@
             const pid = localStorage.getItem('current_pid');
             const products = JSON.parse(localStorage.getItem('revorz_products')) || [];
             const p = products.find(x => x.id == pid);
-            
+
             let cart = JSON.parse(localStorage.getItem('revorz_cart')) || [];
             cart.push({ ...p, qty: currentQty });
             localStorage.setItem('revorz_cart', JSON.stringify(cart));
-            
-            alert("Berhasil masuk keranjang!");
-            window.location.href = "cart.html";
+
+            // Tampilkan notifikasi daripada alert
+            showNotification('Produk berhasil ditambahkan ke keranjang!', 'success');
+
+            // Arahkan ke halaman cart setelah 1.5 detik
+            setTimeout(() => {
+                window.location.href = "cart.html";
+            }, 1500);
         }
         window.onload = loadDetail;
+
+        // Fungsi notifikasi global
+        function showNotification(message, type = 'info') {
+            // Hapus notifikasi sebelumnya jika ada
+            let existingNotification = document.getElementById('web-notification');
+            if(existingNotification) {
+                existingNotification.remove();
+            }
+
+            // Tentukan warna berdasarkan tipe notifikasi
+            let bgColor = '#1524f4'; // Biru default untuk info
+            if(type === 'success') bgColor = '#10b981'; // Hijau untuk sukses
+            if(type === 'error') bgColor = '#ef4444'; // Merah untuk error
+            if(type === 'warning') bgColor = '#f59e0b'; // Kuning untuk warning
+
+            // Buat elemen notifikasi
+            const notification = document.createElement('div');
+            notification.id = 'web-notification';
+            notification.className = 'fixed top-6 right-6 px-6 py-4 rounded-xl shadow-lg z-[1000] max-w-sm';
+            notification.style.backgroundColor = bgColor;
+            notification.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+            notification.style.color = 'white';
+            notification.innerHTML = `
+                <div class="flex items-start">
+                    <div class="mr-3">
+                        <i data-lucide="${type === 'success' ? 'check-circle' : type === 'error' ? 'alert-circle' : type === 'warning' ? 'alert-triangle' : 'info'}" class="w-5 h-5"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="font-bold text-sm">${type.charAt(0).toUpperCase() + type.slice(1)}</p>
+                        <p class="text-xs opacity-80">${message}</p>
+                    </div>
+                    <button onclick="closeNotification()" class="ml-2 text-white">×</button>
+                </div>
+            `;
+
+            // Tambahkan ke body
+            document.body.appendChild(notification);
+            lucide.createIcons();
+
+            // Tampilkan dengan animasi
+            setTimeout(() => {
+                notification.style.opacity = '1';
+                notification.style.transform = 'translateY(0)';
+            }, 10);
+
+            // Otomatis hilangkan setelah 5 detik
+            setTimeout(() => {
+                closeNotification();
+            }, 5000);
+        }
+
+        function closeNotification() {
+            const notification = document.getElementById('web-notification');
+            if(notification) {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateY(-20px)';
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
+            }
+        }
     </script>
 </body>
 </html>

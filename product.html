@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revorz - Smartwatch Premium</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #000; color: #fff; }
+        .glass-card { background: rgba(15, 15, 15, 0.8); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .color-option { transition: all 0.3s ease; border: 2px solid transparent; cursor: pointer; }
+        .color-option.selected { border-color: #1524f4; box-shadow: 0 0 15px rgba(21, 36, 244, 0.5); }
+        .floating { animation: float 6s ease-in-out infinite; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+    </style>
+</head>
+<body class="pt-24 px-6 pb-20">
+
+    <nav class="fixed top-0 w-full left-0 z-50 bg-black/90 border-b border-gray-900 px-8 py-4 flex justify-between items-center">
+        <div class="flex items-center gap-3">
+            <img src="logo.png" class="w-10 h-10 rounded-full" alt="Revorz Logo">
+            <h1 class="text-xl font-black italic tracking-tighter uppercase">REVORZ</h1>
+        </div>
+        <div class="flex items-center gap-6">
+            <a href="index.html" class="text-xs font-bold hover:text-[#1524f4] transition-all tracking-widest uppercase">Beranda</a>
+            <button onclick="window.location.href='cart.html'" class="relative p-2.5 bg-white/5 rounded-full hover:bg-white/10 transition active:scale-90">
+                <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+                <span id="cart-dot" class="absolute top-1 right-1 w-2.5 h-2.5 bg-blue-600 rounded-full border-2 border-black hidden"></span>
+            </button>
+            <button onclick="handleLogout()" class="bg-white/5 border border-white/10 px-4 py-2 rounded-full text-[10px] font-black tracking-widest hover:bg-red-600 hover:text-white hover:border-red-600 transition-all uppercase">
+                Logout
+            </button>
+        </div>
+    </nav>
+
+    <div class="max-w-6xl mx-auto py-12">
+        <div class="grid md:grid-cols-2 gap-16 items-center">
+            <div class="flex justify-center">
+                <div class="relative group p-4 bg-white/5 rounded-[4rem] border border-white/10 overflow-hidden">
+                    <img id="productImage" src="product-black.png" 
+                         class="w-full max-w-md rounded-[3.5rem] floating drop-shadow-2xl transition-transform duration-700 group-hover:scale-105 object-contain h-96" 
+                         alt="Revorz Smartwatch - Black">
+                </div>
+            </div>
+
+            <div>
+                <h1 class="text-5xl font-black italic tracking-tighter mb-4">REVORZ Premium</h1>
+                <p class="text-blue-500 text-3xl font-black mb-8">Rp <span id="price">75.000</span></p>
+
+                <div class="mb-8">
+                    <h3 class="text-lg font-bold mb-4">Pilihan Warna:</h3>
+                    <div class="flex gap-4">
+                        <div class="color-option selected p-2 rounded-xl border-2 border-blue-600 cursor-pointer" data-color="black" data-image="product-black.png" data-price="75000">
+                            <div class="w-12 h-12 rounded-full bg-black border border-gray-700 flex items-center justify-center">
+                                <div class="w-8 h-8 rounded-full bg-black"></div>
+                            </div>
+                            <p class="text-center text-xs mt-2">Hitam</p>
+                        </div>
+                        <div class="color-option p-2 rounded-xl border border-white/10 cursor-pointer" data-color="blue" data-image="product-blue.png" data-price="75000">
+                            <div class="w-12 h-12 rounded-full bg-blue-900 border border-gray-700 flex items-center justify-center">
+                                <div class="w-8 h-8 rounded-full bg-blue-800"></div>
+                            </div>
+                            <p class="text-center text-xs mt-2">Biru Tua</p>
+                        </div>
+                        <div class="color-option p-2 rounded-xl border border-white/10 cursor-pointer" data-color="white" data-image="product-white.png" data-price="75000">
+                            <div class="w-12 h-12 rounded-full bg-gray-200 border border-gray-400 flex items-center justify-center">
+                                <div class="w-8 h-8 rounded-full bg-white"></div>
+                            </div>
+                            <p class="text-center text-xs mt-2">Putih</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-8">
+                    <h3 class="text-lg font-bold mb-4">Deskripsi Produk:</h3>
+                    <p class="text-gray-400 leading-relaxed">
+                        Jam tangan pintar premium dengan desain elegan dan teknologi terkini. 
+                        Cocok untuk berbagai aktivitas harian dengan ketahanan air dan baterai tahan lama.
+                    </p>
+                </div>
+
+                <div class="flex gap-4">
+                    <div class="bg-white/5 border border-white/10 px-6 py-4 rounded-2xl flex items-center gap-6">
+                        <button onclick="updateQty(-1)" class="text-xl font-bold">-</button>
+                        <span id="qty" class="text-xl font-black">1</span>
+                        <button onclick="updateQty(1)" class="text-xl font-bold">+</button>
+                    </div>
+                    <button onclick="addToCart()" class="flex-1 bg-white text-black py-5 rounded-2xl font-black uppercase tracking-[0.2em] hover:bg-blue-600 hover:text-white transition duration-500">
+                        Tambah ke Keranjang
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Check if user is logged in by checking sessionStorage
+        if (!sessionStorage.getItem('isLoggedIn')) {
+            window.location.href = 'login.html';
+        }
+        
+        // Check if user is admin and redirect if needed
+        if (sessionStorage.getItem('role') === 'ADMIN') {
+            window.location.href = 'admin-dashboard.html';
+        }
+
+        let currentQty = 1;
+        let currentColor = 'black';
+        let currentPrice = 75000;
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCartDot();
+        });
+
+        // Update quantity
+        function updateQty(change) {
+            currentQty = Math.max(1, currentQty + change);
+            document.getElementById('qty').innerText = currentQty;
+        }
+
+        // Change color and update image
+        document.querySelectorAll('.color-option').forEach(option => {
+            option.addEventListener('click', function() {
+                // Remove selected class from all options
+                document.querySelectorAll('.color-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                    opt.classList.remove('border-2');
+                    opt.classList.add('border');
+                    opt.classList.add('border-white/10');
+                });
+                
+                // Add selected class to clicked option
+                this.classList.add('selected');
+                this.classList.remove('border-white/10');
+                this.classList.add('border-2');
+                this.classList.add('border-blue-600');
+                
+                // Get color and image from data attributes
+                const color = this.getAttribute('data-color');
+                const image = this.getAttribute('data-image');
+                const price = parseInt(this.getAttribute('data-price'));
+                
+                // Update current values
+                currentColor = color;
+                currentPrice = price;
+                
+                // Update image and price
+                document.getElementById('productImage').src = image;
+                document.getElementById('price').textContent = price.toLocaleString('id-ID');
+            });
+        });
+
+        // Add to cart function
+        function addToCart() {
+            const cart = JSON.parse(localStorage.getItem('revorz_cart')) || [];
+            
+            // Check if product with same color already exists in cart
+            const existingItemIndex = cart.findIndex(item => 
+                item.nama === 'REVORZ Premium' && item.warna === currentColor
+            );
+            
+            if(existingItemIndex > -1) {
+                // If exists, increase quantity
+                cart[existingItemIndex].qty += currentQty;
+            } else {
+                // If not exists, add new item
+                cart.push({
+                    id: Date.now(), // Unique ID
+                    nama: 'REVORZ Premium',
+                    harga: currentPrice,
+                    img: document.getElementById('productImage').src,
+                    qty: currentQty,
+                    warna: currentColor
+                });
+            }
+            
+            // Save cart to localStorage
+            localStorage.setItem('revorz_cart', JSON.stringify(cart));
+            
+            // Update cart dot
+            updateCartDot();
+            
+            // Show notification
+            showNotification(`Produk berhasil ditambahkan ke keranjang! (${currentColor} - Qty: ${currentQty})`, 'success');
+        }
+
+        // Update cart dot
+        function updateCartDot() {
+            const cart = JSON.parse(localStorage.getItem('revorz_cart')) || [];
+            const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+            
+            const cartDot = document.getElementById('cart-dot');
+            if(totalItems > 0) {
+                cartDot.classList.remove('hidden');
+            } else {
+                cartDot.classList.add('hidden');
+            }
+        }
+
+        // Logout function
+        function handleLogout() {
+            sessionStorage.clear();
+            showNotification('Anda telah logout dari akun Anda.', 'info');
+            setTimeout(() => {
+                window.location.href = "login.html";
+            }, 1500);
+        }
+
+        // Notification function
+        function showNotification(message, type = 'info') {
+            // Remove previous notification if exists
+            let existingNotification = document.getElementById('web-notification');
+            if(existingNotification) {
+                existingNotification.remove();
+            }
+
+            // Determine color based on notification type
+            let bgColor = '#1524f4'; // Default blue for info
+            if(type === 'success') bgColor = '#10b981'; // Green for success
+            if(type === 'error') bgColor = '#ef4444'; // Red for error
+            if(type === 'warning') bgColor = '#f59e0b'; // Yellow for warning
+
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.id = 'web-notification';
+            notification.className = 'fixed top-6 right-6 px-6 py-4 rounded-xl shadow-lg z-[1000] max-w-sm';
+            notification.style.backgroundColor = bgColor;
+            notification.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+            notification.style.color = 'white';
+            notification.innerHTML = `
+                <div class="flex items-start">
+                    <div class="mr-3">
+                        <i data-lucide="${type === 'success' ? 'check-circle' : type === 'error' ? 'alert-circle' : type === 'warning' ? 'alert-triangle' : 'info'}" class="w-5 h-5"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="font-bold text-sm">${type.charAt(0).toUpperCase() + type.slice(1)}</p>
+                        <p class="text-xs opacity-80">${message}</p>
+                    </div>
+                    <button onclick="closeNotification()" class="ml-2 text-white">×</button>
+                </div>
+            `;
+
+            // Add to body
+            document.body.appendChild(notification);
+            lucide.createIcons();
+
+            // Show with animation
+            setTimeout(() => {
+                notification.style.opacity = '1';
+                notification.style.transform = 'translateY(0)';
+            }, 10);
+
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                closeNotification();
+            }, 5000);
+        }
+
+        function closeNotification() {
+            const notification = document.getElementById('web-notification');
+            if(notification) {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateY(-20px)';
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
+            }
+        }
+
+        lucide.createIcons();
+    </script>
+</body>
+</html>

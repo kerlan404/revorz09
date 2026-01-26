@@ -67,7 +67,7 @@
             console.log('Checking admin login...');
             if (u === "admin" && p === "revorz123") {
                 console.log('Admin login successful');
-                alert('Admin login berhasil! Redirecting...');
+                showNotification('Admin login berhasil! Mengalihkan...', 'success');
                 sessionStorage.setItem('isLoggedIn', 'true');
                 sessionStorage.setItem('role', 'ADMIN');
                 sessionStorage.setItem('username', 'Master Admin');
@@ -85,15 +85,78 @@
                 sessionStorage.setItem('isLoggedIn', 'true');
                 sessionStorage.setItem('role', 'CUSTOMER');
                 sessionStorage.setItem('username', foundUser.u);
+                showNotification('Login berhasil! Mengalihkan...', 'success');
                 window.location.href = "index.html";
             } else {
                 console.log('Login failed: Invalid credentials');
-                err.classList.remove('hidden');
+                // err.classList.remove('hidden');
+                showNotification('Username atau password salah!', 'error');
                 // Beri getaran pada card jika salah
                 const card = document.querySelector('.glass-card');
                 card.style.transform = "translateX(10px)";
                 setTimeout(() => card.style.transform = "translateX(-10px)", 50);
                 setTimeout(() => card.style.transform = "translateX(0)", 100);
+            }
+        }
+
+        // Fungsi notifikasi global
+        function showNotification(message, type = 'info') {
+            // Hapus notifikasi sebelumnya jika ada
+            let existingNotification = document.getElementById('web-notification');
+            if(existingNotification) {
+                existingNotification.remove();
+            }
+
+            // Tentukan warna berdasarkan tipe notifikasi
+            let bgColor = '#1524f4'; // Biru default untuk info
+            if(type === 'success') bgColor = '#10b981'; // Hijau untuk sukses
+            if(type === 'error') bgColor = '#ef4444'; // Merah untuk error
+            if(type === 'warning') bgColor = '#f59e0b'; // Kuning untuk warning
+
+            // Buat elemen notifikasi
+            const notification = document.createElement('div');
+            notification.id = 'web-notification';
+            notification.className = 'fixed top-6 right-6 px-6 py-4 rounded-xl shadow-lg z-[1000] max-w-sm';
+            notification.style.backgroundColor = bgColor;
+            notification.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+            notification.style.color = 'white';
+            notification.innerHTML = `
+                <div class="flex items-start">
+                    <div class="mr-3">
+                        <i data-lucide="${type === 'success' ? 'check-circle' : type === 'error' ? 'alert-circle' : type === 'warning' ? 'alert-triangle' : 'info'}" class="w-5 h-5"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="font-bold text-sm">${type.charAt(0).toUpperCase() + type.slice(1)}</p>
+                        <p class="text-xs opacity-80">${message}</p>
+                    </div>
+                    <button onclick="closeNotification()" class="ml-2 text-white">×</button>
+                </div>
+            `;
+
+            // Tambahkan ke body
+            document.body.appendChild(notification);
+            lucide.createIcons();
+
+            // Tampilkan dengan animasi
+            setTimeout(() => {
+                notification.style.opacity = '1';
+                notification.style.transform = 'translateY(0)';
+            }, 10);
+
+            // Otomatis hilangkan setelah 5 detik
+            setTimeout(() => {
+                closeNotification();
+            }, 5000);
+        }
+
+        function closeNotification() {
+            const notification = document.getElementById('web-notification');
+            if(notification) {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateY(-20px)';
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
             }
         }
     </script>
