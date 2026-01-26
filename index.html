@@ -306,32 +306,12 @@
             const products = JSON.parse(localStorage.getItem('revorz_products')) || [];
             const grid = document.getElementById('productGrid');
             const cart = JSON.parse(localStorage.getItem('revorz_cart')) || [];
-            
+
+            // Update cart dot
             if(cart.length > 0) document.getElementById('cart-dot').classList.remove('hidden');
 
-
-            grid.innerHTML = '';
-            displayItems.slice(0, 3).forEach(p => {
-                grid.innerHTML += `
-                    <div class="product-card p-6 rounded-[3rem] reveal">
-                        <div class="relative aspect-square mb-8 overflow-hidden rounded-[2.5rem] bg-black border border-white/5">
-                            <img src="${p.img}" class="w-full h-full object-cover opacity-80 hover:scale-110 hover:opacity-100 transition duration-700" alt="${p.nama}">
-                            
-                            <button onclick="addToCart(${p.id}, '${p.nama}', ${p.harga}, '${p.img}')" 
-                                class="absolute bottom-5 right-5 w-14 h-14 bg-white text-black rounded-full flex items-center justify-center shadow-2xl hover:bg-blue-600 hover:text-white transition-all transform active:scale-75">
-                                <i data-lucide="plus" class="w-6 h-6"></i>
-                            </button>
-                        </div>
-                        <div class="px-2">
-                            <h4 class="text-2xl font-black tracking-tighter mb-2 uppercase">${p.nama}</h4>
-                            <div class="flex justify-between items-center">
-                                <p class="text-blue-500 font-bold text-sm">Rp ${parseInt(p.harga).toLocaleString('id-ID')}</p>
-                                <span class="text-[9px] font-black text-gray-600 tracking-widest uppercase">New 2026</span>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            });
+            // Since we're using static products in the HTML, we don't need to populate from localStorage
+            // Just update the cart dot and initialize icons
             lucide.createIcons();
             setTimeout(reveal, 100);
         }
