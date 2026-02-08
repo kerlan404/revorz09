@@ -107,11 +107,6 @@
 <body class="bg-[#030303]">
 
     <script>
-        // Check if user is logged in by checking sessionStorage
-        if (!sessionStorage.getItem('isLoggedIn')) {
-            window.location.href = 'login.html';
-        }
-
         // Check if user is admin and redirect if needed
         if (sessionStorage.getItem('role') === 'ADMIN') {
             window.location.href = 'admin-dashboard.html';
@@ -135,15 +130,15 @@
             <button id="themeToggle" class="p-2.5 bg-white/5 rounded-full hover:bg-white/10 transition active:scale-90">
                 <i data-lucide="sun" class="w-5 h-5 theme-icon"></i>
             </button>
-            <button onclick="window.location.href='cart.html'" class="relative p-2.5 bg-white/5 rounded-full hover:bg-white/10 transition active:scale-90">
+            <button onclick="goToCartOrLogin()" class="relative p-2.5 bg-white/5 rounded-full hover:bg-white/10 transition active:scale-90">
                 <i data-lucide="shopping-bag" class="w-5 h-5"></i>
                 <span id="cart-dot" class="absolute top-1 right-1 w-2.5 h-2.5 bg-blue-600 rounded-full border-2 border-black hidden"></span>
             </button>
-            <button onclick="window.location.href='profile.html'" class="bg-white/5 border border-white/10 px-6 py-2.5 rounded-full text-[10px] font-black tracking-widest hover:bg-white/10 transition-all uppercase active:scale-95">
+            <button onclick="goToProfileOrLogin()" class="bg-white/5 border border-white/10 px-6 py-2.5 rounded-full text-[10px] font-black tracking-widest hover:bg-white/10 transition-all uppercase active:scale-95">
                 <i data-lucide="user" class="w-4 h-4 mr-2"></i>
-                <span>PROFILE</span>
+                <span id="profileButtonText">LOGIN</span>
             </button>
-            <button onclick="handleLogout()" class="bg-white/5 border border-white/10 px-6 py-2.5 rounded-full text-[10px] font-black tracking-widest hover:bg-red-600 hover:text-white hover:border-red-600 transition-all uppercase active:scale-95">
+            <button onclick="handleLogout()" class="bg-white/5 border border-white/10 px-6 py-2.5 rounded-full text-[10px] font-black tracking-widest hover:bg-red-600 hover:text-white hover:border-red-600 transition-all uppercase active:scale-95 hidden" id="logoutButton">
                 Logout
             </button>
         </div>
@@ -169,9 +164,9 @@
             </div>
             <div class="reveal active flex justify-center">
                 <div class="relative group p-4 bg-white/5 rounded-[4rem] border border-white/10 overflow-hidden">
-                    <img id="mainProductImage" src="product-black.png"
+                    <img id="mainProductImage" src="product-white.png"
                          class="w-full max-w-md rounded-[3.5rem] floating drop-shadow-2xl transition-transform duration-700 group-hover:scale-105 object-cover h-96"
-                         alt="Revorz Premium - Black">
+                         alt="Revorz Premium - White">
                 </div>
             </div>
         </div>
@@ -185,49 +180,19 @@
             </div>
             <div class="mt-6 md:mt-0 text-gray-400 text-[10px] font-bold tracking-widest border-b border-blue-600 pb-2">VIEW ALL 2026 SERIES</div>
         </div>
-        <div id="productGrid" class="grid grid-cols-1 md:grid-cols-3 gap-12">
-            <div class="product-card p-6 rounded-[3rem] reveal">
-                <div class="relative aspect-square mb-8 overflow-hidden rounded-[2.5rem] bg-black border border-white/5">
-                    <img src="product-black.png" class="w-full h-full object-cover opacity-80 hover:scale-110 hover:opacity-100 transition duration-700" alt="REVORZ Premium - Black">
-                    <div class="absolute bottom-5 right-5 w-14 h-14 bg-white text-black rounded-full flex items-center justify-center shadow-2xl hover:bg-blue-600 hover:text-white transition-all transform active:scale-75" onclick="window.location.href='product.html'">
-                        <i data-lucide="eye" class="w-6 h-6"></i>
-                    </div>
-                </div>
-                <div class="px-2">
-                    <h4 class="text-2xl font-black tracking-tighter mb-2 uppercase">REVORZ Premium</h4>
-                    <div class="flex justify-between items-center">
-                        <p class="text-blue-500 font-bold text-sm">Rp 75.000</p>
-                        <span class="text-[9px] font-black text-gray-600 tracking-widest uppercase">New 2026</span>
-                    </div>
-                </div>
-            </div>
-            <div class="product-card p-6 rounded-[3rem] reveal">
-                <div class="relative aspect-square mb-8 overflow-hidden rounded-[2.5rem] bg-black border border-white/5">
-                    <img src="product-blue.png" class="w-full h-full object-cover opacity-80 hover:scale-110 hover:opacity-100 transition duration-700" alt="REVORZ Premium - Blue">
-                    <div class="absolute bottom-5 right-5 w-14 h-14 bg-white text-black rounded-full flex items-center justify-center shadow-2xl hover:bg-blue-600 hover:text-white transition-all transform active:scale-75" onclick="window.location.href='product.html'">
-                        <i data-lucide="eye" class="w-6 h-6"></i>
-                    </div>
-                </div>
-                <div class="px-2">
-                    <h4 class="text-2xl font-black tracking-tighter mb-2 uppercase">REVORZ Premium</h4>
-                    <div class="flex justify-between items-center">
-                        <p class="text-blue-500 font-bold text-sm">Rp 75.000</p>
-                        <span class="text-[9px] font-black text-gray-600 tracking-widest uppercase">New 2026</span>
-                    </div>
-                </div>
-            </div>
-            <div class="product-card p-6 rounded-[3rem] reveal">
-                <div class="relative aspect-square mb-8 overflow-hidden rounded-[2.5rem] bg-black border border-white/5">
+        <div id="productGrid" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="product-card p-4 rounded-[2rem] reveal">
+                <div class="relative aspect-square mb-6 overflow-hidden rounded-[2rem] bg-black border border-white/5">
                     <img src="product-white.png" class="w-full h-full object-cover opacity-80 hover:scale-110 hover:opacity-100 transition duration-700" alt="REVORZ Premium - White">
-                    <div class="absolute bottom-5 right-5 w-14 h-14 bg-white text-black rounded-full flex items-center justify-center shadow-2xl hover:bg-blue-600 hover:text-white transition-all transform active:scale-75" onclick="window.location.href='product.html'">
-                        <i data-lucide="eye" class="w-6 h-6"></i>
+                    <div class="absolute bottom-4 right-4 w-12 h-12 bg-white text-black rounded-full flex items-center justify-center shadow-2xl hover:bg-blue-600 hover:text-white transition-all transform active:scale-75" onclick="window.location.href='product.html'">
+                        <i data-lucide="eye" class="w-5 h-5"></i>
                     </div>
                 </div>
                 <div class="px-2">
-                    <h4 class="text-2xl font-black tracking-tighter mb-2 uppercase">REVORZ Premium</h4>
+                    <h4 class="text-xl font-black tracking-tighter mb-2 uppercase">REVORZ Premium</h4>
                     <div class="flex justify-between items-center">
                         <p class="text-blue-500 font-bold text-sm">Rp 75.000</p>
-                        <span class="text-[9px] font-black text-gray-600 tracking-widest uppercase">New 2026</span>
+                        <span class="text-[8px] font-black text-gray-600 tracking-widest uppercase">New 2026</span>
                     </div>
                 </div>
             </div>
@@ -317,6 +282,7 @@
         }
 
         function addToCart(id, nama, harga, img) {
+            // Add to cart regardless of login status
             let cart = JSON.parse(localStorage.getItem('revorz_cart')) || [];
             let exist = cart.find(x => x.id == id);
             if(exist) exist.qty += 1;
@@ -332,6 +298,11 @@
                 btn.innerHTML = '<i data-lucide="plus" class="w-6 h-6"></i>';
                 lucide.createIcons();
             }, 1000);
+            
+            // Show notification about login requirement when accessing cart
+            if (!sessionStorage.getItem('isLoggedIn')) {
+                showNotification('Silakan login untuk melihat keranjang belanja Anda.', 'info');
+            }
         }
 
         // Theme Toggle
@@ -405,8 +376,13 @@
         // Product image cycling functionality
         function initProductImage() {
             const mainProductImage = document.getElementById('mainProductImage');
-            const colors = ['product-black.png', 'product-blue.png', 'product-white.png'];
+            const colors = ['product-white.png', 'product-black.png', 'product-blue.png'];
             let currentIndex = 0;
+
+            // Set initial image to white
+            mainProductImage.src = colors[currentIndex];
+            const colorNames = ['White', 'Black', 'Blue'];
+            mainProductImage.alt = `Revorz Premium - ${colorNames[currentIndex]}`;
 
             // Cycle through images every 5 seconds
             setInterval(() => {
@@ -414,7 +390,6 @@
                 mainProductImage.src = colors[currentIndex];
 
                 // Update alt text based on current color
-                const colorNames = ['Black', 'Blue', 'White'];
                 mainProductImage.alt = `Revorz Premium - ${colorNames[currentIndex]}`;
             }, 5000);
         }
@@ -541,6 +516,44 @@
             }, 5000);
         }
 
+        function goToCartOrLogin() {
+            if (!sessionStorage.getItem('isLoggedIn')) {
+                showNotification('Silakan login terlebih dahulu untuk mengakses keranjang belanja Anda.', 'warning');
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 2000);
+                return;
+            }
+            window.location.href = 'cart.html';
+        }
+
+        function goToProfileOrLogin() {
+            if (!sessionStorage.getItem('isLoggedIn')) {
+                showNotification('Silakan login terlebih dahulu untuk mengakses profil Anda.', 'warning');
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 2000);
+                return;
+            }
+            window.location.href = 'profile.html';
+        }
+
+        // --- UPDATE NAMA USER PADA TOMBOL PROFILE ---
+        function updateProfileName() {
+            const userName = sessionStorage.getItem('currentUser');
+            const profileTextElement = document.getElementById('profileButtonText');
+            const logoutButton = document.getElementById('logoutButton');
+
+            if (userName && profileTextElement) {
+                profileTextElement.innerText = userName.toUpperCase();
+                logoutButton.classList.remove('hidden');
+            } else if (profileTextElement) {
+                // If user is not logged in, change button text to "Login"
+                profileTextElement.innerText = "LOGIN";
+                logoutButton.classList.add('hidden');
+            }
+        }
+
         function closeNotification() {
             const notification = document.getElementById('web-notification');
             if(notification) {
@@ -557,6 +570,20 @@
             initTheme();
             initVideo();
             initProductImage();
+            updateProfileName();
+            
+            // Ensure the profile button shows "LOGIN" if user is not logged in
+            if (!sessionStorage.getItem('isLoggedIn')) {
+                const profileTextElement = document.getElementById('profileButtonText');
+                const logoutButton = document.getElementById('logoutButton');
+
+                if (profileTextElement) {
+                    profileTextElement.innerText = "LOGIN";
+                }
+                if (logoutButton) {
+                    logoutButton.classList.add('hidden');
+                }
+            }
         };
     </script>
 </body>

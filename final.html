@@ -49,6 +49,7 @@
         <div class="grid md:grid-cols-2 gap-16 items-center">
             <div class="flex justify-center">
                 <div class="relative group p-4 bg-white/5 rounded-[4rem] border border-white/10 overflow-hidden w-full max-w-md">
+                    <!-- HARDCODED WHITE WATCH AS DEFAULT -->
                     <img id="productImage" src="product-white.png"
                          class="w-full floating transition-all duration-500 object-contain h-96"
                          alt="Revorz Smartwatch - White">
@@ -64,6 +65,7 @@
                 <div class="mb-8">
                     <h3 class="text-xs font-black tracking-widest uppercase text-zinc-400 mb-4">Pilih Warna</h3>
                     <div class="flex gap-4 justify-center">
+                        <!-- WHITE SELECTED BY DEFAULT -->
                         <div class="color-option p-3 rounded-2xl flex flex-col items-center gap-2 selected" data-color="white" data-image="product-white.png" data-price="75000">
                             <div class="w-10 h-10 rounded-full bg-white border border-zinc-300 ring-2 ring-transparent ring-offset-2 ring-offset-black"></div>
                             <span class="text-[10px] font-bold uppercase">Putih</span>
@@ -101,132 +103,41 @@
     </div>
 
     <script>
+        // HARDCODED DEFAULT VALUES
         let currentQty = 1;
-        let currentColor = 'white'; // DEFAULT TO WHITE
+        let currentColor = 'white'; // HARDCODED TO WHITE
         let currentPrice = 75000;
 
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
+        // Initialize immediately without waiting for DOM
+        // HARDCODE WHITE WATCH AS DEFAULT
+        window.onload = function() {
+            // HARDCODE: Ensure white watch is displayed
+            const productImage = document.getElementById('productImage');
+            productImage.src = 'product-white.png';
+            productImage.alt = 'Revorz Smartwatch - White';
+            
+            // HARDCODE: Ensure label shows white
+            const selectedColorLabel = document.getElementById('selectedColorLabel');
+            selectedColorLabel.textContent = 'Warna: Putih';
+            
+            // HARDCODE: Ensure white option is selected
+            const whiteOption = document.querySelector('[data-color="white"]');
+            if (whiteOption) {
+                // Remove selected from all
+                document.querySelectorAll('.color-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                // Add selected to white
+                whiteOption.classList.add('selected');
+            }
+            
+            // Initialize UI
             updateUI();
             updateCartDot();
-            // Preload all color images for snappy swaps
-            preloadImages();
-            // Set initial state to white without triggering click first
-            initializeColorSelection('white');
-            // Then setup color logic
+            
+            // Setup color logic
             setupColorLogic();
-        });
-
-        // Preload images found in data-image attributes
-        function preloadImages() {
-            document.querySelectorAll('.color-option').forEach(opt => {
-                const src = opt.getAttribute('data-image');
-                if (src) {
-                    const i = new Image();
-                    i.src = src;
-                }
-            });
-        }
-
-        // Small helper to capitalize label
-        function capitalize(s) { return s && s[0].toUpperCase() + s.slice(1); }
-
-        // Function to initialize color selection without triggering events
-        function initializeColorSelection(color) {
-            // Remove selected class and inline styles from all options
-            document.querySelectorAll('.color-option').forEach(opt => {
-                opt.classList.remove('selected');
-                opt.style.borderColor = '';
-                opt.style.backgroundColor = '';
-                opt.setAttribute('aria-pressed', 'false');
-                opt.setAttribute('tabindex', '0'); // make keyboard focusable
-            });
-
-            // Find the option with the specified color and select it
-            const targetOption = Array.from(document.querySelectorAll('.color-option')).find(
-                opt => opt.getAttribute('data-color') === color
-            );
-
-            if (targetOption) {
-                // Add selected class and mark pressed state
-                targetOption.classList.add('selected');
-                targetOption.setAttribute('aria-pressed', 'true');
-
-                // Update the image and price directly
-                const imgPath = targetOption.getAttribute('data-image');
-                const priceVal = targetOption.getAttribute('data-price');
-
-                const imgEl = document.getElementById('productImage');
-                imgEl.src = imgPath;
-
-                currentColor = color;
-                currentPrice = parseInt(priceVal);
-                document.getElementById('price').textContent = currentPrice.toLocaleString('id-ID');
-
-                // Update label
-                const lbl = document.getElementById('selectedColorLabel');
-                if (lbl) lbl.textContent = `Warna: ${capitalize(color)}`;
-
-                // Apply visual tweaks (shadow, alt, selected styling)
-                applyColorStyles(color, targetOption);
-            }
-        }
-
-        // Function to programmatically set color
-        function setCurrentColor(color) {
-            // Find the option with the specified color
-            const targetOption = Array.from(document.querySelectorAll('.color-option')).find(
-                opt => opt.getAttribute('data-color') === color
-            );
-
-            if (targetOption) {
-                // Trigger click event on the target option
-                targetOption.click();
-            }
-        }
-
-        // Apply color-specific visual styles for image and selected option
-        function applyColorStyles(colorName, optionEl) {
-            const imgEl = document.getElementById('productImage');
-            let shadowColor = 'rgba(21,36,244,0.3)';
-
-            if (colorName === 'black') shadowColor = 'rgba(0,0,0,0.55)';
-            else if (colorName === 'white') shadowColor = 'rgba(255,255,255,0.35)';
-            else if (colorName === 'blue') shadowColor = 'rgba(21,36,244,0.3)';
-
-            imgEl.style.filter = `drop-shadow(0 35px 35px ${shadowColor})`;
-            imgEl.alt = `Revorz Smartwatch - ${colorName}`;
-
-            // Update label
-            const lbl = document.getElementById('selectedColorLabel');
-            if (lbl) lbl.textContent = `Warna: ${capitalize(colorName)}`;
-
-            // Reset inline styles for all options
-            document.querySelectorAll('.color-option').forEach(opt => {
-                opt.style.borderColor = '';
-                opt.style.backgroundColor = '';
-            });
-
-            // Style the selected option to reflect the color choice
-            if (optionEl) {
-                let borderClr = '#1524f4';
-                let bg = 'rgba(21,36,244,0.08)';
-
-                if (colorName === 'black') {
-                    borderClr = '#4b5563';
-                    bg = 'rgba(255,255,255,0.03)';
-                } else if (colorName === 'white') {
-                    borderClr = '#cbd5ff';
-                    bg = 'rgba(255,255,255,0.06)';
-                } else if (colorName === 'blue') {
-                    borderClr = '#1524f4';
-                    bg = 'rgba(21,36,244,0.08)';
-                }
-
-                optionEl.style.borderColor = borderClr;
-                optionEl.style.backgroundColor = bg;
-            }
-        }
+        };
 
         function setupColorLogic() {
             document.querySelectorAll('.color-option').forEach(option => {
@@ -267,8 +178,9 @@
                         currentPrice = parseInt(priceVal);
                         document.getElementById('price').textContent = currentPrice.toLocaleString('id-ID');
 
-                        // Apply color-specific visuals (shadow, alt, option highlight)
-                        applyColorStyles(colorName, this);
+                        // Update label
+                        const lbl = document.getElementById('selectedColorLabel');
+                        if (lbl) lbl.textContent = `Warna: ${colorName.charAt(0).toUpperCase() + colorName.slice(1)}`;
                     }, 80);
                 });
             });

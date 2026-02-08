@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reset Product Data</title>
+</head>
+<body>
+    <h1>Resetting Product Data...</h1>
+    <p>This page will clear your browser storage and redirect to the product page with white watch as default.</p>
+    
+    <script>
+        // Clear all localStorage related to products
+        localStorage.removeItem('revorz_products');
+        localStorage.removeItem('revorz_cart');
+        localStorage.removeItem('current_pid');
+        
+        // Clear sessionStorage
+        sessionStorage.removeItem('selectedProduct');
+        
+        // Redirect to product page
+        window.location.href = 'product.html';
+    </script>
+</body>
+</html>

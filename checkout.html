@@ -59,31 +59,17 @@
         </div>
     </main>
 
-    <!-- Modal untuk upload bukti pembayaran WA -->
+    <!-- Modal konfirmasi WhatsApp -->
     <div id="modalWA" class="fixed inset-0 bg-black/95 z-[999] hidden items-center justify-center p-6 backdrop-blur-md">
         <div class="glass-card p-8 rounded-[3rem] max-w-md w-full text-center">
-            <h3 class="text-xl font-bold mb-6 silver-text">KIRIM BUKTI PEMBAYARAN</h3>
-            <p class="text-gray-400 text-sm mb-6">Silakan kirim bukti pembayaran melalui WhatsApp</p>
+            <h3 class="text-xl font-bold mb-6 silver-text">KONFIRMASI PEMBAYARAN</h3>
+            <p class="text-gray-400 text-sm mb-6">Anda akan dialihkan ke WhatsApp untuk menyelesaikan pembayaran</p>
 
             <div class="mb-6">
-                <button onclick="kirimPesan('WhatsApp')" class="w-full py-4 bg-[#1524f4] text-white font-bold rounded-2xl text-xs uppercase tracking-widest mb-4">KIRIM VIA WHATSAPP</button>
-
-                <p class="text-gray-500 text-xs mb-4">ATAU</p>
-
-                <label class="block mb-4">
-                    <span class="text-gray-400 text-sm">Upload Bukti Pembayaran:</span>
-                    <input type="file" id="uploadWA" accept="image/*" class="mt-2 w-full text-sm text-gray-400
-                        file:mr-4 file:py-2 file:px-4
-                        file:rounded-full file:border-0
-                        file:text-sm file:font-semibold
-                        file:bg-[#1524f4] file:text-white
-                        hover:file:bg-blue-700">
-                </label>
-
-                <button onclick="uploadBukti('WhatsApp')" class="w-full py-3 bg-green-600 text-white font-bold rounded-2xl text-xs uppercase tracking-widest">UPLOAD BUKTI</button>
+                <button onclick="kirimPesanDirect('WhatsApp')" class="w-full py-4 bg-[#1524f4] text-white font-bold rounded-2xl text-xs uppercase tracking-widest mb-4">KONFIRMASI & LANJUTKAN KE WHATSAPP</button>
             </div>
 
-            <button onclick="closeModal('modalWA')" class="text-xs text-gray-500 underline">Tutup</button>
+            <button onclick="closeModal('modalWA')" class="text-xs text-gray-500 underline">Batalkan</button>
         </div>
     </div>
 
@@ -160,8 +146,8 @@
             if(method === 'qris') {
                 document.getElementById('modalQris').classList.replace('hidden', 'flex');
             } else {
-                // Untuk WA, tampilkan modal WA
-                document.getElementById('modalWA').classList.replace('hidden', 'flex');
+                // Untuk WA, langsung arahkan ke WhatsApp tanpa bukti pembayaran
+                kirimPesanDirect('WhatsApp');
             }
         }
 
@@ -169,7 +155,7 @@
             const n = document.getElementById('nama').value;
             const phone = document.getElementById('wa').value;
             const address = document.getElementById('alamat').value;
-            
+
             // Calculate total from cart
             const cart = JSON.parse(localStorage.getItem('revorz_cart')) || [];
             const total = cart.reduce((sum, item) => sum + (item.harga * item.qty), 0);
@@ -207,6 +193,47 @@
 
             // Arahkan ke WhatsApp
             window.open(`https://api.whatsapp.com/send?phone=62859102765755&text=Halo%20Admin%20Revorz!%20Nama%20saya%20${encodeURIComponent(n)},%20saya%20pesan%20via%20${encodeURIComponent(metode)}%20senilai%20Rp%20${total.toLocaleString('id-ID')}`, '_blank');
+        }
+
+        function kirimPesanDirect(metode) {
+            const n = document.getElementById('nama').value;
+            const phone = document.getElementById('wa').value;
+            const address = document.getElementById('alamat').value;
+
+            // Calculate total from cart
+            const cart = JSON.parse(localStorage.getItem('revorz_cart')) || [];
+            const total = cart.reduce((sum, item) => sum + (item.harga * item.qty), 0);
+
+            if(total <= 0) {
+                showNotification('Keranjang Anda kosong!', 'error');
+                return;
+            }
+
+            // SIMPAN KE DATABASE LOKAL
+            let currentTotal = parseInt(localStorage.getItem('revorz_total')) || 0;
+            localStorage.setItem('revorz_total', currentTotal + total);
+
+            let orders = JSON.parse(localStorage.getItem('revorz_orders')) || [];
+            orders.push({
+                nama: n,
+                total: total,
+                method: metode,
+                phone: phone,
+                address: address,
+                tgl: new Date().toLocaleString(),
+                status: 'Menunggu Verifikasi',
+                orderID: 'RVZ-' + Date.now()
+            });
+            localStorage.setItem('revorz_orders', JSON.stringify(orders));
+
+            // Clear cart after order
+            localStorage.removeItem('revorz_cart');
+
+            // Tampilkan notifikasi
+            showNotification('Pesanan Anda telah dicatat. Silakan lanjutkan pembayaran melalui WhatsApp.');
+
+            // Arahkan langsung ke WhatsApp tanpa bukti pembayaran
+            window.open(`https://api.whatsapp.com/send?phone=62859102765755&text=Halo%20Admin%20Revorz!%20Nama%20saya%20${encodeURIComponent(n)},%20saya%20ingin%20melakukan%20pembayaran%20untuk%20pesanan%20senilai%20Rp%20${total.toLocaleString('id-ID')}.%0ANomor%20HP%20pemesan:%20${encodeURIComponent(phone)}%0AAlamat:%20${encodeURIComponent(address)}`, '_blank');
         }
 
         function uploadBukti(metode) {

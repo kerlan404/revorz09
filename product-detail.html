@@ -39,11 +39,29 @@
             document.getElementById('detailView').innerHTML = `
                 <div class="grid md:grid-cols-2 gap-16">
                     <div class="glass-card rounded-[3rem] overflow-hidden border border-white/10">
-                        <img src="${p.img}" class="w-full h-full object-cover">
+                        <img id="productImage" src="${p.img || 'product-white.png'}" class="w-full h-full object-cover">
                     </div>
                     <div class="flex flex-col justify-center">
                         <h1 class="text-6xl font-black italic tracking-tighter mb-4">${p.nama}</h1>
                         <p class="text-4xl text-blue-600 font-black mb-8">Rp ${p.harga.toLocaleString('id-ID')}</p>
+
+                        <div class="mb-8">
+                            <h4 class="text-xs font-black uppercase tracking-widest text-gray-500 mb-4">Pilih Warna</h4>
+                            <div class="flex gap-4">
+                                <div class="color-option p-3 rounded-2xl flex flex-col items-center gap-2 ${p.warna === 'white' || (!p.warna || p.warna === '') ? 'selected' : ''}" data-color="white" data-image="product-white.png" data-price="${p.harga}">
+                                    <div class="w-10 h-10 rounded-full bg-white border border-zinc-300"></div>
+                                    <span class="text-[10px] font-bold uppercase">Putih</span>
+                                </div>
+                                <div class="color-option p-3 rounded-2xl flex flex-col items-center gap-2 ${p.warna === 'black' ? 'selected' : ''}" data-color="black" data-image="product-black.png" data-price="${p.harga}">
+                                    <div class="w-10 h-10 rounded-full bg-black border border-zinc-700"></div>
+                                    <span class="text-[10px] font-bold uppercase">Hitam</span>
+                                </div>
+                                <div class="color-option p-3 rounded-2xl flex flex-col items-center gap-2 ${p.warna === 'blue' ? 'selected' : ''}" data-color="blue" data-image="product-blue.png" data-price="${p.harga}">
+                                    <div class="w-10 h-10 rounded-full bg-blue-900 border border-zinc-700"></div>
+                                    <span class="text-[10px] font-bold uppercase">Biru</span>
+                                </div>
+                            </div>
+                        </div>
 
                         <div class="glass-card p-8 rounded-[2rem] mb-8">
                             <h4 class="text-xs font-black uppercase tracking-widest text-gray-500 mb-2">Description</h4>
@@ -63,7 +81,34 @@
                     </div>
                 </div>
             `;
+            
+            // Setup color selection functionality
+            setupColorSelection();
             lucide.createIcons();
+        }
+
+        function setupColorSelection() {
+            document.querySelectorAll('.color-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    // Update UI
+                    document.querySelectorAll('.color-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    this.classList.add('selected');
+
+                    // Get data attributes
+                    const imgPath = this.getAttribute('data-image');
+                    const colorName = this.getAttribute('data-color');
+                    const priceVal = this.getAttribute('data-price');
+
+                    // Change image
+                    const imgEl = document.getElementById('productImage');
+                    imgEl.src = imgPath;
+
+                    // Update price if needed
+                    // document.getElementById('price').textContent = priceVal;
+                });
+            });
         }
 
         let currentQty = 1;
@@ -77,8 +122,18 @@
             const products = JSON.parse(localStorage.getItem('revorz_products')) || [];
             const p = products.find(x => x.id == pid);
 
+            // Get selected color
+            const selectedColorOption = document.querySelector('.color-option.selected');
+            const selectedColor = selectedColorOption ? selectedColorOption.getAttribute('data-color') : p.warna || 'white';
+            const selectedImage = selectedColorOption ? selectedColorOption.getAttribute('data-image') : p.img;
+
             let cart = JSON.parse(localStorage.getItem('revorz_cart')) || [];
-            cart.push({ ...p, qty: currentQty });
+            cart.push({ 
+                ...p, 
+                qty: currentQty,
+                warna: selectedColor,
+                img: selectedImage
+            });
             localStorage.setItem('revorz_cart', JSON.stringify(cart));
 
             // Tampilkan notifikasi daripada alert

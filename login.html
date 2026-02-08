@@ -3,162 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Revorz - Login Portal</title>
+    <title>Revorz - Login Access</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #050505; color: #fff; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
-        .glass-card { background: rgba(15, 15, 15, 0.8); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.05); }
-        .input-field { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); color: white; width: 100%; padding: 1.25rem 1rem 1.25rem 3.5rem; border-radius: 1.25rem; outline: none; transition: 0.3s; }
-        .input-field:focus { border-color: #1524f4; background: rgba(21, 36, 244, 0.05); }
-        .input-icon { position: absolute; left: 1.25rem; top: 50%; transform: translateY(-50%); color: #4b5563; pointer-events: none; }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;400;600;800&display=swap');
+        :root { --brand-blue: #1524f4; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #000; color: #fff; overflow: hidden; }
+        .glass-card { background: rgba(15, 15, 15, 0.6); backdrop-filter: blur(30px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        .form-wrapper { display: flex; width: 200%; transition: transform 0.6s cubic-bezier(0.65, 0, 0.35, 1); }
+        .form-content { width: 50%; padding: 40px; }
+        .show-register { transform: translateX(-50%); }
+        .input-field { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); color: white; width: 100%; padding: 1rem 1rem 1rem 3.5rem; border-radius: 1rem; transition: 0.3s; font-size: 14px; }
+        .input-field:focus { border-color: var(--brand-blue); background: rgba(21, 36, 244, 0.05); outline: none; }
+        .toast { position: fixed; top: 20px; right: 20px; padding: 15px 25px; border-radius: 12px; z-index: 1000; transform: translateX(150%); transition: 0.5s; font-weight: 800; font-size: 12px; }
     </style>
 </head>
-<body>
-    <div class="max-w-md w-full px-6">
-        <div class="text-center mb-10">
-            <h1 class="text-5xl font-black italic tracking-tighter mb-2">REVORZ</h1>
-            <p class="text-gray-500 text-[10px] font-bold uppercase tracking-[0.4em]">Secure Access Point</p>
-        </div>
+<body class="min-h-screen flex items-center justify-center p-4">
+    <div id="toast" class="toast text-white"></div>
 
-        <div class="glass-card p-10 rounded-[3rem]">
-            <div class="space-y-6">
-                <div class="relative w-full">
-                    <input type="text" id="username" placeholder="Username" class="input-field" autocomplete="off">
-                    <i data-lucide="user" class="input-icon w-5 h-5"></i>
+    <div class="max-w-md w-full glass-card rounded-[3rem] overflow-hidden shadow-2xl">
+        <div id="mainSlider" class="form-wrapper">
+            <div class="form-content">
+                <div class="text-center mb-8">
+                    <h1 class="text-3xl font-black italic tracking-tighter uppercase">REVORZ<span class="text-blue-600">.</span></h1>
+                    <p class="text-zinc-500 text-[10px] font-bold tracking-[0.4em] uppercase mt-2">Authorized Access</p>
                 </div>
-                <div class="relative w-full">
-                    <input type="password" id="password" placeholder="Password" class="input-field">
-                    <i data-lucide="lock" class="input-icon w-5 h-5"></i>
-                </div>
-
-                <div id="errorMsg" class="hidden text-red-500 text-[10px] font-bold uppercase text-center tracking-widest bg-red-500/10 p-3 rounded-xl">
-                    Invalid Credentials
-                </div>
-
-                <button onclick="handleLogin()" class="w-full bg-[#1524f4] text-white py-5 rounded-2xl font-black hover:bg-blue-700 transition-all uppercase tracking-widest text-xs">
-                    Sign In
-                </button>
+                <form id="loginForm" class="space-y-4">
+                    <div class="relative"><i data-lucide="user" class="absolute left-5 top-1/2 -translate-y-1/2 text-zinc-600 w-5 h-5"></i><input type="text" id="l_user" placeholder="USERNAME" class="input-field" required></div>
+                    <div class="relative"><i data-lucide="lock" class="absolute left-5 top-1/2 -translate-y-1/2 text-zinc-600 w-5 h-5"></i><input type="password" id="l_pass" placeholder="PASSWORD" class="input-field" required></div>
+                    <button type="submit" class="w-full bg-blue-600 py-4 rounded-2xl font-black text-xs tracking-widest hover:bg-blue-700 transition-all active:scale-95">SIGN IN</button>
+                </form>
+                <p class="text-center mt-6 text-xs text-zinc-500">Need an account? <button onclick="toggleForm('register')" class="text-white font-black underline">JOIN REVORZ</button></p>
             </div>
 
-            <div class="mt-8 text-center">
-                <p class="text-xs text-gray-500">Belum punya akun? <a href="register.html" class="text-white font-bold underline hover:text-[#1524f4]">Daftar</a></p>
+            <div class="form-content">
+                <div class="text-center mb-8">
+                    <h1 class="text-3xl font-black italic tracking-tighter uppercase">JOIN<span class="text-blue-600">.</span></h1>
+                </div>
+                <form id="registerForm" class="space-y-4">
+                    <div class="relative"><i data-lucide="user-plus" class="absolute left-5 top-1/2 -translate-y-1/2 text-zinc-600 w-5 h-5"></i><input type="text" id="r_user" placeholder="NEW USERNAME" class="input-field" required></div>
+                    <div class="relative"><i data-lucide="shield" class="absolute left-5 top-1/2 -translate-y-1/2 text-zinc-600 w-5 h-5"></i><input type="password" id="r_pass" placeholder="CREATE PASSWORD" class="input-field" required></div>
+                    <button type="submit" class="w-full bg-white text-black py-4 rounded-2xl font-black text-xs tracking-widest hover:bg-zinc-200 transition-all active:scale-95">REGISTER</button>
+                </form>
+                <p class="text-center mt-6 text-xs text-zinc-500">Already a member? <button onclick="toggleForm('login')" class="text-white font-black underline">LOGIN</button></p>
             </div>
         </div>
     </div>
 
     <script>
         lucide.createIcons();
+        const slider = document.getElementById('mainSlider');
+        function toggleForm(m) { m === 'register' ? slider.classList.add('show-register') : slider.classList.remove('show-register'); }
 
-        function handleLogin() {
-            // .trim() menghapus spasi di depan/belakang, .toLowerCase() membuat jadi huruf kecil semua
-            const u = document.getElementById('username').value.trim().toLowerCase();
-            const p = document.getElementById('password').value.trim().toLowerCase();
-            const err = document.getElementById('errorMsg');
+        function showToast(msg, type) {
+            const t = document.getElementById('toast');
+            t.innerText = msg.toUpperCase();
+            t.style.backgroundColor = type === 'success' ? '#10B981' : '#EF4444';
+            t.style.transform = 'translateX(0)';
+            setTimeout(() => t.style.transform = 'translateX(150%)', 2500);
+        }
 
-            err.classList.add('hidden');
+        // Register
+        document.getElementById('registerForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const u = document.getElementById('r_user').value.trim();
+            const p = document.getElementById('r_pass').value;
+            let users = JSON.parse(localStorage.getItem('revorz_db')) || [];
+            if(users.find(x => x.username === u)) return showToast("User Exists", "error");
+            users.push({username: u, password: p, role: 'USER'});
+            localStorage.setItem('revorz_db', JSON.stringify(users));
+            showToast("Account Created", "success");
+            setTimeout(() => toggleForm('login'), 1000);
+        });
 
-            // Debug: Log nilai yang dimasukkan (hapus ini setelah testing)
-            console.log('Username input (processed):', u);
-            console.log('Password input (processed):', p);
-
-            // --- 1. CEK ADMIN ---
-            console.log('Checking admin login...');
-            if (u === "admin" && p === "revorz123") {
-                console.log('Admin login successful');
-                showNotification('Admin login berhasil! Mengalihkan...', 'success');
+        // Login
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const u = document.getElementById('l_user').value.trim();
+            const p = document.getElementById('l_pass').value;
+            let users = JSON.parse(localStorage.getItem('revorz_db')) || [];
+            const user = users.find(x => x.username === u && x.password === p);
+            
+            if(user) {
                 sessionStorage.setItem('isLoggedIn', 'true');
-                sessionStorage.setItem('role', 'ADMIN');
-                sessionStorage.setItem('username', 'Master Admin');
-                window.location.href = "admin-dashboard.html";
-                return;
+                sessionStorage.setItem('currentUser', u);
+                sessionStorage.setItem('role', user.role);
+                localStorage.setItem('revorz_user', JSON.stringify({username: u, role: user.role}));
+                showToast("Access Granted", "success");
+                setTimeout(() => window.location.href = 'index.html', 800);
             } else {
-                console.log('Admin check failed - credentials do not match');
+                showToast("Invalid Login", "error");
             }
-
-            // --- 2. CEK USER (LocalStorage) ---
-            let userDB = JSON.parse(localStorage.getItem('revorz_users')) || [];
-            const foundUser = userDB.find(user => user.u.toLowerCase() === u && user.p === p);
-
-            if (foundUser) {
-                sessionStorage.setItem('isLoggedIn', 'true');
-                sessionStorage.setItem('role', 'CUSTOMER');
-                sessionStorage.setItem('username', foundUser.u);
-                showNotification('Login berhasil! Mengalihkan...', 'success');
-                window.location.href = "index.html";
-            } else {
-                console.log('Login failed: Invalid credentials');
-                // err.classList.remove('hidden');
-                showNotification('Username atau password salah!', 'error');
-                // Beri getaran pada card jika salah
-                const card = document.querySelector('.glass-card');
-                card.style.transform = "translateX(10px)";
-                setTimeout(() => card.style.transform = "translateX(-10px)", 50);
-                setTimeout(() => card.style.transform = "translateX(0)", 100);
-            }
-        }
-
-        // Fungsi notifikasi global
-        function showNotification(message, type = 'info') {
-            // Hapus notifikasi sebelumnya jika ada
-            let existingNotification = document.getElementById('web-notification');
-            if(existingNotification) {
-                existingNotification.remove();
-            }
-
-            // Tentukan warna berdasarkan tipe notifikasi
-            let bgColor = '#1524f4'; // Biru default untuk info
-            if(type === 'success') bgColor = '#10b981'; // Hijau untuk sukses
-            if(type === 'error') bgColor = '#ef4444'; // Merah untuk error
-            if(type === 'warning') bgColor = '#f59e0b'; // Kuning untuk warning
-
-            // Buat elemen notifikasi
-            const notification = document.createElement('div');
-            notification.id = 'web-notification';
-            notification.className = 'fixed top-6 right-6 px-6 py-4 rounded-xl shadow-lg z-[1000] max-w-sm';
-            notification.style.backgroundColor = bgColor;
-            notification.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
-            notification.style.color = 'white';
-            notification.innerHTML = `
-                <div class="flex items-start">
-                    <div class="mr-3">
-                        <i data-lucide="${type === 'success' ? 'check-circle' : type === 'error' ? 'alert-circle' : type === 'warning' ? 'alert-triangle' : 'info'}" class="w-5 h-5"></i>
-                    </div>
-                    <div class="flex-1">
-                        <p class="font-bold text-sm">${type.charAt(0).toUpperCase() + type.slice(1)}</p>
-                        <p class="text-xs opacity-80">${message}</p>
-                    </div>
-                    <button onclick="closeNotification()" class="ml-2 text-white">×</button>
-                </div>
-            `;
-
-            // Tambahkan ke body
-            document.body.appendChild(notification);
-            lucide.createIcons();
-
-            // Tampilkan dengan animasi
-            setTimeout(() => {
-                notification.style.opacity = '1';
-                notification.style.transform = 'translateY(0)';
-            }, 10);
-
-            // Otomatis hilangkan setelah 5 detik
-            setTimeout(() => {
-                closeNotification();
-            }, 5000);
-        }
-
-        function closeNotification() {
-            const notification = document.getElementById('web-notification');
-            if(notification) {
-                notification.style.opacity = '0';
-                notification.style.transform = 'translateY(-20px)';
-                setTimeout(() => {
-                    notification.remove();
-                }, 300);
-            }
-        }
+        });
     </script>
 </body>
 </html>

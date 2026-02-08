@@ -3,179 +3,222 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Revorz - Register Portal</title>
+    <title>Revorz - Secure Access</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #050505; color: #fff; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
-        .glass-card { background: rgba(15, 15, 15, 0.8); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.05); }
-        .input-group { position: relative; width: 100%; }
-        .input-field { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); color: white; width: 100%; padding: 1.25rem 1rem 1.25rem 3.5rem; border-radius: 1.25rem; outline: none; transition: 0.3s; }
-        .input-field:focus { border-color: #1524f4; background: rgba(21, 36, 244, 0.05); }
-        .input-icon { position: absolute; left: 1.25rem; top: 50%; transform: translateY(-50%); color: #4b5563; pointer-events: none; }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;400;600;800&display=swap');
+        
+        :root { --brand-blue: #1524f4; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #000; color: #fff; overflow: hidden; }
+
+        /* --- SMARTWATCH ANIMATION --- */
+        .watch-container { position: relative; height: 500px; display: flex; align-items: center; justify-content: center; }
+        .strap { width: 120px; height: 160px; transition: background-color 1.5s ease; position: absolute; }
+        .strap-top { top: 0; border-radius: 40px 40px 0 0; }
+        .strap-bottom { bottom: 0; border-radius: 0 0 40px 40px; }
+        .watch-body { 
+            z-index: 10; width: 180px; height: 280px; background: #000; 
+            border: 6px solid #27272a; border-radius: 50px; padding: 12px;
+            box-shadow: 0 0 50px rgba(21, 36, 244, 0.1), inset 0 0 20px rgba(255,255,255,0.05);
+        }
+        .screen { background: #000; height: 100%; border-radius: 35px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .pulse-bar { width: 10px; border-radius: 10px; animation: pulse 1.5s infinite ease-in-out; }
+        @keyframes pulse { 0%, 100% { height: 8px; } 50% { height: 28px; } }
+
+        /* --- SMOOTH SLIDE MECHANISM --- */
+        .form-wrapper {
+            display: flex;
+            width: 200%;
+            transition: transform 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+        }
+        .form-content { width: 50%; padding: 0 30px; }
+        .show-register { transform: translateX(-50%); }
+
+        .glass-card { 
+            background: rgba(15, 15, 15, 0.6); 
+            backdrop-filter: blur(30px); 
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            overflow: hidden;
+        }
+
+        .input-field {
+            background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white; width: 100%; padding: 1.1rem 1rem 1.1rem 3.5rem; border-radius: 1.25rem; transition: 0.3s;
+        }
+        .input-field:focus { border-color: var(--brand-blue); background: rgba(21, 36, 244, 0.08); outline: none; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
-<body>
-    <div class="max-w-md w-full px-6">
-        <div class="text-center mb-10">
-            <h1 class="text-5xl font-black italic tracking-tighter mb-2">REVORZ</h1>
-            <p class="text-gray-500 text-[10px] font-bold uppercase tracking-[0.4em]">Secure Registration</p>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <div class="fixed inset-0 pointer-events-none">
+        <div class="absolute -top-24 left-1/4 w-96 h-96 bg-blue-600/10 blur-[150px] rounded-full"></div>
+        <div class="absolute -bottom-24 right-1/4 w-96 h-96 bg-purple-600/5 blur-[150px] rounded-full"></div>
+    </div>
+
+    <div class="max-w-6xl w-full grid lg:grid-cols-2 gap-12 items-center relative z-10">
+        
+        <div class="hidden lg:flex flex-col items-center opacity-0 animate-[fadeIn_1s_ease_forwards]">
+            <div class="watch-container">
+                <div id="strapTop" class="strap strap-top bg-zinc-100"></div>
+                <div class="watch-body">
+                    <div class="screen">
+                        <span class="text-[9px] text-zinc-600 mb-2 tracking-[0.3em] font-bold uppercase">Titanium Core</span>
+                        <div class="text-4xl font-black tracking-tighter" id="clock">00:00</div>
+                        <div class="flex gap-2 mt-6 items-end h-10">
+                            <div class="pulse-bar bg-blue-600" style="animation-delay: 0.1s"></div>
+                            <div class="pulse-bar bg-zinc-800" style="animation-delay: 0.3s"></div>
+                            <div class="pulse-bar bg-blue-400" style="animation-delay: 0.5s"></div>
+                        </div>
+                    </div>
+                </div>
+                <div id="strapBottom" class="strap strap-bottom bg-zinc-100"></div>
+            </div>
         </div>
 
-        <div class="glass-card p-10 rounded-[3rem]">
-            <div class="space-y-6">
-                <div class="input-group">
-                    <input type="text" id="reg_username" placeholder="Username" class="input-field" autocomplete="off">
-                    <i data-lucide="user" class="input-icon w-5 h-5"></i>
-                </div>
-                <div class="input-group">
-                    <input type="password" id="reg_password" placeholder="Password" class="input-field">
-                    <i data-lucide="lock" class="input-icon w-5 h-5"></i>
-                </div>
-                <div class="input-group">
-                    <input type="password" id="confirm_password" placeholder="Confirm Password" class="input-field">
-                    <i data-lucide="lock" class="input-icon w-5 h-5"></i>
+        <div class="glass-card rounded-[3.5rem] shadow-2xl max-w-md mx-auto w-full opacity-0 animate-[fadeIn_1s_ease_0.3s_forwards]">
+            <div id="mainSlider" class="form-wrapper">
+                
+                <div class="form-content py-12">
+                    <div class="text-center mb-10">
+                        <h1 class="text-3xl font-black italic tracking-tighter">REVORZ<span class="text-blue-600">.</span></h1>
+                        <p class="text-zinc-500 text-[10px] font-bold uppercase tracking-[0.4em] mt-1">Authorized Entry</p>
+                    </div>
+                    <form id="loginForm" class="space-y-4">
+                        <div class="relative">
+                            <i data-lucide="user" class="absolute left-5 top-1/2 -translate-y-1/2 text-zinc-600 w-5 h-5"></i>
+                            <input type="text" id="l_user" placeholder="Username" class="input-field" required>
+                        </div>
+                        <div class="relative">
+                            <i data-lucide="lock" class="absolute left-5 top-1/2 -translate-y-1/2 text-zinc-600 w-5 h-5"></i>
+                            <input type="password" id="l_pass" placeholder="Password" class="input-field" required>
+                        </div>
+                        <button type="submit" class="w-full bg-blue-600 text-white py-4 rounded-2xl font-black text-xs tracking-widest hover:bg-blue-700 transition-all active:scale-95">
+                            SIGN IN
+                        </button>
+                    </form>
+                    <p class="text-center mt-8 text-xs text-zinc-500">
+                        No account? <button onclick="toggleForm('register')" class="text-white font-extrabold underline">Create Identity</button>
+                    </p>
                 </div>
 
-                <div id="errorMsg" class="hidden text-red-500 text-[10px] font-bold uppercase text-center tracking-widest bg-red-500/10 p-3 rounded-xl">
-                    Registration Error
+                <div class="form-content py-12">
+                    <div class="text-center mb-10">
+                        <h1 class="text-3xl font-black italic tracking-tighter text-blue-600">REGISTER<span class="text-white">.</span></h1>
+                        <p class="text-zinc-500 text-[10px] font-bold uppercase tracking-[0.4em] mt-1">Initialize Identity</p>
+                    </div>
+                    <form id="registerForm" class="space-y-4">
+                        <div class="relative">
+                            <i data-lucide="at-sign" class="absolute left-5 top-1/2 -translate-y-1/2 text-zinc-600 w-5 h-5"></i>
+                            <input type="text" id="r_user" placeholder="Choose Username" class="input-field" required>
+                        </div>
+                        <div class="relative">
+                            <i data-lucide="lock" class="absolute left-5 top-1/2 -translate-y-1/2 text-zinc-600 w-5 h-5"></i>
+                            <input type="password" id="r_pass" placeholder="Password" class="input-field" required>
+                        </div>
+                        <div class="relative">
+                            <i data-lucide="shield-check" class="absolute left-5 top-1/2 -translate-y-1/2 text-zinc-600 w-5 h-5"></i>
+                            <input type="password" id="r_confirm" placeholder="Confirm Password" class="input-field" required>
+                        </div>
+                        <button type="submit" class="w-full bg-white text-black py-4 rounded-2xl font-black text-xs tracking-widest hover:bg-zinc-200 transition-all active:scale-95">
+                            CREATE ACCOUNT
+                        </button>
+                    </form>
+                    <p class="text-center mt-8 text-xs text-zinc-500">
+                        Already registered? <button onclick="toggleForm('login')" class="text-white font-extrabold underline">Back to Login</button>
+                    </p>
                 </div>
 
-                <button onclick="handleRegister()" class="w-full bg-[#1524f4] text-white py-5 rounded-2xl font-black hover:bg-blue-700 transition-all uppercase tracking-widest text-xs">
-                    Create Account
-                </button>
-            </div>
-
-            <div class="mt-8 text-center space-y-4">
-                <p class="text-xs text-gray-500">Sudah punya akun? <a href="login.html" class="text-white font-bold underline">Masuk</a></p>
-                <button onclick="clearSystem()" class="text-[9px] text-gray-700 uppercase tracking-widest hover:text-red-500 transition">Reset System Memory</button>
             </div>
         </div>
     </div>
 
+    <div id="toast" class="fixed top-8 right-8 translate-x-[150%] transition-transform duration-500 z-[100] px-6 py-4 rounded-2xl font-bold text-xs tracking-widest shadow-2xl"></div>
+
     <script>
         lucide.createIcons();
 
-        function handleRegister() {
-            const u = document.getElementById('reg_username').value.trim().toLowerCase();
-            const p = document.getElementById('reg_password').value.trim();
-            const cp = document.getElementById('confirm_password').value.trim();
-            const err = document.getElementById('errorMsg');
-
-            // Validasi input
-            if (!u || !p) {
-                showNotification('Username dan password harus diisi!', 'error');
-                return;
-            }
-
-            if (p !== cp) {
-                showNotification('Password dan konfirmasi password tidak cocok!', 'error');
-                return;
-            }
-
-            if (p.length < 6) {
-                showNotification('Password minimal 6 karakter!', 'error');
-                return;
-            }
-
-            // Ambil data pengguna dari localStorage
-            let userDB = JSON.parse(localStorage.getItem('revorz_users')) || [];
-
-            // Cek apakah username sudah ada
-            const existingUser = userDB.find(user => user.u.toLowerCase() === u);
-            if (existingUser) {
-                showNotification('Username sudah terdaftar!', 'error');
-                return;
-            }
-
-            // Tambahkan pengguna baru
-            userDB.push({ u: u, p: p });
-            localStorage.setItem('revorz_users', JSON.stringify(userDB));
-
-            // Tampilkan notifikasi sukses
-            showNotification('Registrasi berhasil! Silakan login.', 'success');
-
-            // Reset form
-            document.getElementById('reg_username').value = '';
-            document.getElementById('reg_password').value = '';
-            document.getElementById('confirm_password').value = '';
-
-            // Redirect ke halaman login setelah 2 detik
-            setTimeout(() => {
-                window.location.href = "login.html";
-            }, 2000);
+        // --- UI LOGIC: SLIDE & CLOCK ---
+        function toggleForm(mode) {
+            const slider = document.getElementById('mainSlider');
+            if(mode === 'register') slider.classList.add('show-register');
+            else slider.classList.remove('show-register');
         }
 
-        function clearSystem() {
-            if(confirm("Hapus semua data akun?")) {
-                localStorage.clear();
-                sessionStorage.clear();
-                showNotification("Sistem dibersihkan. Coba login admin kembali.", 'info');
-                location.reload();
-            }
+        // Cek URL jika ada ?mode=register
+        window.onload = () => {
+            const params = new URLSearchParams(window.location.search);
+            if(params.get('mode') === 'register') toggleForm('register');
+        };
+
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('clock').innerText = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
+        }
+        setInterval(updateTime, 1000); updateTime();
+
+        // --- AUTH LOGIC: LOCAL STORAGE ---
+        
+        // Helper Notifikasi
+        function showToast(msg, type = 'error') {
+            const toast = document.getElementById('toast');
+            toast.innerText = msg.toUpperCase();
+            toast.style.backgroundColor = type === 'success' ? '#10B981' : '#EF4444';
+            toast.style.transform = 'translateX(0)';
+            setTimeout(() => { toast.style.transform = 'translateX(150%)'; }, 3000);
         }
 
-        // Fungsi notifikasi global
-        function showNotification(message, type = 'info') {
-            // Hapus notifikasi sebelumnya jika ada
-            let existingNotification = document.getElementById('web-notification');
-            if(existingNotification) {
-                existingNotification.remove();
+        // Register Action
+        document.getElementById('registerForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const u = document.getElementById('r_user').value.trim();
+            const p = document.getElementById('r_pass').value;
+            const cp = document.getElementById('r_confirm').value;
+
+            if(p !== cp) return showToast("Passwords don't match");
+            if(p.length < 4) return showToast("Password too short");
+
+            let users = JSON.parse(localStorage.getItem('revorz_db')) || [];
+            if(users.some(user => user.username === u)) return showToast("Username taken");
+
+            users.push({ username: u, password: p });
+            localStorage.setItem('revorz_db', JSON.stringify(users));
+            
+            showToast("Account Created!", "success");
+            setTimeout(() => toggleForm('login'), 1000);
+        });
+
+        // Login Action
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const u = document.getElementById('l_user').value.trim();
+            const p = document.getElementById('l_pass').value;
+
+            let users = JSON.parse(localStorage.getItem('revorz_db')) || [];
+            const userMatch = users.find(user => user.username === u && user.password === p);
+
+            if(userMatch) {
+                showToast("Access Granted!", "success");
+                // Simulasi pindah halaman
+                setTimeout(() => { alert("Welcome to Revorz Dashboard!"); }, 1000);
+            } else {
+                showToast("Invalid Credentials");
             }
+        });
 
-            // Tentukan warna berdasarkan tipe notifikasi
-            let bgColor = '#1524f4'; // Biru default untuk info
-            if(type === 'success') bgColor = '#10b981'; // Hijau untuk sukses
-            if(type === 'error') bgColor = '#ef4444'; // Merah untuk error
-            if(type === 'warning') bgColor = '#f59e0b'; // Kuning untuk warning
-
-            // Buat elemen notifikasi
-            const notification = document.createElement('div');
-            notification.id = 'web-notification';
-            notification.className = 'fixed top-6 right-6 px-6 py-4 rounded-xl shadow-lg z-[1000] max-w-sm';
-            notification.style.backgroundColor = bgColor;
-            notification.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
-            notification.style.color = 'white';
-            notification.innerHTML = `
-                <div class="flex items-start">
-                    <div class="mr-3">
-                        <i data-lucide="${type === 'success' ? 'check-circle' : type === 'error' ? 'alert-circle' : type === 'warning' ? 'alert-triangle' : 'info'}" class="w-5 h-5"></i>
-                    </div>
-                    <div class="flex-1">
-                        <p class="font-bold text-sm">${type.charAt(0).toUpperCase() + type.slice(1)}</p>
-                        <p class="text-xs opacity-80">${message}</p>
-                    </div>
-                    <button onclick="closeNotification()" class="ml-2 text-white">×</button>
-                </div>
-            `;
-
-            // Tambahkan ke body
-            document.body.appendChild(notification);
-            lucide.createIcons();
-
-            // Tampilkan dengan animasi
-            setTimeout(() => {
-                notification.style.opacity = '1';
-                notification.style.transform = 'translateY(0)';
-            }, 10);
-
-            // Otomatis hilangkan setelah 5 detik
-            setTimeout(() => {
-                closeNotification();
-            }, 5000);
-        }
-
-        function closeNotification() {
-            const notification = document.getElementById('web-notification');
-            if(notification) {
-                notification.style.opacity = '0';
-                notification.style.transform = 'translateY(-20px)';
-                setTimeout(() => {
-                    notification.remove();
-                }, 300);
-            }
-        }
+        // Animasi Warna Jam
+        const colors = ['#F3F4F6', '#1A1A1A', '#1E3A8A'];
+        let colorIdx = 0;
+        setInterval(() => {
+            colorIdx = (colorIdx + 1) % colors.length;
+            document.getElementById('strapTop').style.backgroundColor = colors[colorIdx];
+            document.getElementById('strapBottom').style.backgroundColor = colors[colorIdx];
+        }, 4000);
     </script>
 </body>
 </html>

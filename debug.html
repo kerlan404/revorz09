@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>REVORZ — Smartwatch Premium</title>
+    <title>DEBUG - REVORZ — Smartwatch Premium</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
@@ -105,22 +105,43 @@
         let currentColor = 'white'; // DEFAULT TO WHITE
         let currentPrice = 75000;
 
+        // DEBUG: Log initialization
+        console.log("Page loaded, initializing with white color");
+
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
+            console.log("DOM loaded, starting initialization");
             updateUI();
             updateCartDot();
-            // Preload all color images for snappy swaps
+            
+            // Clear any potential conflicting data
+            console.log("Preloading images...");
             preloadImages();
-            // Set initial state to white without triggering click first
+            
+            // DEBUG: Force white selection
+            console.log("Initializing color selection to white...");
             initializeColorSelection('white');
+            
+            // DEBUG: Log current state
+            console.log("Current color after initialization:", currentColor);
+            console.log("Current image:", document.getElementById('productImage').src);
+            
             // Then setup color logic
             setupColorLogic();
+            
+            // DEBUG: Final check
+            setTimeout(() => {
+                console.log("Final state - Current color:", currentColor);
+                console.log("Final state - Current image:", document.getElementById('productImage').src);
+            }, 1000);
         });
 
         // Preload images found in data-image attributes
         function preloadImages() {
+            console.log("Preloading images...");
             document.querySelectorAll('.color-option').forEach(opt => {
                 const src = opt.getAttribute('data-image');
+                console.log("Preloading:", src);
                 if (src) {
                     const i = new Image();
                     i.src = src;
@@ -133,8 +154,11 @@
 
         // Function to initialize color selection without triggering events
         function initializeColorSelection(color) {
+            console.log("initializeColorSelection called with:", color);
+            
             // Remove selected class and inline styles from all options
             document.querySelectorAll('.color-option').forEach(opt => {
+                console.log("Removing selected from:", opt.getAttribute('data-color'));
                 opt.classList.remove('selected');
                 opt.style.borderColor = '';
                 opt.style.backgroundColor = '';
@@ -148,6 +172,8 @@
             );
 
             if (targetOption) {
+                console.log("Found target option for color:", color);
+                
                 // Add selected class and mark pressed state
                 targetOption.classList.add('selected');
                 targetOption.setAttribute('aria-pressed', 'true');
@@ -157,6 +183,7 @@
                 const priceVal = targetOption.getAttribute('data-price');
 
                 const imgEl = document.getElementById('productImage');
+                console.log("Setting image to:", imgPath);
                 imgEl.src = imgPath;
 
                 currentColor = color;
@@ -165,10 +192,16 @@
 
                 // Update label
                 const lbl = document.getElementById('selectedColorLabel');
-                if (lbl) lbl.textContent = `Warna: ${capitalize(color)}`;
+                if (lbl) {
+                    const labelText = `Warna: ${capitalize(color)}`;
+                    console.log("Setting label to:", labelText);
+                    lbl.textContent = labelText;
+                }
 
                 // Apply visual tweaks (shadow, alt, selected styling)
                 applyColorStyles(color, targetOption);
+            } else {
+                console.error("Target option not found for color:", color);
             }
         }
 
@@ -187,6 +220,7 @@
 
         // Apply color-specific visual styles for image and selected option
         function applyColorStyles(colorName, optionEl) {
+            console.log("applyColorStyles called with:", colorName);
             const imgEl = document.getElementById('productImage');
             let shadowColor = 'rgba(21,36,244,0.3)';
 
@@ -229,6 +263,7 @@
         }
 
         function setupColorLogic() {
+            console.log("Setting up color logic...");
             document.querySelectorAll('.color-option').forEach(option => {
                 // Make keyboard accessible
                 option.setAttribute('tabindex', option.getAttribute('tabindex') || '0');
@@ -240,6 +275,8 @@
                 });
 
                 option.addEventListener('click', function() {
+                    console.log("Color option clicked:", this.getAttribute('data-color'));
+                    
                     // Update Class UI and accessibility states
                     document.querySelectorAll('.color-option').forEach(opt => {
                         opt.classList.remove('selected');
@@ -269,6 +306,8 @@
 
                         // Apply color-specific visuals (shadow, alt, option highlight)
                         applyColorStyles(colorName, this);
+                        
+                        console.log("Image changed to:", imgPath, "Color:", colorName);
                     }, 80);
                 });
             });
